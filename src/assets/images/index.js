@@ -1,0 +1,5 @@
+export {default as Logo}  from  './logo_digital.png'
+export {default as DefaultUser}  from  './default_user.png'
+export {default as DefaultProduct}  from  './default-product.png'
+export {default as NewLabel}  from  './new-label.png'
+export {default as TrendingLabel}  from  './trending-label.png'

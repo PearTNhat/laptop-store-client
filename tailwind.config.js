@@ -45,7 +45,7 @@ export default {
           },
           '100%': {
             ' -webkit-transform': ' translateY(-100%)',
-            'transform': 'translateY(-133%)',
+            'transform': 'translateY(-190%)',
             'opacity': '1'
           }
         },

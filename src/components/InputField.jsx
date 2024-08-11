@@ -5,7 +5,7 @@ function InputField({value,error, icon, cssDiv, cssLabel, cssInput, placeholder 
     <div className={`relative ${cssDiv}`}>
         {
         value &&
-        <label htmlFor={placeholder} className={`${cssLabel} absolute bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
+        <label htmlFor={placeholder} className={`${cssLabel} leading-none absolute bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
             {placeholder}
         </label>
         }

@@ -6,8 +6,9 @@ import { userReducer } from "./slice/userSlice";
 import { persistReducer, persistStore } from "redux-persist";
 
 const persistConfig ={
-    key:'root',
-    storage
+    key:'shop/user',
+    storage,
+    whitelist:['accessToken','isLoggedIn'] // only token will be persisted, other will be cleared after
 }
 const persistedReducer = persistReducer(persistConfig, userReducer)
 const store = configureStore({
@@ -15,7 +16,6 @@ const store = configureStore({
         productCategory:productCategoryReducer,
         products: productReducer,
         user: persistedReducer,
-       
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

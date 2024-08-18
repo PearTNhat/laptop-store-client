@@ -7,5 +7,6 @@ const path= {
     BLOGS: 'blogs',
     PRODUCTS: 'products',
     OUR_SERVICES: 'services',
+    FINAL_REGISTER:'/final-register/:status',
 }
 export default path

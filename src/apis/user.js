@@ -1,25 +1,28 @@
-import {http} from '~/utils/http'
+import { http } from "~/utils/http";
 
-const apiRegister = async (infor) => {
-    try {
-        const {data} = await http.post('user/register', infor)
-        return data
-    } catch (error) {
-        if (error.response && error.response.data) {
-            return error.response
-          }
-          throw new Error(error.message)
+const apiRegister = async (info) => {
+  try {
+    const config = {
+        withCredentials:true
+    };
+    const { data } = await http.post("user/register", info,config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
     }
-}
-const apiLogin = async (infor) => {
-    try {
-        const {data} = await http.post('user/login', infor)
-        return data
-    } catch (error) {
-        if (error.response && error.response.data) {
-            return error.response
-          }
-          throw new Error(error.message)
+    throw new Error(error.message);
+  }
+};
+const apiLogin = async (info) => {
+  try {
+    const { data } = await http.post("user/login", info);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
     }
-}
-export { apiRegister,apiLogin}
+    throw new Error(error.message);
+  }
+};
+export { apiRegister, apiLogin };

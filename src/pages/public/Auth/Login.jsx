@@ -27,31 +27,20 @@ function Login() {
       // register
       const response = await apiRegister(payload)
       if (!response.success) {
-        Swal.fire({
-          title: "Opps!",
-          text: response.data.message,
-          icon: "error"
-        });
+        Swal.fire('Oops!', response.message, 'error');
       } else {
-        dispatch(userActions.login({accessToken:response.accessToken, userData:response.data}))
-        Toast.fire({
-          icon: "success",
-          title: "Create account successfully"
-        });
-        navigate(`/${path.HOME}`)
+        Swal.fire('Success', response.message, 'success');
       }
     } else {
          // login
       const response = await apiLogin({ email, password })
-      console.log('response', response);
       if (!response.success) {
         Swal.fire({
-          title: "Opps!",
-          text: response.data.message,
+          title: "Oops!",
+          text: response.message,
           icon: "error"
         });
       } else {
-  
         dispatch(userActions.login({accessToken:response.accessToken, userData:response.data}))
         Toast.fire({
           icon: "success",

@@ -1,28 +1,35 @@
 /* eslint-disable react/prop-types */
 
-function InputField({value,error, icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
+function InputField({nameKey,value,setPayload,invalidField, setInvalidField,icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
+  const error = invalidField.find((item) => item.name === nameKey);
   return (
-    <div className={`relative ${cssDiv}`}>
+    <div className={`${cssDiv} mb-3 relative`}>
         {
         value &&
-        <label htmlFor={placeholder} className={`${cssLabel} leading-none absolute bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
+        <label htmlFor={nameKey} className={`${cssLabel} leading-none absolute z-10 bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
             {placeholder}
         </label>
         }
-        <input 
-            id={placeholder}
-            type="text" 
-            placeholder={placeholder}
-            className={`
-                ${error && 'border-red-500'} 
-                ${cssInput}
-                placeholder:text-dark-light my-2 border border-gray-400 rounded-md p-2 w-full outline-none focus:border-blue-500
-                `}
-            {...rest}
-        />
-        {icon}
+        <div className="relative">
+          <input 
+              id={nameKey}
+              type="text" 
+              value={value}
+              onChange={(e) =>setPayload((prev) => ({ ...prev, [nameKey]: e.target.value }))}
+              onFocus={()=>setInvalidField(invalidField.filter(item => item.name !== nameKey))}
+              placeholder={placeholder}
+              className={`
+                  ${error && 'border-red-500'} 
+                  ${cssInput}
+                  placeholder:text-dark-light border border-gray-400 rounded-md p-2 w-full outline-none focus:border-blue-500
+                  `}
+              {...rest}
+          />
+          {icon}
+        </div>
+        {error && <small className="text-red-500">{error.mes}</small>}
     </div>
   )
 }
-
+// [{name:password, mes: Required}]
 export default InputField

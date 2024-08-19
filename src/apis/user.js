@@ -25,4 +25,26 @@ const apiLogin = async (info) => {
     throw new Error(error.message);
   }
 };
-export { apiRegister, apiLogin };
+const apiForgetPassword = async (email) => {
+  try {
+    const { data } = await http.get(`user/forgot-password?email=${email}`);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
+const apiResetPassword = async ({newPassword, resetToken}) => {
+  try {
+    const {data} = await http.put(`user/reset-password/${resetToken}`,{newPassword});
+    return data
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
+export { apiRegister, apiLogin ,apiForgetPassword,apiResetPassword};

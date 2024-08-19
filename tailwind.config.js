@@ -44,47 +44,42 @@ export default {
             'opacity': '0'
           },
           '100%': {
-            ' -webkit-transform': ' translateY(-100%)',
-            'transform': 'translateY(-190%)',
+            'top': '0',
             'opacity': '1'
           }
         },
-        'scale-down-tl': {
-          '0%':{
-            '-webkit-transform': 'scale(0)',
-            'transform': 'scale(0)',
-            '-webkit-transform-origin': ' 0% 0%',
-            'transform-origin': ' 0% 0%',
+       'slide-in-left': {
+          '0%': {
+           ' -webkit-transform': 'translateX(-1000px)',
+            'transform': 'translateX(-1000px)',
+            'opacity': '0'
           },
-          '100%': {
-            ' -webkit-transform': 'scale(1)',
-            ' transform': 'scale(1)',
-            ' -webkit-transform-origin': ' 0% 0%',
-            ' transform-origin':'0% 0%',
+          '100%' :{
+           ' -webkit-transform': 'translateX(0)',
+            'transform': 'translateX(0)',
+            'opacity': '1'
           }
+        }
         },
-        'scale-down-br': {
-          '0%':{
-            '-webkit-transform': 'scale(0)',
-            'transform': 'scale(0)',
-            '-webkit-transform-origin': ' 100% 100%',
-            'transform-origin': '100% 100%',
+        'slide-in-right': {
+          '0%': {
+           ' -webkit-transform': 'translateX(1000px)',
+            'transform': 'translateX(1000px)',
+            'opacity': '0'
           },
-          '100%': {
-            ' -webkit-transform': 'scale(1)',
-            ' transform': 'scale(1)',
-            ' -webkit-transform-origin': '100% 100%',
-            ' transform-origin':' 100% 100%',
+          '100%' :{
+           ' -webkit-transform': 'translateX(0)',
+            'transform': 'translateX(0)',
+            'opacity': '1'
           }
         }
       },
       animation: {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
         'slide-top-sm': 'slide-top-sm 0.2s linear both',
-        'scale-down-tl': 'scale-down-tl 0.3s ease-out both',
-        'scale-down-br':'scale-down-br 0.3s ease-out both'
+        'slide-in-left': 'slide-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
+        'slide-in-right': 'slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
       }
-    },
   },
   plugins: [],
 }

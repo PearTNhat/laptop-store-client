@@ -3,7 +3,7 @@ import { FaRegStar, FaStar } from 'react-icons/fa'
 import { memo } from 'react'
 import { FaRegStarHalfStroke } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
-import { caculatePercent, convertNumberToStar, formatNumber } from '~/utils/helper'
+import { calculatePercent, convertNumberToStar, formatNumber } from '~/utils/helper'
 import { ThunderIcon } from '~/assets/icon';
 function PriceStartProduct({ to, price,totalRating, discountPrice, title, daillDeals=false }) {
     const stars = convertNumberToStar(totalRating)
@@ -17,7 +17,7 @@ function PriceStartProduct({ to, price,totalRating, discountPrice, title, daillD
                     {/* % */}
                     <p className={`ml-1 text-main ${daillDeals && 'bg-[#FDE68A] relative pl-2 pr-1 rounded-r-md h-[18px]'}`}>
                         {daillDeals && <ThunderIcon className={'absolute left-[-2px]'} />}
-                        -{caculatePercent(price, discountPrice)}%
+                        -{calculatePercent(price, discountPrice)}%
                     </p>
                 </div>
               

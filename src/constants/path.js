@@ -7,6 +7,7 @@ const path= {
     BLOGS: 'blogs',
     PRODUCTS: 'products',
     OUR_SERVICES: 'services',
+    RESET_PASSWORD: 'reset-password/:resetToken',
     FINAL_REGISTER:'/final-register/:status',
 }
 export default path

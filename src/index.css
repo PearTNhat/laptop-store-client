@@ -38,7 +38,6 @@ body{
 .animation-hover:hover::before{
     transform: scale(1);
 }
-
 .truncate-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

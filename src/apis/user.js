@@ -14,6 +14,18 @@ const apiRegister = async (info) => {
     throw new Error(error.message);
   }
 };
+const apiFinalRegister = async ({email,OTP}) => {
+  try {
+    const {data} = await http.post('user/final-register',{email,OTP});
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+  }
+
 const apiLogin = async (info) => {
   try {
     const { data } = await http.post("user/login", info);
@@ -47,4 +59,15 @@ const apiResetPassword = async ({newPassword, resetToken}) => {
     throw new Error(error.message);
   }
 }
-export { apiRegister, apiLogin ,apiForgetPassword,apiResetPassword};
+const getCurrentUser = async () => {
+  try {
+    const { data } = await http.get("user");
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+};
+export { apiRegister, apiLogin ,apiForgetPassword,apiResetPassword,apiFinalRegister,getCurrentUser};

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userActions } from "~/store/slice/userSlice";
 import Swal from "sweetalert2";
-import { apiForgetPassword, apiLogin, apiRegister } from "~/apis/user";
+import { apiForgetPassword, apiLogin } from "~/apis/user";
 import Button from "~/components/Button";
 import InputField from "~/components/InputField";
 import path from "~/constants/path";
@@ -13,33 +13,18 @@ import { validateForm } from "~/utils/helper";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isRegister, setIsRegister] = useState(false);
   const [isForgetPassword, setIsForgetPassword] = useState(false);
   const [invalidField, setInvalidField] = useState([]);
   const [payload, setPayload] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
     emailResetPassword: "", // forgot password
   });
   // useCallBack tránh tạo lại hàm mới mỗi lần render (nếu dependencies không thay đổi)
   const handleSubmit = useCallback(async () => {
     const { email, password } = payload;
-    const invalid = isRegister ? validateForm(payload, setInvalidField) : validateForm({ email, password }, setInvalidField);
+    const invalid =  validateForm({ email, password }, setInvalidField);
     if (invalid>0) return;
-    if (isRegister) {
-      // register
-      
-      const response = await apiRegister(payload);
-      if (!response.success) {
-        Swal.fire("Oops!", response.message, "error");
-      } else {
-        Swal.fire("Success", response.message, "success");
-      }
-    } else {
-      // login
       const response = await apiLogin({ email, password });
       if (!response.success) {
         Swal.fire("Oops!", response.message, "error");
@@ -56,20 +41,17 @@ function Login() {
         });
         navigate(`/${path.HOME}`);
       }
-    }
-  }, [payload, isRegister]);
+    
+  }, [payload]);
   //reset payload khi chuyển tính năng
   useEffect(() => {
     setPayload({
       email: "",
       password: "",
-      confirmPassword: "",
-      firstName: "",
-      lastName: "",
       emailResetPassword:"",
     });
     setInvalidField([])
-  }, [isForgetPassword, isRegister]);
+  }, [isForgetPassword]);
   const handleForgetPassword = async (email) => {
     let invalid = validateForm({ emailResetPassword :email }, setInvalidField);
     if(invalid>0) return;
@@ -93,7 +75,7 @@ function Login() {
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
             Forget password
           </h3>
-            <InputField
+              <InputField
                 setInvalidField={setInvalidField}
                 placeholder={"Email"}
                 nameKey={"emailResetPassword"}
@@ -120,28 +102,9 @@ function Login() {
       <div className="flex justify-center items-center my-16 ">
         <div className="min-w-[300px] md:w-[400px] px-2">
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
-            {isRegister ? "Register" : "Login"}
+           Login
           </h3>
-          {isRegister && (
-            <div className="flex gap-4">
-              <InputField
-                setInvalidField={setInvalidField}
-                placeholder={"First name"}
-                nameKey={"firstName"}
-                value={payload.firstName}
-                setPayload={setPayload}
-                invalidField={invalidField}
-              />
-              <InputField
-                setInvalidField={setInvalidField}
-                placeholder={"Last name"}
-                nameKey={"lastName"}
-                value={payload.lastName}
-                setPayload={setPayload}
-                invalidField={invalidField}
-              />
-            </div>
-          )}
+          
           <InputField
             setInvalidField={setInvalidField}
             placeholder={"Email"}
@@ -159,31 +122,13 @@ function Login() {
             invalidField={invalidField}
             setPayload={setPayload}
           />
-          {isRegister && (
-            <InputField
-              setInvalidField={setInvalidField}
-              placeholder={"Confirm password"}
-              type={"password"}
-              value={payload.confirmPassword}
-              nameKey={"confirmPassword"}
-              setPayload={setPayload}
-              invalidField={invalidField}
-            />
-          )}
           <div className="mt-4 mb-2">
             <Button wf onClick={handleSubmit}>
-              {isRegister ? "Create account" : "Login"}
+             Login
             </Button>
           </div>
           <div className="flex justify-between text-blue-500 text-[13px]">
-            {isRegister ? (
-              <button
-                className="hover:text-main"
-                onClick={() => setIsRegister(false)}
-              >
-                Go to Login
-              </button>
-            ) : (
+          
               <>
                 <Button
                   style={"hover:text-main"}
@@ -191,14 +136,14 @@ function Login() {
                 >
                   Forget password
                 </Button>
-                <button
-                  className="hover:text-main"
-                  onClick={() => setIsRegister(true)}
+                <Button
+                  to={`${path.PUBLIC}${path.REGISTER}`}
+                  style="hover:text-main"
                 >
                   Create account
-                </button>
+                </Button>
               </>
-            )}
+            
           </div>
         </div>
       </div>

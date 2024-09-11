@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import path from "~/constants/path"
 
-function Topbar() {
+function TopBar() {
   return (
     <div className="bg-main ">
         <div className="main-container flex justify-between text-white py-2">
@@ -14,4 +14,4 @@ function Topbar() {
   )
 }
 
-export default Topbar
+export default TopBar

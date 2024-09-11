@@ -6,7 +6,7 @@ function InputField({nameKey,value,setPayload,invalidField, setInvalidField,icon
     <div className={`${cssDiv} mb-3 relative`}>
         {
         value &&
-        <label htmlFor={nameKey} className={`${cssLabel} leading-none absolute z-10 bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
+        <label htmlFor={nameKey} className={`${cssLabel}  select-none leading-none absolute z-10 bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
             {placeholder}
         </label>
         }
@@ -25,7 +25,9 @@ function InputField({nameKey,value,setPayload,invalidField, setInvalidField,icon
                   `}
               {...rest}
           />
-          {icon}
+          <div className="absolute right-3 top-[50%] translate-y-[-50%] cursor-pointer">
+            {icon}
+          </div>
         </div>
         {error && <small className="text-red-500">{error.mes}</small>}
     </div>

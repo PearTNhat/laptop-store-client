@@ -1,3 +1,7 @@
+import React from "react";
+import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaRegStarHalfStroke } from "react-icons/fa6";
+
 const calculatePercent = (price, priceDiscount) => {
   if (price === 0 || !price || priceDiscount === 0 || !priceDiscount) {
     return 0;
@@ -5,11 +9,15 @@ const calculatePercent = (price, priceDiscount) => {
   return Math.round(((price - priceDiscount) / price) * 100);
 };
 const formatNumber = (number) => {
-  if (!number) {
+  if (!number || number === 0) {
     return 0;
   }
   return number.toLocaleString("de-DE");
 };
+const covertMoneyToNumber = (money) => {
+    const cleanedStr = money.replace(/\./g, ""); // Loại bỏ dấu chấm
+  return Number(cleanedStr);
+}
 const convertNumberToStar = (number) => {
   if (!number) {
     return [0, 0, 0, 0, 0];
@@ -17,14 +25,14 @@ const convertNumberToStar = (number) => {
   number = Number(number);
   let stars = [];
   for (let i = 1; i <= number; i++) {
-    stars.push(1);
+    stars.push( React.createElement(FaStar));
   }
   if (number !== 0 && number % Math.floor(number) !== 0) {
-    stars.push(0.5);
+    stars.push( React.createElement(FaRegStarHalfStroke));
     number++;
   }
   for (let i = 5; i > number; i--) {
-    stars.push(0);
+    stars.push(React.createElement(FaRegStar));
   }
   return stars;
 };
@@ -146,4 +154,5 @@ export {
   convertNumberToStar,
   getTimeHMS,
   validateForm,
+  covertMoneyToNumber
 };

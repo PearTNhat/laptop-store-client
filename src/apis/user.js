@@ -59,9 +59,14 @@ const apiResetPassword = async ({newPassword, resetToken}) => {
     throw new Error(error.message);
   }
 }
-const getCurrentUser = async () => {
+const getCurrentUser = async ({token}) => {
   try {
-    const { data } = await http.get("user");
+    const config ={
+      headers:{
+        Authorization: `Bearer ${token}`,
+      },
+      }
+    const { data } = await http.get("user",config);
     return data;
   } catch (error) {
     if (error.response && error.response.data) {

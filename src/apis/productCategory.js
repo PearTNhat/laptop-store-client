@@ -12,4 +12,16 @@ const apiGetAllCategories = async() => {
           throw new Error(error.message)
     }
 }
-export {apiGetAllCategories}
+const apiGetProductCategory = async({slug}) => {
+    try {
+        const {data} = await http.get(`product-category/${slug}`)
+        return data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.message)
+          }
+          console.log(error);
+          throw new Error(error.message)
+    }
+}
+export {apiGetAllCategories,apiGetProductCategory}

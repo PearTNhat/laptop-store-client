@@ -12,7 +12,13 @@ body{
     .main-container{
         @apply m-auto max-w-main px-5
     }
-}
+    #custom-paging .slick-dots li.slick-active{
+        @apply border border-main rounded-md p-1
+    }
+    #custom-paging .slick-dots li{
+        @apply border border-gray-400 rounded-md p-1
+    }
+}   
 .animation-hover{
     position: relative;
 }
@@ -46,15 +52,13 @@ body{
     text-overflow: ellipsis;
 }
 .slick-prev{
-   
-    left: 0;
+    left: 5px;
     z-index: 10;
     opacity: 0;
 }
 
 .slick-next{
-
-    right: 0;
+    right: 5px;
     z-index: 10;
     opacity: 0;
 }
@@ -105,4 +109,47 @@ body{
 .slick-slider:hover .slick-prev{
     opacity: 1;
     transition: all 0.4s;
+}
+
+.profile-dropdown{
+    position: absolute;
+    top: 135%;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+    border-radius: 5px;
+    display: none;
+    z-index: 10;
+}
+.profile-dropdown::after{
+    content: "";
+    position: absolute;
+    top: -15px;
+    right: 4px;
+    border: 10px solid transparent;
+    border-bottom-color: rgb(255, 255, 255);
+    box-shadow: 1 1 10px 0 rgb(0 0 0 / 10%);
+
+}
+.profile-dropdown::before{
+    content: "";
+    position: absolute;
+    display: block;
+    top: -12px;
+    right: 0;
+    background: transparent;
+    width: 100px;
+    height: 10px;
+}
+#image-magnifier{
+    width: 500px;
+    height: 480px;
+}
+#custom-paging .slick-dots{
+    margin: 12px 0;
+    position: static;
+}
+#custom-paging .slick-dots li{
+    width: 50px;
+    height: 50px;
 }

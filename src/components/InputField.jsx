@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 
-function InputField({nameKey,value,setPayload,invalidField, setInvalidField,icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
+
+function InputField({nameKey,value,type='text',setPayload=()=>{},invalidField=[],onChange=null, setInvalidField,icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
   const error = invalidField.find((item) => item.name === nameKey);
+  const changeValueDefault = (e) => setPayload((prev) => ({ ...prev, [nameKey]: e.target.value }))
   return (
     <div className={`${cssDiv} mb-3 relative`}>
         {
-        value &&
+        (value===0 || value) &&
         <label htmlFor={nameKey} className={`${cssLabel}  select-none leading-none absolute z-10 bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
             {placeholder}
         </label>
@@ -13,10 +15,10 @@ function InputField({nameKey,value,setPayload,invalidField, setInvalidField,icon
         <div className="relative">
           <input 
               id={nameKey}
-              type="text" 
+              type={type} 
               value={value}
-              onChange={(e) =>setPayload((prev) => ({ ...prev, [nameKey]: e.target.value }))}
-              onFocus={()=>setInvalidField(invalidField.filter(item => item.name !== nameKey))}
+              onChange={(e)=>{onChange(e) || changeValueDefault(e)}}
+              onFocus={()=>setInvalidField && setInvalidField(invalidField.filter(item => item.name !== nameKey))}
               placeholder={placeholder}
               className={`
                   ${error && 'border-red-500'} 

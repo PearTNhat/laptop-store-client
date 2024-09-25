@@ -2,7 +2,7 @@
 import Slider from "react-slick";
 import Product from "~/pages/public/Home/component/Product/Product";
 /* eslint-disable react/prop-types */
-function CustomSliceProducts({ products,isNew,isTrending }) {
+function CustomSliceProducts({ customSetting,products,isNew,isTrending }) {
     const settings = {
         infinite: false,
         // autoplay: true,
@@ -10,6 +10,7 @@ function CustomSliceProducts({ products,isNew,isTrending }) {
         speed: 500,
         slidesToShow: 3,
         slidesToScroll: 1,
+        customSetting
     };
     return (
         <Slider {...settings}>
@@ -24,6 +25,8 @@ function CustomSliceProducts({ products,isNew,isTrending }) {
                 isNew={isNew}
                 isTrending={isTrending}
                 totalRating={item.totalRating}
+                category={item.category?.title}
+                className={'p-3 mb-3 mx-3'}
               />
             ))}
           </Slider>

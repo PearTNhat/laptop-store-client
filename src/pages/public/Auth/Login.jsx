@@ -9,11 +9,14 @@ import InputField from "~/components/InputField";
 import path from "~/constants/path";
 import { Toast } from "~/utils/alert";
 import { validateForm } from "~/utils/helper";
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isForgetPassword, setIsForgetPassword] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const [invalidField, setInvalidField] = useState([]);
   const [payload, setPayload] = useState({
     email: "",
@@ -21,7 +24,8 @@ function Login() {
     emailResetPassword: "", // forgot password
   });
   // useCallBack tránh tạo lại hàm mới mỗi lần render (nếu dependencies không thay đổi)
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
     const { email, password } = payload;
     const invalid =  validateForm({ email, password }, setInvalidField);
     if (invalid>0) return;
@@ -32,7 +36,7 @@ function Login() {
         dispatch(
           userActions.login({
             accessToken: response.accessToken,
-            userData: response.data,
+            userData: response.userData,
           })
         );
         Toast.fire({
@@ -91,6 +95,7 @@ function Login() {
               Back
             </Button>
             <Button
+              type="submit"
               className="!bg-blue-700 !py-2"
               onClick={() => handleForgetPassword(payload.emailResetPassword)}
             >
@@ -100,35 +105,41 @@ function Login() {
         </div>
       </div>
       <div className="flex justify-center items-center my-16 ">
-        <div className="min-w-[300px] md:w-[400px] px-2">
+        <form className="min-w-[300px] md:w-[400px] px-2" onSubmit={(e)=>handleSubmit(e)}>
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
            Login
           </h3>
-          
           <InputField
             setInvalidField={setInvalidField}
             placeholder={"Email"}
             value={payload.email}
             nameKey={"email"}
+            type='email'
             setPayload={setPayload}
             invalidField={invalidField}
           />
           <InputField
             setInvalidField={setInvalidField}
             placeholder={"Password"}
-            type={"password"}
+            type={`${isShowPassword ? "text" : "password"}`}
             value={payload.password}
             nameKey={"password"}
             invalidField={invalidField}
             setPayload={setPayload}
+            icon={
+              isShowPassword ? (
+                <IoEyeSharp onClick={() => setIsShowPassword(false)} />
+              ) : (
+                <FaEyeSlash onClick={() => setIsShowPassword(true)} />
+              )
+            }
           />
           <div className="mt-4 mb-2">
-            <Button wf onClick={handleSubmit}>
+            <Button wf type="submit">
              Login
             </Button>
           </div>
           <div className="flex justify-between text-blue-500 text-[13px]">
-          
               <>
                 <Button
                   style={"hover:text-main"}
@@ -143,9 +154,8 @@ function Login() {
                   Create account
                 </Button>
               </>
-            
-          </div>
-        </div>
+            </div>
+        </form>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const persistConfig ={
     key:'shop/user',
     storage,
-    whitelist:['accessToken','isLoggedIn'] // only token will be persisted, other will be cleared after
+    whitelist:['accessToken','isLoggedIn','userData'] // only token will be persisted, other will be cleared after
 }
 const persistedReducer = persistReducer(persistConfig, userReducer)
 const store = configureStore({

@@ -6,6 +6,6 @@ import { apiGetAllCategories } from "~/apis/productCategory"
 //The second argument is an asynchronous function that will be executed when the thunk action is dispatched.
 export const fetchProductCategory =createAsyncThunk( 'categories/getAll',async (d,{rejectWithValue}) => {
     const {data } = await apiGetAllCategories()
-    if(!data?.lenght === 0) return rejectWithValue(data)
+    if(!data?.length === 0) return rejectWithValue(data)
     return data
 })

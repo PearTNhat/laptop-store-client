@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import Slider from "react-slick";
-function CustomeSliceStatic({options,images,className}) {
+function CustomSliceStatic({options,images,className}) {
   
   var settings = {
     dots: false,
@@ -26,4 +26,4 @@ function CustomeSliceStatic({options,images,className}) {
   );
 }
 
-export default CustomeSliceStatic
+export default CustomSliceStatic

@@ -59,7 +59,7 @@ function DailyDeals() {
           price={dailyDeals.product?.discountPrice}
           discountPrice={dailyDeals.price}
           title={dailyDeals.product?.title}
-          daillDeals={true}
+          detailDeals={true}
         />
         
         <div className="flex gap-1 justify-center mt-2">

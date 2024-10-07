@@ -20,7 +20,7 @@ const covertMoneyToNumber = (money) => {
 }
 const convertNumberToStar = (number) => {
   if (!number) {
-    return [0, 0, 0, 0, 0];
+    return [...Array(React.createElement(FaRegStar)).keys()];
   }
   number = Number(number);
   let stars = [];

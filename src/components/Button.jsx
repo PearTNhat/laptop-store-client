@@ -8,6 +8,9 @@ function Button({ leftIcon, rightIcon, wf, style, className,children,outline, ..
   } else if (rest?.to) {
     Comp = Link;
   }
+  if(!rest?.type){
+    rest.type = "button"
+  }
   return (
     <Comp
       className={`${ style ? style : className+` leading-none px-2 py-3  ${outline ?'bg-white border border-main text-main' : 'text-white bg-main'} rounded-md` }

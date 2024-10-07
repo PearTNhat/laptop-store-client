@@ -13,11 +13,11 @@ function InputField({nameKey,value,type='text',setPayload=()=>{},invalidField=[]
         </label>
         }
         <div className="relative">
-          <input 
+          <input  
               id={nameKey}
               type={type} 
               value={value}
-              onChange={(e)=>{onChange(e) || changeValueDefault(e)}}
+              onChange={(e)=>{onChange  !== null ? onChange(e) : changeValueDefault(e)}}
               onFocus={()=>setInvalidField && setInvalidField(invalidField.filter(item => item.name !== nameKey))}
               placeholder={placeholder}
               className={`

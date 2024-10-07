@@ -11,29 +11,34 @@ import {
 import CustomPaging from "~/components/CustomePagging";
 import OtherInfoProduct from "./component/OtherInfoProduct";
 import CustomSliceProducts from "~/components/CustomSliceProducts";
-
+import CommentContainer from "~/components/Comments/CommentContainer";
+let firstRender = true;
 function DetailProduct() {
   const { slug } = useParams();
   const [product, setProduct] = useState({});
   const [otherProduct, setOtherProduct] = useState([]);
   const [colorProduct, setColorProduct] = useState({});
+  const [fetchAgain, setFetchAgain] = useState(false);
   const stars = useCallback(() => {
     return convertNumberToStar(product?.totalRating);
   }, [product]);
-
   async function getProductDetail(slug) {
     // goi product detail và lấy ra product theo category
-    const response = await getProduct({ slug });
-    if (response.success) {
-      const oProducts = await getAllProducts({ params: { 'slug[ne]': slug, 'category':slug} })
+    const {data,success} = await getProduct({ slug });
+    setProduct(data);
+    setColorProduct(data.colors[0]);
+    if(success && otherProduct.length === 0){
+      const oProducts =await getAllProducts({ params: { 'slug[ne]': slug, 'category':data.category.slug} })
       if (oProducts?.success) setOtherProduct(oProducts.data)
-      setProduct(response.data);
-      setColorProduct(response.data.colors[0]);
     }
   }
   useEffect(() => {
     getProductDetail(slug);
-  }, []);
+    if(firstRender){
+      window.scrollTo(0, 0);
+    }
+    firstRender = false
+  }, [fetchAgain]);
   return (
     <div className="main-container text-black my-2">
       <Breadcrumbs title={product.title} />
@@ -109,7 +114,13 @@ function DetailProduct() {
         <CustomSliceProducts products={otherProduct} />
       </div>
       {/* comment */}
-      
+      <CommentContainer 
+      title={product.title} 
+      pId={product._id} 
+      comments={product.comments} 
+      totalRating={product.totalRating}
+      setFetchAgain={setFetchAgain}
+      />
     </div>
   );
 }

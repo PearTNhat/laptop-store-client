@@ -20,6 +20,9 @@ function ProductCategory() {
   useEffect(() => {  
     fetchProductCategory(currentParams)
   },[currentParams])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[])
   return (
     <div className="my-8">
       <div className="bg-[#f7f7f7]">

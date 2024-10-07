@@ -20,6 +20,7 @@ function CustomSliceProducts({ customSetting,products,isNew,isTrending }) {
                 price={item.price}
                 discountPrice={item.discountPrice}
                 primaryImage={item.primaryImage.url}
+                soldQuantity={item.soldQuantity}
                 title={item.title}
                 slug={item.slug}
                 isNew={isNew}
@@ -27,6 +28,7 @@ function CustomSliceProducts({ customSetting,products,isNew,isTrending }) {
                 totalRating={item.totalRating}
                 category={item.category?.title}
                 className={'p-3 mb-3 mx-3'}
+
               />
             ))}
           </Slider>

@@ -28,7 +28,10 @@ const apiFinalRegister = async ({email,OTP}) => {
 
 const apiLogin = async (info) => {
   try {
-    const { data } = await http.post("user/login", info);
+    const config = {
+      withCredentials: true
+    }
+    const { data } = await http.post("user/login", info,config);
     return data;
   } catch (error) {
     if (error.response && error.response.data) {
@@ -72,7 +75,22 @@ const getCurrentUser = async ({token}) => {
     if (error.response && error.response.data) {
       return error.response.data;
     }
+    console.log('Error',error.message)
     throw new Error(error.message);
   }
 };
-export { apiRegister, apiLogin ,apiForgetPassword,apiResetPassword,apiFinalRegister,getCurrentUser};
+const apiRefreshToken = async (accessToken) => {
+  const config = {
+    withCredentials: true
+  }
+  try {
+    const { data } = await http.post("user/refresh-token", { accessToken },config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
+export { apiRegister, apiLogin ,apiForgetPassword,apiResetPassword,apiFinalRegister,getCurrentUser,apiRefreshToken};

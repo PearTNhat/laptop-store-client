@@ -122,6 +122,7 @@ function Login() {
             setInvalidField={setInvalidField}
             placeholder={"Password"}
             type={`${isShowPassword ? "text" : "password"}`}
+  
             value={payload.password}
             nameKey={"password"}
             invalidField={invalidField}

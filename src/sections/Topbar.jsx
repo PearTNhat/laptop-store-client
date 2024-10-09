@@ -1,12 +1,16 @@
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import path from "~/constants/path"
+import { fetchCurrentUser } from "~/store/action/user"
 
 function TopBar() {
   const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
   useEffect(() => {
-  }, [])
+    if (!user.isLoggedIn) return
+    dispatch(fetchCurrentUser({token: user.accessToken}))
+  }, [user.isLoggedIn])
   return (
     <div className="bg-main ">
         <div className="main-container flex justify-between text-white py-2 text-xs">

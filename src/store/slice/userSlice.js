@@ -14,9 +14,12 @@ const userSlice = createSlice({
         isError: false
     },
     reducers: {
-        //  vì login giống resgister nên ta có thể sử dụng chung 1 hàm
+
+        setAccessToken: (state, action) => {
+            console.log(action)
+            state.accessToken = action.payload.accessToken;
+        },
         login: (state, action) => {
-            console.log('action.payload', action.payload);
             state.accessToken = action.payload.accessToken;
             state.isLoggedIn = true;
             state.userData=action.payload.userData
@@ -32,11 +35,15 @@ const userSlice = createSlice({
             })
             builder.addCase(fetchCurrentUser.fulfilled,(state,action) =>{
                 state.isLoading = false
+                state.isLoggedIn = true
                 state.userData=action.payload.userData
             })
             builder.addCase(fetchCurrentUser.rejected,(state) =>{
                 state.isLoading = false
                 state.isError = true
+                state.isLoggedIn = true
+                state.userData= {},
+                state.accessToken = null
             })
         }
     }

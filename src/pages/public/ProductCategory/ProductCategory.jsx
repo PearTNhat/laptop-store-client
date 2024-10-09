@@ -5,21 +5,29 @@ import Breadcrumbs from "~/components/Breadcrumbs"
 import Product from "../Home/component/Product/Product"
 import InputOrCheckBoxFilter from "~/components/Filter/InputOrCheckBoxFilter"
 import SelectionFilter from "~/components/Filter/SelectionFilter"
+import Pagination from "~/components/Pagination"
 const colors = ['Titan Đen', 'Titan Trắng', 'Titan Xanh', 'Titan tự nhiên']
+const LIMIT =5
 function ProductCategory() {
   const {category} = useParams()
   const [products, setProducts] = useState([])
-  const [searchParams] = useSearchParams()
+  const [searchParams,setSearchParams] = useSearchParams()
+  const [currentPage,setCurrentPage] = useState(1)
+  const [totalPageCount,setTotalPageCount] = useState(1)
   const currentParams =useMemo(()=> Object.fromEntries([...searchParams]),[searchParams]) 
   const fetchProductCategory = async (filter) => {
       const response = await getAllProducts({params: {...filter,category}})
       if(response.success) {
         setProducts(response.data)
+        setTotalPageCount(Math.ceil(response.counts/LIMIT))
       }
   }    
   useEffect(() => {  
     fetchProductCategory(currentParams)
   },[currentParams])
+  useEffect(()=>{
+    setSearchParams({...currentParams, page: currentPage,limit:LIMIT})
+  },[currentPage])
   useEffect(() => {
     window.scrollTo(0, 0);
   },[])
@@ -64,6 +72,9 @@ function ProductCategory() {
                 />
               )
             }
+        </div>
+        <div className="mt-6">
+          <Pagination siblingCount={1} currentPage={currentPage} totalPageCount={totalPageCount} onPageChange={setCurrentPage}/>
         </div>
       </div>
     </div>

@@ -70,7 +70,9 @@ function Header() {
                     alt="name"
                   />
                   <ul className="group-hover:block profile-dropdown py-2 px-1">
-                    {userDropdown.map((item, i) => (
+                    {userDropdown.map((item, i) =>{
+                      if(item.title === 'Admin' && user.userData.role !== 'admin') return null
+                      return  (
                       <li
                         key={item.title}
                         className={`hover:bg-gray-300 px-2 ${
@@ -90,7 +92,7 @@ function Header() {
                           {item.title}
                         </Button>
                       </li>
-                    ))}
+                    )})}
                   </ul>
                 </div>
               </div>

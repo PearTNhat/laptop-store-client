@@ -32,19 +32,17 @@ function DetailProduct() {
       if (oProducts?.success) setOtherProduct(oProducts.data)
     }
   }
+  console.log('c',colorProduct?.images)
   useEffect(() => {
     getProductDetail(slug);
-    if(firstRender){
-      window.scrollTo(0, 0);
-    }
-    firstRender = false
-  }, [fetchAgain]);
+    window.scrollTo(0, 0);
+  }, [fetchAgain,slug]);
   return (
     <div className="main-container text-black my-2">
       <Breadcrumbs title={product.title} />
       <div className="flex flex-wrap gap-4">
         <div className="max-md:w-full w-[calc(50%-8px)] overflow-auto">
-          <CustomPaging images={colorProduct.images || []}/>
+          <CustomPaging images={colorProduct?.images || []}/>
         </div>
         <div className="max-md:w-full w-[calc(50%-8px)]">
           <h2 className="font-medium text-2xl">{product.title}</h2>

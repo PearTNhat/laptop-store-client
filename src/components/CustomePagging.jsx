@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
+import { memo } from "react";
 import Slider from "react-slick";
 
 function CustomPaging({images}) {
+  console.log(images);
   const settings = {
     customPaging: function(i) {
       return (
         <div className="">
-          <img src={images[i].url} />
+          <img src={images[i]?.url} />
         </div>
       );
     },
@@ -21,9 +23,9 @@ function CustomPaging({images}) {
     <div className="slider-container" id="custom-paging">
       <Slider {...settings}>
         {
-            images?.map((image,index) => {
+            images?.map((image) => {
                 return (
-                <div key={index} className=" ">
+                <div key={image.url} className=" ">
                     <img src={image.url} alt={""} className="!w-[80%] mx-auto"/>
                 </div>
                 );
@@ -34,4 +36,4 @@ function CustomPaging({images}) {
   );
 }
 
-export default CustomPaging;
+export default memo(CustomPaging);

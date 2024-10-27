@@ -2,7 +2,6 @@
 import { memo } from "react"
 import {DOTS,usePagination} from "~/hook/usePagination"
 function Pagination({siblingCount, currentPage, totalPageCount, onPageChange}) {
-  console.log(currentPage)
   const paginationRange = usePagination({siblingCount, currentPage, totalPageCount})
   const onPrevious = () => {
     onPageChange(currentPage - 1)
@@ -25,7 +24,7 @@ function Pagination({siblingCount, currentPage, totalPageCount, onPageChange}) {
           <path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"></path>
         </svg>
       </button>
-       {paginationRange.map((el,index)=>{
+       {paginationRange?.map((el,index)=>{
             if(el === DOTS){
                 return <div key={index} className=" cursor-pointer w-[40px] h-[40px] flex justify-center items-center border border-gray-200  bg-white">{DOTS}</div>
             }

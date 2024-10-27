@@ -3,6 +3,7 @@ import { HiMiniChevronRight } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 function HotCollections() {
     const { categories } = useSelector(state => state.productCategory)
+    console.log('cate',categories)
     return (
         <div className="">
             <div className="uppercase border-b-2 border-b-main text-bl py-4 text-[20px] font-semibold mb-4">

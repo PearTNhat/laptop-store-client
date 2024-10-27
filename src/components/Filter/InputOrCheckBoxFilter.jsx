@@ -78,7 +78,6 @@ function InputOrCheckBoxFilter({ name,data, type = 'checkbox' }) {
     if(filter['price[lte]']){
       search['price[lte]'] = filter['price[lte]']
     }
-    console.log(currentParams)
     if(currentParams.sort){
       search.sort = currentParams.sort
     }

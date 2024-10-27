@@ -70,3 +70,36 @@ export const adminNavigation = [
     }
 
 ]
+import { FaRegUserCircle } from "react-icons/fa"
+import { MdOutlineHistory } from "react-icons/md";
+import { LuHeart } from "react-icons/lu";
+export const userProfilesNavigation = [
+    {
+        id: 1,
+        text: 'Profile',
+        type:'SINGLE',
+        path: `${path.USER_PROFILE}`,
+        icon: FaRegUserCircle,
+    },
+    {
+        id: 2,
+        text: 'Purchase history',
+        type:'SINGLE',
+        path: `${path.USER_ORDER}`,
+        icon: MdOutlineHistory,
+    },
+    {
+        id: 3,
+        text: 'My cart',
+        type:'SINGLE',
+        path: `${path.USER_CART}`,
+        icon: FiShoppingCart,
+    },
+    {
+        id: 4,
+        text: 'Wishlist',
+        type:'SINGLE',
+        path: `${path.USER_WISHLIST}`,
+        icon: LuHeart,
+    }
+]

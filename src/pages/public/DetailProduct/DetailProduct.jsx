@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import DOMPurify from 'dompurify';
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getAllProducts, getProduct } from "~/apis/product";
 import Breadcrumbs from "~/components/Breadcrumbs";
@@ -12,13 +13,15 @@ import CustomPaging from "~/components/CustomePagging";
 import OtherInfoProduct from "./component/OtherInfoProduct";
 import CustomSliceProducts from "~/components/CustomSliceProducts";
 import CommentContainer from "~/components/Comments/CommentContainer";
-let firstRender = true;
 function DetailProduct() {
   const { slug } = useParams();
+  const descRef = useRef(null);
   const [product, setProduct] = useState({});
   const [otherProduct, setOtherProduct] = useState([]);
   const [colorProduct, setColorProduct] = useState({});
   const [fetchAgain, setFetchAgain] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const [isReadMore, setIsReadMore] = useState(false);
   const stars = useCallback(() => {
     return convertNumberToStar(product?.totalRating);
   }, [product]);
@@ -32,7 +35,14 @@ function DetailProduct() {
       if (oProducts?.success) setOtherProduct(oProducts.data)
     }
   }
-  console.log('c',colorProduct?.images)
+
+  useEffect(() => {
+    const element = descRef.current;
+    if (element) {
+      const isOverflowing = element.scrollHeight > element.clientHeight;
+      setIsClamped(isOverflowing);
+    }
+  }, [product]);
   useEffect(() => {
     getProductDetail(slug);
     window.scrollTo(0, 0);
@@ -68,11 +78,21 @@ function DetailProduct() {
               );
             })}
           </div>
-          <ul className="list-disc pl-[19px]">
-            {product.description?.map((desc) => (
+          <ul className={`list-disc pl-[19px] text-sm ${ !isReadMore && 'line-clamp-[10]'}`} ref={descRef}>
+            {product?.description?.length > 1 && product.description?.map((desc) => (
               <li key={desc}>{desc}</li>
-            ))}
+            ))
+            }
+            {
+              product?.description?.length === 1 
+              && 
+              <div
+
+              dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(product?.description[0])}} >
+              </div>
+            }
           </ul>
+          {(isClamped || isReadMore) && <p onClick={()=>setIsReadMore(!isReadMore)} className='underline cursor-pointer text-xs text-blue-400 hover:text-blue-600 text-right'>{isReadMore ? 'Show less':'Read more'}</p>}
           <div className="flex items-center gap-3 my-2">
             <p className="font-medium">Color:</p>
             <div className="flex flex-wrap gap-2 cursor-pointer">

@@ -29,6 +29,10 @@ const userSlice = createSlice({
             state.isLoggedIn = false;
             state.userData = {}
         },
+        setUser: (state, action) => {
+            console.log(action.payload)
+            state.userData = action.payload.userData
+        },
         extraReducers: (builder) =>{
             builder.addCase(fetchCurrentUser.pending,(state) =>{
                 state.isLoading = true

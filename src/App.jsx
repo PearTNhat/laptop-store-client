@@ -8,15 +8,24 @@ import DetailProduct from "./pages/public/DetailProduct/DetailProduct"
 import ProductCategory from "./pages/public/ProductCategory/ProductCategory"
 import Modal from "./components/Modal"
 import { AdminLayout, DashBoard, ManageOrder, ManageProduct, ManageUser } from "./pages/admin"
+import CreateProduct from "./pages/admin/ManageProduct/CreateProduct"
+import CreateProductColor from "./pages/admin/ManageProduct/CreateProductColor"
+import EditProduct from "./pages/admin/ManageProduct/EditProduct"
+import EditProductColor from "./pages/admin/ManageProduct/EditProductColor"
+import { MyCart, Order, UserInfo, WishList,UserProfileLayout } from "./pages/Member/UserProfile"
 
 function App() {
   const {isShowModal,childrenModal} = useSelector((state) => state.app)
-  const {userData} = useSelector((state) => state.user)
-  console.log(userData)
   return (
     <div className="relative">
       {isShowModal && <Modal>{childrenModal}</Modal>}
       <Routes>
+      <Route path="/user" element={<UserProfileLayout/>}>
+        <Route path={path.USER_PROFILE} element={<UserInfo/>}  />
+        <Route path={path.USER_CART} element={<MyCart/>} />
+        <Route path={path.USER_ORDER} element={<Order/>} />
+        <Route path={path.USER_WISHLIST} element={<WishList/>} />
+      </Route>
       <Route path={path.PUBLIC} element={<Public/>}>
           <Route path={path.HOME} element={<Home/>} />
           <Route path={path.LOGIN} element={<Login/>} />
@@ -29,7 +38,10 @@ function App() {
         <Route path={path.ADMIN_DASHBOARD} element={<DashBoard/>} />
         <Route path={path.ADMIN_MANAGE_USERS} element={<ManageUser/>}/>
         <Route path={path.ADMIN_MANAGE_PRODUCTS} element={<ManageProduct/>}/>
-        <Route path={path.ADMIN_MANAGE_PRODUCTS_CREATE} element={<ManageProduct/>}/>
+        <Route path={path.ADMIN_MANAGE_PRODUCTS_CREATE} element={<CreateProduct/>}/>
+        <Route path={path.ADMIN_MANAGE_PRODUCTS_EDIT} element={<EditProduct/>}/>
+        <Route path={path.ADMIN_MANAGE_PRODUCTS_CREATE_COLOR} element={<CreateProductColor/>}/>
+        <Route path={path.ADMIN_MANAGE_PRODUCTS_EDIT_COLOR} element={<EditProductColor/>}/>
         <Route path={path.ADMIN_MANAGE_ORDERS} element={<ManageOrder/>}/>
       </Route>
       {/* <Route path ={path.FINAL_REGISTER} element={<FinalRegister/>}/> */}

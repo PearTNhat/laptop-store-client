@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react"
 import { IoMdArrowDropup,IoMdArrowDropdown  } from "react-icons/io";
-import { NavLink, useLocation } from "react-router-dom"
+import { Link, NavLink, useLocation } from "react-router-dom"
 import { Logo } from "~/assets/images"
 import { adminNavigation } from "~/constants/navigation"
 import path from "~/constants/path";
@@ -8,11 +8,12 @@ import path from "~/constants/path";
 function SideBar() {
   const [activeDropdown, setActiveDropdown] = useState([])
   const {pathname} = useLocation()
-  console.log(activeDropdown)
   return (
     <div className="">
       <div className="pb-4">
-        <img src={Logo} alt="logo" className="mx-auto" />
+        <Link to='/'>
+          <img src={Logo} alt="logo" className="mx-auto" />
+        </Link>
         <p className="text-center">Admin workspace</p>
       </div>
       <div className="">

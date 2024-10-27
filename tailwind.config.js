@@ -90,6 +90,18 @@ export default {
             'opacity': '1'
           }
         },
+        'scale-up-ver-top': { // drop down
+          '0%': {
+            transform: 'scaleY(0)',
+            'transform-origin': '100% 0%'
+          
+          },
+          '100%': {
+            transform: 'scaleY(1)',
+            'transform-origin': '100% 0%'
+         
+          }
+        }
       },
     },
     animation: {
@@ -97,7 +109,8 @@ export default {
       'slide-top-sm': 'slide-top-sm 0.2s linear both',
       'slide-in-left': 'slide-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
       'slide-in-right': 'slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
-      'slide-show': 'slide-show 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both'
+      'slide-show': 'slide-show 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
+      'drop-down-animation': 'scale-up-ver-top 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both'
     }
   },
   daisyui: {

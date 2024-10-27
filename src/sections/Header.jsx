@@ -53,46 +53,67 @@ function Header() {
             <FaRegHeart className="text-main cursor-pointer" />
           </div>
           {/* cart */}
-          <div className={`px-[20px] ${user.isLoggedIn && `border-r border-r-gray-300`} text-main cursor-pointer flex h-[37.5px] items-center`}>
+          <div
+            className={`px-[20px] ${
+              user.isLoggedIn && `border-r border-r-gray-300`
+            } text-main cursor-pointer flex h-[37.5px] items-center`}
+          >
             <FaShoppingCart />
           </div>
           {/* User */}
           {user.isLoggedIn && (
             <div className="pl-[20px]">
-              <div className="w-[30px] h-[30px] rounded cursor-pointer">
-                <div className="relative group">
+              <div className="w-[40px] h-[40px]  cursor-pointer">
+                <div className="relative group h-full">
                   <img
                     src={`${
                       user.userData?.avatar?.url
                         ? user.userData?.avatar?.url
                         : DefaultUser
                     }`}
+                    className="w-full h-full object-cover rounded-full"
                     alt="name"
                   />
                   <ul className="group-hover:block profile-dropdown py-2 px-1">
-                    {userDropdown.map((item, i) =>{
-                      if(item.title === 'Admin' && user.userData.role !== 'admin') return null
-                      return  (
-                      <li
-                        key={item.title}
-                        className={`hover:bg-gray-300 px-2 ${
-                          i === userDropdown.length - 1
-                            ? ""
-                            : "border-gray-300 border-b"
-                        }`}
-                      >
-                        <Button
-                          to={item?.navigation}
-                          className={
-                            "flex justify-between items-center gap-5 !bg-transparent !text-black"
-                          }
-                          onClick={() => item?.onClick(handleLogout)}
+                    {userDropdown.map((item, i) => {
+                      if (
+                        item.title === "Admin" &&
+                        user.userData.role !== "admin"
+                      )
+                        return null;
+                      return (
+                        <li
+                          key={item.title}
+                          className={`hover:bg-gray-300 px-2 ${
+                            i === userDropdown.length - 1
+                              ? ""
+                              : "border-gray-300 border-b"
+                          }`}
                         >
-                          {item.icon}
-                          {item.title}
-                        </Button>
-                      </li>
-                    )})}
+                          {item.title === "Logout" ? (
+                            <Button
+                              className={
+                                "flex justify-between items-center gap-5 !bg-transparent !text-black"
+                              }
+                              onClick={() => item?.onClick(handleLogout)}
+                            >
+                              {item.icon}
+                              {item.title}
+                            </Button>
+                          ) : (
+                            <Button
+                              to={item?.navigation}
+                              className={
+                                "flex justify-between items-center gap-5 !bg-transparent !text-black"
+                              }
+                            >
+                              {item.icon}
+                              {item.title}
+                            </Button>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>

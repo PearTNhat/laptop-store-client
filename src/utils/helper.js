@@ -48,6 +48,7 @@ const validateForm = (payload, setInvalidField) => {
   setInvalidField([]);
   const formatPayload = Object.entries(payload);
   for (let arr of formatPayload) {
+    console.log('arr',arr)
     switch (arr[0]) {
       case "firstName":
         if (arr[1].trim() === "") {
@@ -55,6 +56,16 @@ const validateForm = (payload, setInvalidField) => {
           setInvalidField((prev) => [
             ...prev,
             { name: "firstName", mes: "First name is required" },
+          ]);
+          break;
+        }
+        break;
+      case "description":
+        if (arr[1].trim() === "") {
+          invalid++;
+          setInvalidField((prev) => [
+            ...prev,
+            { name: "description", mes: "Description  is required" },
           ]);
           break;
         }
@@ -148,11 +159,19 @@ const validateForm = (payload, setInvalidField) => {
   }
   return invalid;
 };
+const toBase64 = file => new Promise((resolve, reject) => {
+  if(!file) resolve('File empty');
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = reject;
+});
 export {
   calculatePercent,
   formatNumber,
   convertNumberToStar,
   getTimeHMS,
   validateForm,
-  covertMoneyToNumber
+  covertMoneyToNumber,
+  toBase64
 };

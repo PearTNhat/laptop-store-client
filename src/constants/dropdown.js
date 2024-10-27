@@ -6,7 +6,7 @@ import { GrUserAdmin } from "react-icons/gr";
 export const userDropdown = [
     {
         title: 'Profile',
-        navigation: `/${path.PROFILE}`,
+        navigation: `${path.USER_PROFILE}`,
         icon: React.createElement(FaUserCircle),
     },
     {

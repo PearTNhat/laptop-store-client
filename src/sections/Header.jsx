@@ -6,11 +6,13 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import path from "~/constants/path";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import { userDropdown } from "~/constants/dropdown";
 import Button from "~/components/Button";
 import { userActions } from "~/store/slice/userSlice";
 import { Toast } from "~/utils/alert";
+import Cart from "~/components/MyCart/Cart";
+import { fetchCurrentUser } from "~/store/action/user";
+import { useEffect } from "react";
 function Header() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -21,7 +23,10 @@ function Header() {
       title: "Logout successfully",
     });
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log( user.accessToken)
+    dispatch(fetchCurrentUser({ token: user.accessToken }));
+  }, []);
   return (
     <div className="main-container py-[35px]">
       <div className="flex justify-between items-center">
@@ -54,11 +59,19 @@ function Header() {
           </div>
           {/* cart */}
           <div
-            className={`px-[20px] ${
+            className={`px-[20px] relative group  ${
               user.isLoggedIn && `border-r border-r-gray-300`
-            } text-main cursor-pointer flex h-[37.5px] items-center`}
+            } text-gray-900 cursor-pointer flex h-[37.5px] items-center`}
           >
-            <FaShoppingCart />
+            <FaShoppingCart className="text-xl" />
+            {user.userData?.carts?.length > 0 &&(
+              <span className="absolute bg-main top-[2px] right-[11px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
+                {user.userData?.carts?.length}
+              </span>
+            )}
+            <div className=" group-hover:block dropdown py-2 px-1">
+                <Cart />
+            </div>
           </div>
           {/* User */}
           {user.isLoggedIn && (
@@ -74,7 +87,7 @@ function Header() {
                     className="w-full h-full object-cover rounded-full"
                     alt="name"
                   />
-                  <ul className="group-hover:block profile-dropdown py-2 px-1">
+                  <ul className="group-hover:block dropdown py-2 px-1">
                     {userDropdown.map((item, i) => {
                       if (
                         item.title === "Admin" &&

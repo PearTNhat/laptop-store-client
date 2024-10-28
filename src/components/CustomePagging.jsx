@@ -3,12 +3,11 @@ import { memo } from "react";
 import Slider from "react-slick";
 
 function CustomPaging({images}) {
-  console.log(images);
   const settings = {
     customPaging: function(i) {
       return (
         <div className="">
-          <img src={images[i]?.url} />
+          <img src={images[i]?.url} className="w-full h-full object-cover"/>
         </div>
       );
     },

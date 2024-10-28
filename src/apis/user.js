@@ -128,9 +128,49 @@ const apiRefreshToken = async (accessToken) => {
     throw new Error(error.message);
   }
 }
-export { apiRegister, apiLogin,
-   apiForgetPassword, apiResetPassword, 
-   apiFinalRegister, getCurrentUser,
-    apiRefreshToken, apiGetAllUsers ,
-    apiUpdateCurrentUser
-  };
+const apiUpdateCart = async ({ accessToken, body }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    const { data } = await http.put("user/cart", body, config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    console.log(error.message)
+  }
+}
+const apiRemoveCartItem = async ({ accessToken, body }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: body
+    }
+    const { data } = await http.delete("user/cart", config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
+export {
+  apiRegister,
+  apiLogin,
+  apiForgetPassword,
+  apiResetPassword,
+  apiFinalRegister,
+  getCurrentUser,
+  apiRefreshToken,
+  apiGetAllUsers,
+  apiUpdateCurrentUser,
+  apiUpdateCart,
+  apiRemoveCartItem
+};

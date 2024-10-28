@@ -43,6 +43,7 @@ function EditProduct() {
       return Toast.fire({icon:'error',title:response.message})
     }
   }
+  console.log(categories)
   useEffect(() => {
     fetProduct();
     dispatch(fetchProductCategory())

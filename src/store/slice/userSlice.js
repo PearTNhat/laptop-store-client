@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCurrentUser } from "../action/user";
-
-
-
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -14,44 +11,44 @@ const userSlice = createSlice({
         isError: false
     },
     reducers: {
-
         setAccessToken: (state, action) => {
-            console.log(action)
             state.accessToken = action.payload.accessToken;
         },
         login: (state, action) => {
             state.accessToken = action.payload.accessToken;
             state.isLoggedIn = true;
-            state.userData=action.payload.userData
+            state.userData = action.payload.userData
+        },
+        setUserData: (state, action) => {
+            console.log('setUserData', action.payload)
+            state.userData = action.payload.userData
         },
         logout: (state) => {
             state.accessToken = null;
             state.isLoggedIn = false;
             state.userData = {}
         },
-        setUser: (state, action) => {
-            console.log(action.payload)
-            state.userData = action.payload.userData
-        },
-        extraReducers: (builder) =>{
-            builder.addCase(fetchCurrentUser.pending,(state) =>{
-                state.isLoading = true
-            })
-            builder.addCase(fetchCurrentUser.fulfilled,(state,action) =>{
-                state.isLoading = false
-                state.isLoggedIn = true
-                state.userData=action.payload.userData
-            })
-            builder.addCase(fetchCurrentUser.rejected,(state) =>{
-                state.isLoading = false
-                state.isError = true
-                state.isLoggedIn = true
-                state.userData= {},
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchCurrentUser.pending, (state) => {
+            state.isLoading = true
+        })
+        builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isLoggedIn = true
+            state.userData = action.payload
+            return state
+        })
+        builder.addCase(fetchCurrentUser.rejected, (state) => {
+            console.log('eror')
+            state.isLoading = false
+            state.isError = true
+            state.isLoggedIn = true
+            state.userData = {},
                 state.accessToken = null
-            })
-        }
+        })
     }
 })
 const userActions = userSlice.actions;
 const userReducer = userSlice.reducer;
-export { userReducer,userActions }
+export { userReducer, userActions }

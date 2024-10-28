@@ -5,12 +5,15 @@ const path= {
     LOGIN: 'login',
     REGISTER: 'register',
     BLOGS: 'blogs',
+    DETAIL_CART: 'detail-cart',
     PRODUCT_DETAIL: ':category/:slug',
     PRODUCTS_CATEGORY: ':category',
     OUR_SERVICES: 'services',
     RESET_PASSWORD: 'reset-password/:resetToken',
     FINAL_REGISTER:'/final-register/:status',
-
+    //
+    CHECKOUT: '/checkout',
+    //
     USER_PROFILE: '/user/profile',
     USER_CART: '/user/cart',
     USER_ORDER: '/user/order',

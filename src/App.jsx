@@ -13,6 +13,8 @@ import CreateProductColor from "./pages/admin/ManageProduct/CreateProductColor"
 import EditProduct from "./pages/admin/ManageProduct/EditProduct"
 import EditProductColor from "./pages/admin/ManageProduct/EditProductColor"
 import { MyCart, Order, UserInfo, WishList,UserProfileLayout } from "./pages/Member/UserProfile"
+import DetailCart from "./components/MyCart/DetailCart"
+import Checkout from "./components/Checkout"
 
 function App() {
   const {isShowModal,childrenModal} = useSelector((state) => state.app)
@@ -26,10 +28,12 @@ function App() {
         <Route path={path.USER_ORDER} element={<Order/>} />
         <Route path={path.USER_WISHLIST} element={<WishList/>} />
       </Route>
+      <Route path={path.CHECKOUT} element={<Checkout/>} />
       <Route path={path.PUBLIC} element={<Public/>}>
           <Route path={path.HOME} element={<Home/>} />
           <Route path={path.LOGIN} element={<Login/>} />
           <Route path={path.REGISTER} element={<Register/>} />
+          <Route path={path.DETAIL_CART} element={<DetailCart/>} />
           <Route path={path.PRODUCT_DETAIL} element={<DetailProduct/>} />
           <Route path={path.PRODUCTS_CATEGORY} element={<ProductCategory/>} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword/>} />

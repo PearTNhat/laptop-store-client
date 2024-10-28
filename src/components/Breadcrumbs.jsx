@@ -6,6 +6,7 @@ import { memo } from "react";
 function Breadcrumbs({title}) {
   const routes = [
     { path: "/", breadcrumb: "Home" },
+    { path: "/:one", breadcrumb: title},
     { path: "/:category/:slug", breadcrumb: title },
   ];
   const breadcrumbs = useBreadcrumbs(routes);

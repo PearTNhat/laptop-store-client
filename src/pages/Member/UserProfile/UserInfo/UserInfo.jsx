@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { apiUpdateCurrentUser } from "~/apis/user";
 import InputForm from "~/components/InputForm";
 import Loading from "~/components/Loading";
+import { fetchCurrentUser } from "~/store/action/user";
 import { appActions } from "~/store/slice/app";
-import { userActions } from "~/store/slice/userSlice";
 import { Toast } from "~/utils/alert";
 import { toBase64 } from "~/utils/helper";
 
@@ -31,7 +31,7 @@ function UserInfo() {
     const response = await apiUpdateCurrentUser({accessToken:accessToken,formData})
     dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))
     if(response.success){
-      dispatch(userActions.setUser({userData:response.data}))
+      dispatch(fetchCurrentUser({token: accessToken}))
       return Toast.fire({icon:'success',title:'Update product successfully'})
     }else{
       return Toast.fire({icon:'error',title:response.message})

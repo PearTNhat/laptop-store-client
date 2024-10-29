@@ -50,7 +50,7 @@ function Cart() {
             );
         })}
         <div className="flex justify-end">
-            <Link to={`${path.PUBLIC}${path.DETAIL_CART}`} className=" bg-main text-white rounded-md px-3 py-2 mt-2">
+            <Link to={`${path.USER_CART}`} className=" bg-main text-white rounded-md px-3 py-2 mt-2">
                 View my cart
             </Link>
         </div>

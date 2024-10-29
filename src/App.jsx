@@ -12,7 +12,7 @@ import CreateProduct from "./pages/admin/ManageProduct/CreateProduct"
 import CreateProductColor from "./pages/admin/ManageProduct/CreateProductColor"
 import EditProduct from "./pages/admin/ManageProduct/EditProduct"
 import EditProductColor from "./pages/admin/ManageProduct/EditProductColor"
-import { MyCart, Order, UserInfo, WishList,UserProfileLayout } from "./pages/Member/UserProfile"
+import { Order, UserInfo, WishList,UserProfileLayout } from "./pages/Member/UserProfile"
 import DetailCart from "./components/MyCart/DetailCart"
 import Checkout from "./components/Checkout"
 
@@ -24,7 +24,7 @@ function App() {
       <Routes>
       <Route path="/user" element={<UserProfileLayout/>}>
         <Route path={path.USER_PROFILE} element={<UserInfo/>}  />
-        <Route path={path.USER_CART} element={<MyCart/>} />
+        <Route path={path.USER_CART} element={<DetailCart/>} />
         <Route path={path.USER_ORDER} element={<Order/>} />
         <Route path={path.USER_WISHLIST} element={<WishList/>} />
       </Route>
@@ -33,7 +33,6 @@ function App() {
           <Route path={path.HOME} element={<Home/>} />
           <Route path={path.LOGIN} element={<Login/>} />
           <Route path={path.REGISTER} element={<Register/>} />
-          <Route path={path.DETAIL_CART} element={<DetailCart/>} />
           <Route path={path.PRODUCT_DETAIL} element={<DetailProduct/>} />
           <Route path={path.PRODUCTS_CATEGORY} element={<ProductCategory/>} />
           <Route path={path.RESET_PASSWORD} element={<ResetPassword/>} />

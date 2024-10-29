@@ -43,6 +43,7 @@ function UserInfo() {
       lastName: userData.lastName,
       email: userData.email,
       phone: userData.phone || "",
+      address: userData.address || "",
     });
   }, [userData]);
   const handleAvatarToPreview =async (file) => {
@@ -123,6 +124,14 @@ function UserInfo() {
               error={errors}
             />
           </div>
+          <InputForm
+              id="address"
+              validate={{ required: "This input is required." }}
+              cssParents="flex-1"
+              label="Address"
+              register={register}
+              error={errors}
+            />
           <p className="mt-2 capitalize">Role: {userData?.role}</p>
           <p className="mt-2">
             Create at: {moment(userData.createdAt).format("DD/MM/YYYY HH:mm")}

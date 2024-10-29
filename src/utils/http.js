@@ -26,7 +26,7 @@ http.interceptors.request.use(async function (config) {
       config.headers.Authorization = `Bearer ${res.accessToken}`
       dispatch(userActions.setAccessToken({accessToken:res.accessToken}))
     }else{
-      Swal.fire("Oops!", "Login expired, Please login again", "info").then(()=>{
+      await Swal.fire("Oops!", "Login expired, Please login again", "info").then(()=>{
         dispatch(userActions.logout())
         window.location.href = '/login'
       })

@@ -2,29 +2,14 @@ import path from "./path";
 export const navigation = [
     {
         id: 1,
-        name: 'Home',
+        name: 'Trang chủ',
         path: `/${path.HOME}`
     },
     {
         id:2 ,
-        name:'Products',
-        path: `/${path.PRODUCTS}`
+        name:'Laptop',
+        path: `/${path.PRODUCTS_CATEGORY}`
     },
-    {
-        id:3,
-        name:'Blogs',
-        path: `/${path.BLOGS}`,
-    },
-    {
-        id:4,
-        name:'Our services',
-        path: `/${path.OUR_SERVICES}`,
-    },
-    {
-        id:5,
-        name:'FAQs',
-        path: `/${path.FAQ}`,
-    }
 ]
 import { AiOutlineDashboard } from "react-icons/ai";
 import { HiOutlineUserGroup } from "react-icons/hi";
@@ -40,30 +25,30 @@ export const adminNavigation = [
     },
     {
         id: 2,
-        text: 'Manage users',
+        text: 'Quản lý người dùng',
         type:'SINGLE',
         path: `${path.ADMIN}/${path.ADMIN_MANAGE_USERS}`,
         icon: HiOutlineUserGroup ,
     },
     {   
         id: 3,
-        text: 'Manage products',
+        text: 'Quản lý sản phẩm',
         type:'PARENT',
         icon: RiProductHuntLine,
         submenus: [
             {
-                text: 'Create products',
-                path: `${path.ADMIN}/${path.ADMIN_MANAGE_PRODUCTS_CREATE}`,
+                text: 'Danh sách sản phẩm',
+                path: `${path.ADMIN}/${path.ADMIN_MANAGE_PRODUCTS}`,
             },
             {
-                text: 'Manage products',
-                path: `${path.ADMIN}/${path.ADMIN_MANAGE_PRODUCTS}`,
+                text: 'Tạo sản phẩm',
+                path: `${path.ADMIN}/${path.ADMIN_MANAGE_PRODUCTS_CREATE}`,
             }
         ]
     },
     {
         id: 4,
-        text: 'Manage order',
+        text: 'Quản lý đơn hàng',
         type:'SINGLE',
         path: `${path.ADMIN}/${path.ADMIN_MANAGE_ORDERS}`,
         icon: FiShoppingCart,
@@ -76,28 +61,28 @@ import { LuHeart } from "react-icons/lu";
 export const userProfilesNavigation = [
     {
         id: 1,
-        text: 'Profile',
+        text: 'Thông tin cá nhân',
         type:'SINGLE',
         path: `${path.USER_PROFILE}`,
         icon: FaRegUserCircle,
     },
     {
         id: 2,
-        text: 'Purchase history',
+        text: 'Lịch sử mua hàng',
         type:'SINGLE',
         path: `${path.USER_ORDER}`,
         icon: MdOutlineHistory,
     },
     {
         id: 3,
-        text: 'My cart',
+        text: 'Giỏ hàng',
         type:'SINGLE',
         path: `${path.USER_CART}`,
         icon: FiShoppingCart,
     },
     {
         id: 4,
-        text: 'Wishlist',
+        text: 'Danh sách ưu thích',
         type:'SINGLE',
         path: `${path.USER_WISHLIST}`,
         icon: LuHeart,

@@ -18,7 +18,7 @@ function Featured() {
   return (
     <div>
       <div className="uppercase border-b-2 border-b-main text-bl py-4 text-[20px] font-semibold">
-        Featured products
+        Sản phẩm nổi bật
       </div>
       <div className="flex flex-wrap gap-4">
         {

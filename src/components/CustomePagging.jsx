@@ -6,7 +6,7 @@ function CustomPaging({images}) {
   const settings = {
     customPaging: function(i) {
       return (
-        <div className="">
+        <div className="w-full h-full">
           <img src={images[i]?.url} className="w-full h-full object-cover"/>
         </div>
       );
@@ -20,17 +20,29 @@ function CustomPaging({images}) {
   };
   return (
     <div className="slider-container" id="custom-paging">
-      <Slider {...settings}>
+      {
+        images?.length === 1 ? (
+          <div className=" ">
+            <img src={images[0].url} alt={""} className="!w-[80%] mx-auto"/>
+          </div>
+        ) :
+        <Slider {...settings}>
         {
             images?.map((image) => {
                 return (
                 <div key={image.url} className=" ">
-                    <img src={image.url} alt={""} className="!w-[80%] mx-auto"/>
+                  <div className="css-w-img">
+                    <div className="css-img-item">
+                      <img src={image.url} alt={""} className="object-contain h-full p-1"/>
+                    </div>
+                  </div>
                 </div>
                 );
-            })
+            }) 
         }
       </Slider>
+      }
+      
     </div>
   );
 }

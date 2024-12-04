@@ -77,7 +77,7 @@ function Login() {
       >
         <div className="w-[300px] md:w-[400px]">
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
-            Forget password
+            Quên mật khẩu
           </h3>
               <InputField
                 setInvalidField={setInvalidField}
@@ -87,19 +87,19 @@ function Login() {
                 setPayload={setPayload}
                 invalidField={invalidField}
               />
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-2 justify-end mt-3">
             <Button
               className="!py-2"
               onClick={() => setIsForgetPassword(false)}
             >
-              Back
+              Trở lại
             </Button>
             <Button
               type="submit"
               className="!bg-blue-700 !py-2"
               onClick={() => handleForgetPassword(payload.emailResetPassword)}
             >
-              Send mail
+              Gửi mail
             </Button>
           </div>
         </div>
@@ -107,7 +107,7 @@ function Login() {
       <div className="flex justify-center items-center my-16 ">
         <form className="min-w-[300px] md:w-[400px] px-2" onSubmit={(e)=>handleSubmit(e)}>
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
-           Login
+           Đăng nhập
           </h3>
           <InputField
             setInvalidField={setInvalidField}
@@ -120,7 +120,7 @@ function Login() {
           />
           <InputField
             setInvalidField={setInvalidField}
-            placeholder={"Password"}
+            placeholder={"Mật khẩu"}
             type={`${isShowPassword ? "text" : "password"}`}
   
             value={payload.password}
@@ -137,7 +137,7 @@ function Login() {
           />
           <div className="mt-4 mb-2">
             <Button wf type="submit">
-             Login
+             Đăng nhập
             </Button>
           </div>
           <div className="flex justify-between text-blue-500 text-[13px]">
@@ -146,13 +146,13 @@ function Login() {
                   style={"hover:text-main"}
                   onClick={() => setIsForgetPassword(true)}
                 >
-                  Forget password
+                  Quên mật khẩu
                 </Button>
                 <Button
                   to={`${path.PUBLIC}${path.REGISTER}`}
                   style="hover:text-main"
                 >
-                  Create account
+                  Tạo tài khoản
                 </Button>
               </>
             </div>

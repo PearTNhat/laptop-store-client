@@ -1,22 +1,18 @@
 /* eslint-disable react/prop-types */
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useState } from "react"
 import { useDispatch } from "react-redux";
 import { Logo } from "~/assets/images"
 import { IoClose } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import Button from "../Button";
 import { appActions } from "~/store/slice/app";
-const startText = ['Terrible', 'Bad', 'Neutral', 'Good', 'Perfect']
+const startText = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Perfect']
 function RatingModal({ title,handleSubmitComment,rating=5,content='',confirmText="Submit" }) {
   const dispatch = useDispatch()
-  const refModal = useRef(null)
   const [hover, setHover] = useState(null);
   const [payload, setPayload] = useState({rating,content})
-  useEffect(() => {
-    refModal.current.scrollIntoView({ behavior: 'smooth', 'block': 'center' })
-  }, [])
   return (
-    <div ref={refModal} className="w-[600px] bg-white rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
+    <div className="w-[600px] bg-white rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
       <div className="relative py-3 bg-gray-100 text-bl">
         <p className="font-bold text-xl pl-2">Đánh giá và nhận xét</p>
         <IoClose className="absolute top-1/2 -translate-y-1/2 right-0 pr-2 text-4xl cursor-pointer" onClick={()=>dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))}/>

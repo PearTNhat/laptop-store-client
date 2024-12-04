@@ -6,17 +6,17 @@ import { getProduct, updateProduct } from "~/apis/product";
 import InputForm from "~/components/InputForm";
 import { useDispatch, useSelector } from "react-redux";
 import MarkDownEditor from "~/components/MarkDownEditor";
-import { fetchProductCategory } from "~/store/action/productCategory";
 import { toBase64, validateForm } from "~/utils/helper";
 import { Toast } from "~/utils/alert";
 import { appActions } from "~/store/slice/app";
 import Loading from "~/components/Loading";
+import { fetchBrands } from "~/store/action/brand";
 
 function EditProduct() {
   const { slug } = useParams();
   const dispatch = useDispatch()
   const {accessToken} = useSelector(state => state.user)
-  const {categories} = useSelector(state => state.productCategory)
+  const {brands} = useSelector(state => state.brand)
   const [product, setProduct] = useState(null);
   const [invalidField, setInvalidField] = useState([])
   const { register, handleSubmit, formState: { errors }, reset ,watch } = useForm();
@@ -43,10 +43,9 @@ function EditProduct() {
       return Toast.fire({icon:'error',title:response.message})
     }
   }
-  console.log(categories)
   useEffect(() => {
     fetProduct();
-    dispatch(fetchProductCategory())
+    dispatch(fetchBrands())
   }, []);
   useEffect(() => { 
     reset({
@@ -73,7 +72,9 @@ function EditProduct() {
   const price = watch('price')
   return (
     <div className="h-screen overflow-auto">
-      <h1 className="text-2xl">Edit product</h1>
+      <h3 className="uppercase text-2xl font-semibold text-black">
+          Chỉnh sửa sản phẩm
+        </h3>
       <div className="my-3">
         <form onSubmit={handleSubmit(handleSubmitProduct)}>
           <InputForm
@@ -116,17 +117,17 @@ function EditProduct() {
                 classNamePrefix="select"
                 isClearable
                 isSearchable
-                options={categories.map((item) => ({
+                options={brands.map((item) => ({
                   value: item.slug,
                   label: item.title,
                 }))}
                 onChange={(data) =>
-                  setPayload({ ...payload, category: data.value })
+                  setPayload({ ...payload, brand: data.value })
                 }
                 value={
                     {
                     value: payload.category,
-                    label:categories.find((item) => item.slug === payload.category)?.title || ""
+                    label:brands.find((item) => item.slug === payload.brand)?.title || ""
                   }
                 }
               />
@@ -138,7 +139,7 @@ function EditProduct() {
                 classNamePrefix="select"
                 isClearable
                 isSearchable
-                options={categories
+                options={brands
                   ?.find((item) => item.slug === payload.category)
                   ?.brands?.map((item) => ({ value: item, label: item }))}
                 onChange={(data) =>

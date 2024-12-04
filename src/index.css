@@ -20,7 +20,25 @@ body{
     #custom-paging .slick-dots li{
         @apply border border-gray-400 rounded-md p-1
     }
-}   
+}  
+.css-w-img{
+    margin:auto;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: calc(100%);
+}
+.css-img-item{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.info-container .info-item:nth-child(odd){
+    background: #f2f2f2;
+    border-radius: 2px;
+} 
 .animation-hover{
     position: relative;
 }
@@ -141,7 +159,7 @@ body{
     right: 0;
     background: transparent;
     width: 100px;
-    height: 10px;
+    height: 15px;
 }
 #image-magnifier{
     width: 500px;
@@ -158,4 +176,10 @@ body{
 
 .css-13cymwt-control{
     height: 100% !important;
+}
+.short-desc ul{
+    padding: 0 20px;
+}
+.short-desc ul li{
+    list-style-type: circle;
 }

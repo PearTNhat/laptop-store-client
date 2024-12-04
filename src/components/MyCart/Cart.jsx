@@ -20,20 +20,20 @@ function Cart() {
   }
   return (
     <div className="max-w-[500px] min-w-[400px]">
-        {userData?.carts?.length===0 && <p className="text-center">No item in cart</p>}
+        {userData?.carts?.length===0 && <p className="text-center">Chưa có sản phẩm trong giỏ hàng</p>}
         {userData?.carts?.length>0 && <ul className= ''>
         {userData?.carts?.map((item) => {
-            const color = item.product.colors?.find(
+            const color = item.product?.colors?.find(
             (color) => color.color === item.color
             );
-            return (
+            return color && (
             <li key={item._id} className="flex mt-2 border border-gray-200 rounded-md p-1">
                 <div className="w-[70px] pr-2">
                     <img src={color?.primaryImage.url} alt={color?.color} className="w-full" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                 <div className="flex items-center justify-between">
-                    <p className="line-clamp-2">{item.product.title}</p> 
+                    <p className="line-clamp-2">{item.product?.title}</p> 
                     <p>×{item.quantity}</p>
                 </div>
                 <div className="flex items-center justify-between ">
@@ -51,7 +51,7 @@ function Cart() {
         })}
         <div className="flex justify-end">
             <Link to={`${path.USER_CART}`} className=" bg-main text-white rounded-md px-3 py-2 mt-2">
-                View my cart
+                Xem chi tiết
             </Link>
         </div>
         </ul>}

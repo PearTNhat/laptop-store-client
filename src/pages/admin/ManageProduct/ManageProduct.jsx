@@ -2,23 +2,26 @@
 import moment from "moment";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import SelectItem from "~/components/SelectItem";
 import { getAllProducts } from "~/apis/product";
 import InputField from "~/components/InputField";
 import Pagination from "~/components/Pagination";
 import { useDebounce } from "~/hook/useDebounce";
-
+import { FaRegEdit } from "react-icons/fa";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaRegTrashAlt } from "react-icons/fa";
 const tableHeaderTitleList = [
   "#",
-  "Thumb",
-  "Title",
-  "Brand",
-  "Category",
-  "Price",
-  "Quantity",
-  "Sold",
-  "Rating",
-  "Update At",
-  "Action",
+  "Ảnh",
+  "Tên",
+  "Thương hiệu",
+  "Series",
+  "Giá",
+  "Số lượng",
+  "Đã bán",
+  "Đánh giá",
+  "Ngày tạo",
+  "Chức năng",
 ];
 function MangeProduct() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,7 +37,9 @@ function MangeProduct() {
     [searchParams]
   );
   const fetchAllProduct = async (params) => {
-    const response = await getAllProducts({ params });
+    const response = await getAllProducts({
+      params: { ...params, showAll: true },
+    });
     if (response.success) {
       const totalPage = Math.ceil(response.counts / 10);
       if (totalPage < currentPage) {
@@ -78,13 +83,43 @@ function MangeProduct() {
   }, [currentPage, debounceSearch]);
   return (
     <div className="h-screen overflow-auto">
-      <h1 className="text-2xl font-semibold">Manage product</h1>
+      <h1 className="text-2xl font-semibold">Quản lý sản phẩm</h1>
       <div className="">
         <div className="flex justify-end mr-4">
           <form className="flex gap-3">
+            <SelectItem
+              className="z-50"
+              isClearable
+              isSearchable
+              placeholder="Chọn thương hiệu"
+              options={[
+                { value: "8GB", label: "8GB" },
+                { value: "16GB", label: "16GB" },
+                { value: "32GB", label: "32GB" },
+                { value: "64GB", label: "64GB" },
+              ]}
+              onChange={(data) => {
+                // setFilter((prev) => ({ ...prev, status: data?.value }));
+              }}
+            />
+            <SelectItem
+              className="z-50"
+              isClearable
+              isSearchable
+              placeholder="Chọn series"
+              options={[
+                { value: "8GB", label: "8GB" },
+                { value: "16GB", label: "16GB" },
+                { value: "32GB", label: "32GB" },
+                { value: "64GB", label: "64GB" },
+              ]}
+              onChange={(data) => {
+                // setFilter((prev) => ({ ...prev, status: data?.value }));
+              }}
+            />
             <InputField
               type="text"
-              placeholder={"Search title"}
+              placeholder={"Tìm kiếm tên sản phẩm"}
               className="px-4 py-[0.625rem] border-gray-200 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               onChange={(e) => {
                 let value = e.target.value;
@@ -120,7 +155,7 @@ function MangeProduct() {
                         className="cursor-pointer"
                       >
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {index + 1}
+                          {(currentPage - 1) * 10 + index + 1}
                         </td>
                         <td className="p-4 gap-2 border-gray-200 border-b text-sm">
                           <div className="flex gap-3 items-center justify-start">
@@ -142,10 +177,8 @@ function MangeProduct() {
                         <td className="p-1 border-gray-200 border-b text-sm">
                           {p.brand}
                         </td>
-                        <td
-                          className={`p-1 border-gray-200 border-b text-sm capitalize`}
-                        >
-                          {p.category?.title}
+                        <td className="p-1 border-gray-200 border-b text-sm">
+                          {p.series}
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
                           {p.discountPrice}
@@ -165,24 +198,26 @@ function MangeProduct() {
                           </p>
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          <Link
-                            className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
-                            to={`/admin/manage/products/edit/${p.slug}`}
-                          >
-                            Edit
-                          </Link>
-                          <Link
-                            className="mr-3 text-green-400 hover:text-green-900 disabled:opacity-70  hover:underline`}"
-                            to={`/admin/manage/products/create-color/${p.slug}`}
-                          >
-                            Create
-                          </Link>
-                          <Link
-                            className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
-                            to={`/admin/manage/products/delete/${p.slug}`}
-                          >
-                            Delete
-                          </Link>
+                          <div className="flex items-center justify-center text-[16px]">
+                            <Link
+                              className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
+                              to={`/admin/manage/products/edit/${p.slug}`}
+                            >
+                              <FaRegEdit />
+                            </Link>
+                            <Link
+                              className="mr-3 text-green-400 hover:text-green-900 disabled:opacity-70  hover:underline`}"
+                              to={`/admin/manage/products/create-color/${p.slug}`}
+                            >
+                              <IoMdAddCircleOutline />
+                            </Link>
+                            <Link
+                              className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
+                              to={`/admin/manage/products/delete/${p.slug}`}
+                            >
+                              <FaRegTrashAlt />
+                            </Link>
+                          </div>
                         </td>
                       </tr>
                       {isSelected && (
@@ -198,19 +233,19 @@ function MangeProduct() {
                                     #
                                   </th>
                                   <th className="p-2 border-gray-200 border-b text-sm">
-                                    Color Name
+                                    Màu sắc
                                   </th>
                                   <th className="p-2 border-gray-200 border-b text-sm">
-                                    Thumb
+                                    Ảnh
                                   </th>
                                   <th className="p-2 border-gray-200 border-b text-sm">
-                                    Quantity
+                                    Số lượng
                                   </th>
                                   <th className="p-2 border-gray-200 border-b text-sm">
-                                    Sold quantity
+                                    Đã bán
                                   </th>
                                   <th className="p-2 border-gray-200 border-b text-sm">
-                                    Action
+                                    Chức năng
                                   </th>
                                 </tr>
                               </thead>
@@ -239,18 +274,20 @@ function MangeProduct() {
                                       {color.soldQuantity}
                                     </td>
                                     <td>
-                                      <Link
-                                        className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
-                                        to={`/admin/manage/products/edit-color/${p.slug}/${color._id}`}
-                                      >
-                                        Edit
-                                      </Link>
-                                      <Link
-                                        className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
-                                        to={`/admin/manage/products/delete-color/${p.slug}`}
-                                      >
-                                        Delete
-                                      </Link>
+                                      <div className="flex items-center text-[16px]">
+                                        <Link
+                                          className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
+                                          to={`/admin/manage/products/edit-color/${p.slug}/${color._id}`}
+                                        >
+                                          <FaRegEdit />
+                                        </Link>
+                                        <Link
+                                          className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
+                                          to={`/admin/manage/products/delete-color/${p.slug}`}
+                                        >
+                                          <FaRegTrashAlt />
+                                        </Link>
+                                      </div>
                                     </td>
                                   </tr>
                                 ))}

@@ -161,6 +161,40 @@ const apiRemoveCartItem = async ({ accessToken, body }) => {
     throw new Error(error.message);
   }
 }
+const apiUpdateWishlist = async ({ accessToken, product }) => {
+  try {
+    console.log(accessToken)
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+    }
+    const { data } = await http.put("user/wish-list",{product}, config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
+
+const apiUpdateRole = async ({ accessToken, role,userId }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    const { data } = await http.put("user/admin",{role,userId} ,config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
 export {
   apiRegister,
   apiLogin,
@@ -172,5 +206,7 @@ export {
   apiGetAllUsers,
   apiUpdateCurrentUser,
   apiUpdateCart,
-  apiRemoveCartItem
+  apiRemoveCartItem,
+  apiUpdateWishlist,
+  apiUpdateRole
 };

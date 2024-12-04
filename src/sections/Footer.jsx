@@ -17,14 +17,14 @@ function Footer() {
                             <li className="flex items-center mb-[10px] hover:text-white cursor-pointer">
                                 <FaMapMarkerAlt className="w-[10px]" />
                                 <strong className="ml-2 mr-1">
-                                    Address:
+                                    Địa chỉ:
                                 </strong>
-                                9 District, Ho Chi Minh City
+                                Quận 9, Thành phố Hồ Chí Minh
                             </li>
                             <li className="flex items-center mb-[10px] hover:text-white cursor-pointer">
                                 <FaPhoneAlt />
                                 <strong className="mx-1">
-                                    Phone:
+                                    SĐT:
                                 </strong>
                                 +84 4444 4444
                             </li>
@@ -44,7 +44,7 @@ function Footer() {
                         </ul>
                     </div>
                     <div className="md:col-span-4 col-span-12">
-                        <div className="uppercase border-l-[3px] border-l-main text-white text-[15px] mb-5 font-semibold pl-3">Information</div>
+                        <div className="uppercase border-l-[3px] border-l-main text-white text-[15px] mb-5 font-semibold pl-3">Thông tin</div>
                         <ul className="text-[13px]">
                             <li className="mb-[10px] hover:text-white cursor-pointer">
                                 <a href="">
@@ -75,11 +75,11 @@ function Footer() {
 
                     </div>
                     <div className="md:col-span-4 col-span-12">
-                        <div className="uppercase border-l-[3px] border-l-main text-white text-[15px] mb-5 font-semibold pl-3">Who we are</div>
+                        <div className="uppercase border-l-[3px] border-l-main text-white text-[15px] mb-5 font-semibold pl-3">Bạn là ai</div>
                         <ul className="text-[13px]">
                             <li className="mb-[10px] hover:text-white cursor-pointer">
                                 <a href="">
-                                    Help
+                                    Giúp đỡ
                                 </a>
                             </li>
                             <li className="mb-[10px] hover:text-white cursor-pointer">

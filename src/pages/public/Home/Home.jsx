@@ -4,10 +4,7 @@ import { bannerImages,logoImages } from "~/constants/images"
 import ListProduct from "./component/ListProduct"
 import SideBar from "./component/SideBar"
 import CustomSliceStatic from "~/components/CustomSliceStatic"
-import NewArrivals from "./component/NewArrivals"
 import HotCollections from "./component/HotCollections"
-import Blogs from "./component/Blogs"
-
 function Home() {
   return (
     <div className="main-container">
@@ -20,9 +17,7 @@ function Home() {
         <ListProduct />
       </div>
       <Featured/> 
-      <NewArrivals/>
       <HotCollections/>
-      <Blogs/>
       <CustomSliceStatic images={logoImages} className={''} options={{ slidesToShow: 5}}/>
     </div>
   ) 

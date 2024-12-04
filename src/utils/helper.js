@@ -15,20 +15,20 @@ const formatNumber = (number) => {
   return number.toLocaleString("de-DE");
 };
 const covertMoneyToNumber = (money) => {
-    const cleanedStr = money.replace(/\./g, ""); // Loại bỏ dấu chấm
+  const cleanedStr = money.replace(/\./g, ""); // Loại bỏ dấu chấm
   return Number(cleanedStr);
 }
 const convertNumberToStar = (number) => {
   if (!number) {
-    return [...Array(React.createElement(FaRegStar)).keys()];
+    return new Array(5).fill(React.createElement(FaRegStar));
   }
   number = Number(number);
   let stars = [];
   for (let i = 1; i <= number; i++) {
-    stars.push( React.createElement(FaStar));
+    stars.push(React.createElement(FaStar));
   }
   if (number !== 0 && number % Math.floor(number) !== 0) {
-    stars.push( React.createElement(FaRegStarHalfStroke));
+    stars.push(React.createElement(FaRegStarHalfStroke));
     number++;
   }
   for (let i = 5; i > number; i--) {
@@ -48,7 +48,7 @@ const validateForm = (payload, setInvalidField) => {
   setInvalidField([]);
   const formatPayload = Object.entries(payload);
   for (let arr of formatPayload) {
-    console.log('arr',arr)
+    console.log('arr', arr)
     switch (arr[0]) {
       case "firstName":
         if (arr[1].trim() === "") {
@@ -66,6 +66,16 @@ const validateForm = (payload, setInvalidField) => {
           setInvalidField((prev) => [
             ...prev,
             { name: "description", mes: "Description  is required" },
+          ]);
+          break;
+        }
+        break;
+      case "connectionPort":
+        if (arr[1].trim() === "") {
+          invalid++;
+          setInvalidField((prev) => [
+            ...prev,
+            { name: "connectionPort", mes: "Connection port  is required" },
           ]);
           break;
         }
@@ -160,12 +170,21 @@ const validateForm = (payload, setInvalidField) => {
   return invalid;
 };
 const toBase64 = file => new Promise((resolve, reject) => {
-  if(!file) resolve('File empty');
+  if (!file) resolve('File empty');
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => resolve(reader.result);
   reader.onerror = reject;
 });
+function capitalizeFirstCharacter(str) {
+  if (!str) return str; // Handle empty or null strings
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+const convertObjToValueLabel = (obj) => {
+  return Object.entries(obj).map(([key,value]) => {
+    return { value:key, label:value };
+  });
+}
 export {
   calculatePercent,
   formatNumber,
@@ -173,5 +192,7 @@ export {
   getTimeHMS,
   validateForm,
   covertMoneyToNumber,
-  toBase64
+  toBase64,
+  capitalizeFirstCharacter,
+  convertObjToValueLabel
 };

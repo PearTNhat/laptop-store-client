@@ -28,7 +28,6 @@ function DailyDeals() {
       const today = `${moment().format('DD-MM-YYYY')}`; // cai này là giờ cố định
       //Number( new Date(today).getTime() ) - Number(Date.now() sẻ tính đc giờ hiện tại
       const distance =  24 * 3600 *1000 + Number( new Date(today).getTime() ) - Number(Date.now());
-      console.log('distance', distance);
       if(distance < 0) {
         fetchDailyDeals()
       }else{

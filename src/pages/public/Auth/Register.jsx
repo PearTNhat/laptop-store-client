@@ -57,15 +57,15 @@ function Register() {
                     <span className="flex justify-center items-center absolute top-0 right-0 w-[20px] h-[20px] rounded-full m-1 hover:bg-gray-300">
                       <IoCloseSharp onClick={()=>setVerifyOtp(false)} className="text-xl text-black cursor-pointer" />
                     </span>
-                    <p className="font-bold text-lg text-center">Verification</p>
-                    <p className="text-center">{`We will send you a OTP on ${payload.email}`} </p>
+                    <p className="font-bold text-lg text-center">Xác thực email</p>
+                    <p className="text-center">{`Nhập OPT đã gửi đến email ${payload.email}`} </p>
                     <input 
-                    type="text" placeholder="Enter OTP" 
+                    type="text" placeholder="Nhập OTP" 
                     className="my-4 py-1 px-2 w-[80%] mx-auto block border-gray-00 border rounded-md outline-none" 
                     onChange={ (e) => setPayload({...payload,OTP:e.target.value})}
                     />
                     <div className="w-[80%] mx-auto">
-                        <Button className={'text-main !py-2 w-full'} type="submit">Verify</Button>
+                        <Button className={'text-main !py-2 w-full'} type="submit">Xác thực</Button>
                     </div>
                 </form>
             </div>
@@ -75,12 +75,12 @@ function Register() {
     <div className="flex justify-center items-center my-16 ">
       <form className="min-w-[300px] md:w-[400px] px-2">
         <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
-          Register
+          Đăng ký
         </h3>
         <div className="flex gap-4">
           <InputField
             setInvalidField={setInvalidField}
-            placeholder={"First name"}
+            placeholder={"Họ"}
             nameKey={"firstName"}
             value={payload.firstName}
             setPayload={setPayload}
@@ -88,7 +88,7 @@ function Register() {
           />
           <InputField
             setInvalidField={setInvalidField}
-            placeholder={"Last name"}
+            placeholder={"Tên"}
             nameKey={"lastName"}
             value={payload.lastName}
             setPayload={setPayload}
@@ -105,7 +105,7 @@ function Register() {
         />
         <InputField
           setInvalidField={setInvalidField}
-          placeholder={"Password"}
+          placeholder={"Mật khẩu"}
           type={`${isShowPassword ? "text" : "password"}`}
           value={payload.password}
           nameKey={"password"}
@@ -121,7 +121,7 @@ function Register() {
         />
         <InputField
           setInvalidField={setInvalidField}
-          placeholder={"Confirm password"}
+          placeholder={"Xác nhận mật khẩu"}
           type={`${isShowPassword ? "text" : "password"}`}
           value={payload.confirmPassword}
           nameKey={"confirmPassword"}
@@ -138,12 +138,12 @@ function Register() {
 
         <div className="mt-4 mb-2">
           <Button wf onClick={handleSubmit} type="submit">
-            Create account
+            Tạo tài khoản
           </Button>
         </div>
         <div className="flex justify-between text-blue-500 text-[13px]">
           <Button style={"hover:text-main"} to={`${path.PUBLIC}${path.LOGIN}`}>
-            Go to Login
+            Đi tới đăng nhập
           </Button>
         </div>
       </form>

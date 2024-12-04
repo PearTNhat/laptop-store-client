@@ -9,7 +9,6 @@ function SideBar() {
   const [activeDropdown, setActiveDropdown] = useState([])
   const {userData} = useSelector(state => state.user)
   const {pathname} = useLocation()
-  console.log(userData)
     return (
       <div className="">
         <div className="pb-4 flex flex-col items-center">

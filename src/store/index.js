@@ -1,10 +1,10 @@
 import { configureStore} from "@reduxjs/toolkit";
-import { productCategoryReducer } from "./slice/productCategory";
 import { productReducer } from "./slice/product";
 import storage from "redux-persist/lib/storage";
 import { userReducer } from "./slice/userSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import { appReducer } from "./slice/app";
+import { brandReducer } from "./slice/brand";
 
 const persistConfig ={
     key:'shop/user',
@@ -14,7 +14,7 @@ const persistConfig ={
 const persistedReducer = persistReducer(persistConfig, userReducer)
 const store = configureStore({
     reducer:{
-        productCategory:productCategoryReducer,
+        brand:brandReducer,
         products: productReducer,
         user: persistedReducer,
         app:appReducer

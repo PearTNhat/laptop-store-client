@@ -56,7 +56,7 @@ function Comment({
                             <span className="text-xs">{replies.length} Reply</span>
                         </button>
                         {
-                            isBelongToUser &&
+                            (isBelongToUser && parentId ) &&
                             <button className="flex justify-center items-center gap-1"
                             onClick={()=>{
                             setAffectedComment({type:"EDIT",id:comment._id})

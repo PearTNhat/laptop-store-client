@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { Toast } from "~/utils/alert";
 
 /* eslint-disable react/prop-types */
 function QuantityInput({quantity,setQuantity,onUp=null, onDown=null,maxQuantity=100000}) {
@@ -23,6 +24,9 @@ function QuantityInput({quantity,setQuantity,onUp=null, onDown=null,maxQuantity=
         value={quantity}
         onChange={(e) => {
           if(/^-?\d+$/.test(e.target.value)){
+            if(Number(e.target.value) > maxQuantity){
+              return Toast.fire({icon: 'error',title: `Số lượng tối đa là ${maxQuantity}`})
+            }
             setQuantity(e.target.value)
           }
         }}

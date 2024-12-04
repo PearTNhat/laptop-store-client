@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 
 
-function InputField({nameKey,value,type='text',setPayload=()=>{},invalidField=[],onChange=null, setInvalidField,icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
+function InputField({nameKey,clsWrapInput=null,clsWrapIcon=null,value,type='text',setPayload=()=>{},invalidField=[],onChange=null, setInvalidField,icon, cssDiv, cssLabel, cssInput, placeholder ,...rest}) {
   const error = invalidField.find((item) => item.name === nameKey);
   const changeValueDefault = (e) => setPayload((prev) => ({ ...prev, [nameKey]: e.target.value }))
   return (
-    <div className={`${cssDiv} mb-3 relative`}>
+    <div className={`${cssDiv} relative`}>
         {
         (value===0 || value) &&
         <label htmlFor={nameKey} className={`${cssLabel}  select-none leading-none absolute z-10 bg-white text-gray-500 left-[9px] top-1/2 -translate-y-1/2 animate-slide-top-sm`}>
             {placeholder}
         </label>
         }
-        <div className="relative">
+        <div className={`relative ${clsWrapInput}`}>
           <input  
               id={nameKey}
               type={type} 
@@ -27,11 +27,11 @@ function InputField({nameKey,value,type='text',setPayload=()=>{},invalidField=[]
                   `}
               {...rest}
           />
-          <div className="absolute right-3 top-[50%] translate-y-[-50%] cursor-pointer">
+          <div className={`absolute w-fit ${clsWrapIcon} right-3 top-[50%] translate-y-[-50%] cursor-pointer`}>
             {icon}
           </div>
         </div>
-        {error && <small className="text-red-500">{error.mes}</small>}
+        {error && <small className="text-red-500 mt-3">{error.mes}</small>}
     </div>
   )
 }

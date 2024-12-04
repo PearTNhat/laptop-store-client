@@ -11,8 +11,6 @@ import Button from "~/components/Button";
 import { userActions } from "~/store/slice/userSlice";
 import { Toast } from "~/utils/alert";
 import Cart from "~/components/MyCart/Cart";
-import { fetchCurrentUser } from "~/store/action/user";
-import { useEffect } from "react";
 function Header() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -23,10 +21,6 @@ function Header() {
       title: "Logout successfully",
     });
   };
-  useEffect(() => {
-    console.log( user.accessToken)
-    dispatch(fetchCurrentUser({ token: user.accessToken }));
-  }, []);
   return (
     <div className="main-container py-[35px]">
       <div className="flex justify-between items-center">
@@ -51,30 +45,37 @@ function Header() {
               <MdEmail className="text-main mr-4" />
               <span className="font-semibold">abc.support@gmail.com</span>
             </div>
-            <div className="text-[12px] text-center">Online support 24/7</div>
+            <div className="text-[12px] text-center">Hỗ trợ 24/7</div>
           </div>
           {/* wishlist */}
-          <div className="px-[20px] border-r border-r-gray-300 flex h-[37.5px] items-center">
-            <FaRegHeart className="text-main cursor-pointer" />
-          </div>
+          {
+            user.accessToken && (
+            <Link to={path.USER_WISHLIST} className="px-[20px] border-r border-r-gray-300 flex h-[37.5px] items-center">
+                <FaRegHeart className="text-main cursor-pointer" />
+            </Link>
+            )
+          }
           {/* cart */}
-          <div
-            className={`px-[20px] relative group  ${
-              user.isLoggedIn && `border-r border-r-gray-300`
-            } text-gray-900 cursor-pointer flex h-[37.5px] items-center`}
-          >
-            <FaShoppingCart className="text-xl" />
-            {user.userData?.carts?.length > 0 &&(
-              <span className="absolute bg-main top-[2px] right-[11px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
-                {user.userData?.carts?.length}
-              </span>
-            )}
-            <div className=" group-hover:block dropdown py-2 px-1">
-                <Cart />
+          {user.accessToken && (
+            <div
+              className={`px-[20px] relative group  ${
+                user.accessToken && `border-r border-r-gray-300`
+              } text-gray-900 cursor-pointer flex h-[37.5px] items-center`}
+            >
+              <FaShoppingCart className="text-xl" />
+              {user.userData?.carts?.length > 0 && (
+                <span className="absolute bg-main top-[2px] right-[11px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
+                  {user.userData?.carts?.length}
+                </span>
+              )
+              }
+              <div className="group-hover:block dropdown py-2 px-1">
+                  <Cart />
+              </div>
             </div>
-          </div>
+          )}
           {/* User */}
-          {user.isLoggedIn && (
+          { user.accessToken && (
             <div className="pl-[20px]">
               <div className="w-[40px] h-[40px]  cursor-pointer">
                 <div className="relative group h-full">
@@ -97,21 +98,23 @@ function Header() {
                       return (
                         <li
                           key={item.title}
-                          className={`hover:bg-gray-300 px-2 ${
+                          className={`hover:bg-gray-300 px-2 text-nowrap ${
                             i === userDropdown.length - 1
                               ? ""
                               : "border-gray-300 border-b"
                           }`}
                         >
-                          {item.title === "Logout" ? (
+                          {item.title === "Đăng xuất" ? (
                             <Button
                               className={
                                 "flex justify-between items-center gap-5 !bg-transparent !text-black"
                               }
                               onClick={() => item?.onClick(handleLogout)}
                             >
+                              <p className=" text-right text-sm w-[70px]">
+                                {item.title}
+                              </p>
                               {item.icon}
-                              {item.title}
                             </Button>
                           ) : (
                             <Button
@@ -120,8 +123,10 @@ function Header() {
                                 "flex justify-between items-center gap-5 !bg-transparent !text-black"
                               }
                             >
-                              {item.icon}
+                              <p className=" text-right text-sm w-[70px]">
                               {item.title}
+                              </p>
+                              {item.icon}
                             </Button>
                           )}
                         </li>

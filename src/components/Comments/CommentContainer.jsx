@@ -4,7 +4,7 @@ import { appActions } from "~/store/slice/app"
 import Button from "../Button"
 import VoteBar from "./VoteBar"
 import RatingModal from "./RatingModal"
-import { memo, useCallback, useEffect, useMemo, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import Swal from "sweetalert2"
 import { useNavigate } from "react-router-dom"
 import { apiCreateComment, apiDeleteComment, apiLikeComment, apiUpdateComment } from "~/apis/comments"
@@ -85,11 +85,11 @@ function CommentContainer({ title, pId, comments, totalRating,setFetchAgain }) {
   }
   const handleClickShowModalRating = useCallback(async() => {
     if( !await requireLogin()) return
-    dispatch(appActions.toggleModal({ isShowModal: true, childrenModal: <RatingModal title={title} handleSubmitComment={handleSubmitComment} /> }))
+    dispatch(appActions.toggleModal({ isShowModal: true,animation:true, childrenModal: <RatingModal title={title} handleSubmitComment={handleSubmitComment} /> }))
   }, [title])
   const handleShowModalUpdateRating = useCallback(async () => {
     if( !await requireLogin()) return
-    dispatch(appActions.toggleModal({ isShowModal: true, childrenModal: <RatingModal title={title} rating = {rated.rating} content={rated.content} handleSubmitComment={({rating,content})=>handleUpdateComment({rating,content,commentId:rated._id})} /> }))
+    dispatch(appActions.toggleModal({ isShowModal: true,animation:true, childrenModal: <RatingModal title={title} rating = {rated.rating} content={rated.content} handleSubmitComment={({rating,content})=>handleUpdateComment({rating,content,commentId:rated._id})} /> }))
   }, [rated])
   useEffect(() => {
     setRated(comments?.find((comment) => comment.user._id === userData._id))
@@ -102,7 +102,7 @@ function CommentContainer({ title, pId, comments, totalRating,setFetchAgain }) {
           <YourRating comment={rated} handleShowModalUpdateRating={handleShowModalUpdateRating} handleDeleteComment={handleDeleteComment} /> 
         :
         <div className="flex justify-center">
-          <Button onClick={handleClickShowModalRating}>Rating now</Button>
+          <Button onClick={handleClickShowModalRating}>Đánh giá ngay</Button>
         </div>
         // <Comment
         // />     

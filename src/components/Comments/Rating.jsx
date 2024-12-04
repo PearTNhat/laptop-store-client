@@ -6,7 +6,7 @@ function Rating({number,numberOfReviews,totalReviews}) {
   const barRef = useRef()
   useEffect(()=>{
   barRef.current.style.right = `${100-(numberOfReviews/totalReviews || 0)*100}%`
-  },[totalReviews])
+  },[totalReviews,numberOfReviews])
   return (
     <div className="flex items-center">
         <div className="flex items-center justify-between font-medium gap-1 w-[5%] text-sm">

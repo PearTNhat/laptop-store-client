@@ -9,7 +9,7 @@ function SideBar() {
   const [activeDropdown, setActiveDropdown] = useState([])
   const {pathname} = useLocation()
   return (
-    <div className="">
+    <div className="  ">
       <div className="pb-4">
         <Link to='/'>
           <img src={Logo} alt="logo" className="mx-auto" />

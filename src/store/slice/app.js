@@ -5,11 +5,13 @@ const appSlice = createSlice({
     initialState: {
         isShowModal: false,
         childrenModal: null,
+        animation:false
     },
     reducers: {
         toggleModal: (state,action) => {
             state.isShowModal = action.payload.isShowModal;
             state.childrenModal = action.payload.childrenModal
+            state.animation = action.payload.animation
         },
     },
 });

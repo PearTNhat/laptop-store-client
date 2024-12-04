@@ -58,7 +58,7 @@ function UserInfo() {
   return (
     <div>
       <div className="bg-gray-100 h-[60px]">
-        <h1 className="text-2xl font-semibold p-3">Personal</h1>
+        <h1 className="text-2xl font-semibold p-3">Thông tin</h1>
       </div>
       <div className="max-w-[600px] mx-auto">
         <form onSubmit={handleSubmit(handleSubmitUserInfo)}>
@@ -91,17 +91,17 @@ function UserInfo() {
           <div className="flex gap-2 mt-2">
             <InputForm
               id="firstName"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không được để trống" }}
               cssParents="flex-1"
-              label="First name"
+              label="Họ"
               register={register}
               error={errors}
             />
             <InputForm
               id="lastName"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không được để trống" }}
               cssParents="flex-1"
-              label="Last name"
+              label="Tên"
               register={register}
               error={errors}
             />
@@ -109,7 +109,7 @@ function UserInfo() {
           <div className="flex gap-2 mt-2">
             <InputForm
               id="email"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không được để trống" }}
               cssParents="flex-1"
               label="Email"
               register={register}
@@ -117,24 +117,24 @@ function UserInfo() {
             />
             <InputForm
               id="phone"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không được để trống" }}
               cssParents="flex-1"
-              label="Phone"
+              label="Số điện thoại"
               register={register}
               error={errors}
             />
           </div>
           <InputForm
               id="address"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không được để trống" }}
               cssParents="flex-1"
-              label="Address"
+              label="Địa chỉ"
               register={register}
               error={errors}
             />
-          <p className="mt-2 capitalize">Role: {userData?.role}</p>
+          <p className="mt-2 capitalize">Vai trò: {userData?.role}</p>
           <p className="mt-2">
-            Create at: {moment(userData.createdAt).format("DD/MM/YYYY HH:mm")}
+            Ngày tạo: {moment(userData.createdAt).format("DD/MM/YYYY HH:mm")}
           </p>
           <div className="flex justify-center">
             <button
@@ -142,7 +142,7 @@ function UserInfo() {
               className="bg-primary text-white py-2 px-10 rounded-md mt-2"
               disabled={!isDirty}
             >
-              Submit
+              Lưu
             </button>
           </div>
         </form>

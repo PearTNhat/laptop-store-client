@@ -5,17 +5,17 @@ import { FaUserCircle } from "react-icons/fa";
 import { GrUserAdmin } from "react-icons/gr";
 export const userDropdown = [
     {
-        title: 'Profile',
+        title: 'Thông tin',
         navigation: `${path.USER_PROFILE}`,
         icon: React.createElement(FaUserCircle),
     },
     {
-        title: 'Admin',
+        title: 'Quản lý',
         navigation: `${path.ADMIN}`,
         icon: React.createElement(GrUserAdmin),
     },
     {
-        title: 'Logout',
+        title: 'Đăng xuất',
         icon:  React.createElement(CiLogout),
         onClick: (func) => {
             return func()

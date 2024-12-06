@@ -1,12 +1,22 @@
 /* eslint-disable react/prop-types */
+import {  useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 import { Logo } from '~/assets/images'
 import Button from '~/components/Button'
 import { appActions } from '~/store/slice/app'
 
-function DescriptionModal({desc, setDesc}) {
+function DescriptionModal({currentParams}) {
   const dispatch = useDispatch()
+  const [desc, setDesc] = useState(currentParams?.desc)
+  const [ ,setSearchParams] = useSearchParams();
+  const handleSearch = async ()=>{
+    const params = { ...currentParams, desc };
+    if(!desc) delete params.desc
+    setSearchParams(params)
+    dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))
+  }
   return (
     <div className="w-[600px] bg-white rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
     <div className="relative py-3 bg-gray-100 text-bl">
@@ -21,7 +31,7 @@ function DescriptionModal({desc, setDesc}) {
       value={desc} 
       onChange={(e)=>setDesc(e.target.value)}
       className="w-full border border-gray-300 rounded-sm p-1 focus:outline-none mt-1" rows="4"></textarea>
-      <Button wf className={'my-4'}>Tìm kiếm</Button>
+      <Button wf className={'my-4'} onClick={handleSearch}>Tìm kiếm</Button>
     </div>
 
   </div>

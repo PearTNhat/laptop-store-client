@@ -2,11 +2,11 @@
 //import { useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
-export default function MarkDownEditor({label,value='',changeValue,name,height,invalidField,setInvalidField}) {
+export default function MarkDownEditor({label,value='',changeValue,name,height,invalidField,setInvalidField,iconRequire}) {
   const error = invalidField?.find((item) => item.name === name);
   return (
     <div>
-      <span>{label}</span>
+      <span>{iconRequire &&<span className='text-red-500'>*</span>}{label}</span>
       <Editor
         apiKey='j9p5nmemoud9rzhrgc1gjydlx1t1x0t14wsstn6ccmb3cmya'
         initialValue={value}

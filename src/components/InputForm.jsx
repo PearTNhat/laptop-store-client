@@ -1,10 +1,12 @@
 import { memo } from "react"
 
 /* eslint-disable react/prop-types */
-function InputForm({cssParents,id,validate,label,register,error,...rest}) {
+function InputForm({cssParents,id,validate,iconRequire,label,register,error,...rest}) {
   return (
     <div className={cssParents + ' mt-1'}>
-        {label && <label htmlFor={id}>{label}</label>}
+        {label && <label htmlFor={id}>
+          {iconRequire && <span className="text-red-500">*</span>}
+          {label}</label>}
         <input 
             type="text"
             id={id} 

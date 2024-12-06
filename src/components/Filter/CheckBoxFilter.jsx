@@ -18,12 +18,10 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
     if (name !== activeFilter) return;
     const search = { ...currentParams };
     if (filter[name]?.length) {
-      console.log(filter[name])
       search[name] = filter[name].join(",");
     } else {
       delete search[name];
     }
-    console.log('search',search)    
     setSearchParams(search)
     // cần dependency activeFilter để chọn vào cái nào thì search ngay cái đó
   }, [filter, activeFilter]);

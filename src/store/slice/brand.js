@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchBrands } from "../action/brand";
+import { getValueLabel } from "~/utils/helper";
 
 const brandSlice = createSlice({
     name: "brand",
@@ -14,7 +15,7 @@ const brandSlice = createSlice({
         })
         builder.addCase(fetchBrands.fulfilled,(state,action) =>{
             state.isLoading = false
-            state.brands = action.payload
+            state.brands = getValueLabel(action.payload) 
         })
         builder.addCase(fetchBrands.rejected,(state) =>{
             state.isLoading = false

@@ -488,12 +488,14 @@ function MangeProduct() {
                                           <div className="flex items-center text-[16px]">
                                             {/* Edit */}
                                             <button
+                                              type="button"
                                               className={`mr-3 ${
                                                 isEditProduct === product._id
                                                   ? "text-red-600 hover:text-red-900"
                                                   : "text-yellow-400 hover:text-yellow-600"
                                               } `}
-                                              onClick={() => {
+                                              onClick={(e) => {
+                                                e.stopPropagation();
                                                 if (isEditProduct) {
                                                   setIsEditProduct(null);
                                                 } else {
@@ -513,6 +515,7 @@ function MangeProduct() {
                                             </button>
                                             {/* Delete */}
                                             <button
+                                              type="button"
                                               className="p-2 text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
                                               onClick={() =>
                                                 handleDeleteProductOrder({

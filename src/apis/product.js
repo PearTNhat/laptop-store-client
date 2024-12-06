@@ -1,6 +1,6 @@
 import { http } from "~/utils/http"
 
-const getAllProducts = async ({params}) => {
+const getAllProducts = async ({ params }) => {
     try {
         const { data } = await http.get('product', { params })
         return data
@@ -22,15 +22,32 @@ const getProduct = async ({ slug }) => {
         throw new Error(error.message)
     }
 }
-const createProduct = async ({accessToken,formData}) => {
+const createProduct = async ({ accessToken, formData }) => {
     try {
-        const config ={
+        const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${accessToken}`
             }
         }
-        const {data} = await http.post('product',formData,config)
+        const { data } = await http.post('product', formData, config)
+        return data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data.message
+        }
+        return error.message
+    }
+}
+const createProductColor = async ({ accessToken, slug, formData }) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        }
+        const { data } = await http.post(`product/create-color/${slug}`, formData, config)
         return data
     } catch (error) {
         if (error.response && error.response.data) {
@@ -39,32 +56,15 @@ const createProduct = async ({accessToken,formData}) => {
         throw new Error(error.message)
     }
 }
-const createProductColor = async ({accessToken,slug,formData}) => {
+const updateProduct = async ({ accessToken, slug, formData }) => {
     try {
-        const config ={
+        const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${accessToken}`
             }
         }
-        const {data} = await http.post(`product/create-color/${slug}`,formData,config)
-        return data
-    } catch (error) {
-        if (error.response && error.response.data) {
-            throw new Error(error.response.data.message)
-        }
-        throw new Error(error.message)
-    }
-}
-const updateProduct = async ({accessToken,slug,formData}) => {
-    try {
-        const config ={
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                 'Authorization': `Bearer ${accessToken}`
-            }
-        }
-        const {data} = await http.put(`product/update/${slug}`,formData,config)
+        const { data } = await http.put(`product/update/${slug}`, formData, config)
         return data
     }
     catch (error) {
@@ -74,16 +74,16 @@ const updateProduct = async ({accessToken,slug,formData}) => {
         throw new Error(error.message)
     }
 }
-const updateProductColor = async ({accessToken,slug,formData,params}) => {
+const updateProductColor = async ({ accessToken, slug, formData, params }) => {
     try {
-        const config ={
+        const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                 'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${accessToken}`
             },
             params
         }
-        const {data} = await http.put(`product/update-product-color/${slug}`,formData,config)
+        const { data } = await http.put(`product/update-product-color/${slug}`, formData, config)
         return data
     }
     catch (error) {
@@ -93,4 +93,4 @@ const updateProductColor = async ({accessToken,slug,formData,params}) => {
         throw new Error(error.message)
     }
 }
-export { getAllProducts,getProduct,createProduct ,createProductColor,updateProduct,updateProductColor}
+export { getAllProducts, getProduct, createProduct, createProductColor, updateProduct, updateProductColor }

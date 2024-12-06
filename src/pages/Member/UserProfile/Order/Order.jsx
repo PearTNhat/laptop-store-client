@@ -8,6 +8,7 @@ import InputField from "~/components/InputField";
 import Pagination from "~/components/Pagination";
 import { useDebounce } from "~/hook/useDebounce";
 import { formatNumber } from "~/utils/helper";
+import { orderStatus } from "~/constants/order";
 const status = [
   { value: "Pending", label: "Pending" },
   { value: "Succeed", label: "Succeed" },
@@ -93,7 +94,6 @@ function Order() {
               <th className="p-2">#</th>
               <th className="p-2">Ảnh</th>
               <th className="p-2">Tên</th>
-              <th className="p-2">Địa chỉ</th>
               <th className="p-2">Số lượng</th>
               <th className="p-2">Giá</th>
               <th className="p-2">Trạng thái</th>
@@ -146,7 +146,7 @@ function Order() {
                                   : "text-green-500"
                               }`}
                             >
-                              {p.status}
+                              {orderStatus[p.status] }
                             </p>
                           </td>
                         </tr>

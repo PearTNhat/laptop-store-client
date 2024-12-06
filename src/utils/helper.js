@@ -185,6 +185,9 @@ const convertObjToValueLabel = (obj) => {
     return { value:key, label:value };
   });
 }
+const getValueLabel = (obj) => {
+  return obj.map(item=> ({value:item._id, label:item.title}));
+}
 export {
   calculatePercent,
   formatNumber,
@@ -194,5 +197,6 @@ export {
   covertMoneyToNumber,
   toBase64,
   capitalizeFirstCharacter,
-  convertObjToValueLabel
+  convertObjToValueLabel,
+  getValueLabel
 };

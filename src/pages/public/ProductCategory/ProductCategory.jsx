@@ -7,11 +7,12 @@ import InputOrCheckBoxFilter from "~/components/Filter/InputOrCheckBoxFilter";
 import SelectionFilter from "~/components/Filter/SelectionFilter";
 import Pagination from "~/components/Pagination";
 import { AiIcon } from "~/assets/images";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { appActions } from "~/store/slice/app";
 import DescriptionModal from "./component/DescriptionModal";
 import { fetchBrands } from "~/store/action/brand";
 import CheckBoxFilter from "~/components/Filter/CheckBoxFilter";
+import Loading from "~/components/Loading";
 const colors = [
   { value: "Titan Đen", label: "Titan Đen" },
   { value: "Titan Trắng", label: "Titan Trắng" },
@@ -24,10 +25,10 @@ const rams = [
   { value: "32GB", label: "32GB" },
   { value: "64GB", label: "64GB" },
 ];
-const LIMIT = 10;
+const LIMIT = 12;
 function ProductCategory() {
   const dispatch = useDispatch();
-  const { brands } = useSelector((state) => state.brand);
+  // const { brands } = useSelector((state) => state.brand);
   const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,8 +39,10 @@ function ProductCategory() {
   );
   const fetchProductCategory = async (filter) => {
     const params = { ...filter };
+    dispatch(appActions.toggleModal({ isShowModal: true,animation:false,childrenModal: <Loading /> }));
     const response = await getAllProducts({ params });
-    const totalPage = Math.ceil(response.counts / 10) || 1;
+    dispatch(appActions.toggleModal({ isShowModal: false,childrenModal: null }));
+    const totalPage = Math.ceil(response.counts / 12) || 1;
     if (response.success) {
       setProducts(response.data);
       setTotalPageCount(totalPage);
@@ -49,11 +52,11 @@ function ProductCategory() {
     dispatch(
       appActions.toggleModal({
         isShowModal: true,
-        childrenModal: <DescriptionModal />,
+        animation:true,
+        childrenModal: <DescriptionModal currentParams={currentParams} />,
       })
     );
   };
-  console.log(brands);
   useEffect(() => {
     fetchProductCategory(currentParams);
   }, [currentParams]);

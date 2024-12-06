@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import Swal from 'sweetalert2';
 import { apiRefreshToken } from '~/apis/user';
 import { store } from '~/store';
+import { appActions } from '~/store/slice/app';
 import { userActions } from '~/store/slice/userSlice';
 export const http = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
@@ -21,6 +22,9 @@ http.interceptors.request.use(async function (config) {
   const dispatch= store.dispatch
   if(decodeAccessToken.exp < currentTime){
     console.log('Token expired')
+    dispatch(
+      appActions.toggleModal({ isShowModal: false, childrenModal: null })
+    );
     const res = await apiRefreshToken(accessToken)
     if(res?.success){
       config.headers.Authorization = `Bearer ${res.accessToken}`

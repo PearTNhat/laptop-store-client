@@ -2,9 +2,9 @@
 import { useDispatch } from "react-redux";
 import { appActions } from "~/store/slice/app";
 function Modal({ children ,animation=false }) {
-  console.log(animation)
   const dispatch = useDispatch();
   const handleClickModal = () => {
+    // e.stopPagination();
     dispatch(
       appActions.toggleModal({ isShowModal: false, childrenModal: null })
     );
@@ -15,7 +15,7 @@ function Modal({ children ,animation=false }) {
       onClick={handleClickModal}
     >
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className={`h-full flex items-center ${animation && 'animate-slide-in-left'}`}>
+      <div className={`h-full flex items-center ${animation && 'animate-slide-in-left'} z-[9999]`}>
         {children}
       </div>
     </div>

@@ -19,8 +19,8 @@ http.interceptors.request.use(async function (config) {
   if(!accessToken) return config
   const decodeAccessToken = jwtDecode(accessToken)
   const currentTime = Date.now()/1000
-  const dispatch= store.dispatch
   if(decodeAccessToken.exp < currentTime){
+    const dispatch= store.dispatch
     console.log('Token expired')
     dispatch(
       appActions.toggleModal({ isShowModal: false, childrenModal: null })

@@ -34,7 +34,7 @@ const createProduct = async ({ accessToken, formData }) => {
         return data
     } catch (error) {
         if (error.response && error.response.data) {
-            return error.response.data.message
+            return error.response.data
         }
         return error.message
     }
@@ -45,7 +45,8 @@ const createProductColor = async ({ accessToken, slug, formData }) => {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${accessToken}`
-            }
+            },
+            timeout: 50000
         }
         const { data } = await http.post(`product/create-color/${slug}`, formData, config)
         return data
@@ -93,4 +94,44 @@ const updateProductColor = async ({ accessToken, slug, formData, params }) => {
         throw new Error(error.message)
     }
 }
-export { getAllProducts, getProduct, createProduct, createProductColor, updateProduct, updateProductColor }
+const apiDeleteProduct = async ({ accessToken, pId }) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        }
+        const { data } = await http.delete(`product/${pId}`, config)
+        return data
+    }
+    catch (error) {
+        if (error.response && error.response.data) {
+            return (error.response.data)
+        }
+        throw new Error(error.message)
+    }
+}
+const apiDeleteProductColor = async ({ accessToken, pId, cId }) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${accessToken}`
+            },
+        }
+        const { data } = await http.delete(`product/${pId}/${cId}`, config)
+        return data
+    }
+    catch (error) {
+        if (error.response && error.response.data) {
+            return (error.response.data)
+        }
+        throw new Error(error.message)
+    }
+}
+export {
+    getAllProducts, getProduct, createProduct,
+    createProductColor, updateProduct,
+    updateProductColor, apiDeleteProduct, apiDeleteProductColor
+}

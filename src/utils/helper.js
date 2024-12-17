@@ -9,12 +9,14 @@ const calculatePercent = (price, priceDiscount) => {
   return Math.round(((price - priceDiscount) / price) * 100);
 };
 const formatNumber = (number) => {
-  if (!number || number === 0) {
+  let numberParse=Number(number);
+  if (!numberParse || numberParse === 0) {
     return 0;
   }
-  return number.toLocaleString("de-DE");
+  return numberParse.toLocaleString("de-DE");
 };
 const covertMoneyToNumber = (money) => {
+  if (!money) return 0;
   const cleanedStr = money.replace(/\./g, ""); // Loại bỏ dấu chấm
   return Number(cleanedStr);
 }
@@ -48,14 +50,33 @@ const validateForm = (payload, setInvalidField) => {
   setInvalidField([]);
   const formatPayload = Object.entries(payload);
   for (let arr of formatPayload) {
-    console.log('arr', arr)
     switch (arr[0]) {
+      case "brand":
+        if (arr[1].trim() === "") {
+          invalid++;
+          setInvalidField((prev) => [
+            ...prev,
+            { name: "brand", mes: "Yêu cầu thương hiệu" },
+          ]);
+          break;
+        }
+        break;
+        case "series":
+          if (arr[1].trim() === "") {
+            invalid++;
+            setInvalidField((prev) => [
+              ...prev,
+              { name: "series", mes: "Yêu cầu dòng sản phẩm" },
+            ]);
+            break;
+          }
+          break;
       case "firstName":
         if (arr[1].trim() === "") {
           invalid++;
           setInvalidField((prev) => [
             ...prev,
-            { name: "firstName", mes: "First name is required" },
+            { name: "firstName", mes: "Yêu cầu họ" },
           ]);
           break;
         }
@@ -181,12 +202,12 @@ function capitalizeFirstCharacter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 const convertObjToValueLabel = (obj) => {
-  return Object.entries(obj).map(([key,value]) => {
-    return { value:key, label:value };
+  return Object.entries(obj).map(([key, value]) => {
+    return { value: key, label: value };
   });
 }
 const getValueLabel = (obj) => {
-  return obj.map(item=> ({value:item._id, label:item.title}));
+  return obj.map(item => ({ value: item._id, label: item.title }));
 }
 export {
   calculatePercent,

@@ -174,12 +174,13 @@ body{
     height: 50px;
 }
 
-.css-13cymwt-control{
-    height: 100% !important;
-}
 .short-desc ul{
     padding: 0 20px;
 }
 .short-desc ul li{
     list-style-type: circle;
+}
+
+.react-select__control{
+    height: 45px !important;
 }

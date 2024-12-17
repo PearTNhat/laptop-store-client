@@ -21,7 +21,7 @@ import { convertObjToValueLabel, formatNumber } from "~/utils/helper";
 import Swal from "sweetalert2";
 import { MdCancel } from "react-icons/md";
 import InputForm from "~/components/InputForm";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 const tableHeaderTitleList = [
   "#",
   "Mã đơn",
@@ -198,7 +198,7 @@ function MangeProduct() {
   }, [currentPage, debounceSearch]);
   return (
     <div className="h-screen overflow-auto">
-      <h1 className="text-2xl font-semibold">Quản lý sản phẩm</h1>
+      <h1 className="text-2xl font-semibold">Quản lý đơn hàng</h1>
       <div className="">
         <form onSubmit={handleSubmit(handleUpdateInfoOrder)}>
           <div className="flex justify-end mr-4 gap-3">

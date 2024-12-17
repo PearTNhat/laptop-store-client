@@ -111,6 +111,7 @@ function Login() {
           </h3>
           <InputField
             setInvalidField={setInvalidField}
+            cssDiv="mb-2"
             placeholder={"Email"}
             value={payload.email}
             nameKey={"email"}
@@ -120,9 +121,9 @@ function Login() {
           />
           <InputField
             setInvalidField={setInvalidField}
+            cssDiv="mb-2"
             placeholder={"Mật khẩu"}
             type={`${isShowPassword ? "text" : "password"}`}
-  
             value={payload.password}
             nameKey={"password"}
             invalidField={invalidField}

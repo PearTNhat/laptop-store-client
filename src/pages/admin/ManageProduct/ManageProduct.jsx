@@ -3,19 +3,25 @@ import moment from "moment";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import SelectItem from "~/components/SelectItem";
-import { getAllProducts } from "~/apis/product";
+import { apiDeleteProduct, apiDeleteProductColor, getAllProducts } from "~/apis/product";
 import InputField from "~/components/InputField";
 import Pagination from "~/components/Pagination";
 import { useDebounce } from "~/hook/useDebounce";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { Toast } from "~/utils/alert";
+import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBrands } from "~/store/action/brand";
+import { apiGetSeriesBrand } from "~/apis/series";
+import { capitalizeFirstCharacter, formatNumber, getValueLabel } from "~/utils/helper";
 const tableHeaderTitleList = [
   "#",
   "Ảnh",
   "Tên",
   "Thương hiệu",
-  "Series",
+  "Dòng",
   "Giá",
   "Số lượng",
   "Đã bán",
@@ -24,12 +30,19 @@ const tableHeaderTitleList = [
   "Chức năng",
 ];
 function MangeProduct() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const [searchParams,setSearchParams] = useSearchParams();
+  const {accessToken} = useSelector(state=>state.user)
+  const {brands} = useSelector(state=>state.brand)
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [totalPageCount, setTotalPageCount] = useState(0);
+  const [listSeries, setListSeries] = useState([]);
   const [filter, setFilter] = useState({
     title: "",
+    brand: "",
+    series: "",
+    brandId: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const currentParams = useMemo(
@@ -38,7 +51,7 @@ function MangeProduct() {
   );
   const fetchAllProduct = async (params) => {
     const response = await getAllProducts({
-      params: { ...params, showAll: true },
+      params: { ...params,limit:10, showAll: true },
     });
     if (response.success) {
       const totalPage = Math.ceil(response.counts / 10);
@@ -47,6 +60,65 @@ function MangeProduct() {
       }
       setTotalPageCount(totalPage);
       setProducts(response.data);
+    }
+  };
+  const getSerieBrand = async (brandId) => {
+    const response = await apiGetSeriesBrand({ brandId });
+    return response;
+  };
+  const deleteProduct = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Bạn có muốn xóa sản phẩm này không",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Hủy",
+        confirmButtonText: "Đồng ý",
+      });
+      if (result.isDismissed) return;
+      if (result.isConfirmed) {
+        const res = await apiDeleteProduct({accessToken, pId: id });
+        console.log(res)
+        if (res.success) {
+          fetchAllProduct(currentParams)
+          return Toast.fire({
+            icon: "success",
+            title: "Xoá sản phẩm thành công",
+          });
+        }
+        return Toast.fire({ icon: "error", title: "Xảy ra lỗi khi xóa" });
+      }
+    } catch (error) {
+      return Toast.fire({ icon: "error", title: error.message });
+    }
+  };
+  const deleteProductColor = async ({ pId, cId }) => {
+    try {
+      const result = await Swal.fire({
+        title: "Bạn có muốn xóa sản phẩm này không",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Hủy",
+        confirmButtonText: "Đồng ý",
+      });
+      if (result.isDismissed) return;
+      if (result.isConfirmed) {
+        const res = await apiDeleteProductColor({accessToken, pId, cId });
+        if (res.success) {
+          fetchAllProduct(currentParams)
+          return Toast.fire({
+            icon: "success",
+            title: "Xoá sản phẩm thành công",
+          });
+        }
+        return Toast.fire({ icon: "error", title: "Xảy ra lỗi khi xóa" });
+      }
+    } catch (error) {
+      return Toast.fire({ icon: "error", title: error.message });
     }
   };
   const handleRowClick = (product) => {
@@ -70,6 +142,18 @@ function MangeProduct() {
     const search = {};
     if (filter.title) {
       search.title = filter.title;
+    }else{
+      delete search.title
+    }
+    if (filter.brand) {
+      search.brand = filter.brand;
+    }else{
+      delete search.brand
+    }
+    if (filter.series) {
+      search.series = filter.series;
+    }else{
+      delete search.series
     }
     if (!search) return;
     fetchAllProduct({ ...params, ...search });
@@ -79,8 +163,20 @@ function MangeProduct() {
       ...currentParams,
       page: currentPage,
       title: debounceSearch,
+      brand: filter.brand,
+      series: filter.series,
     });
-  }, [currentPage, debounceSearch]);
+  }, [currentPage, debounceSearch,filter.brand,filter.series]);
+  useEffect(() => {
+    if (filter.brandId) {
+      getSerieBrand(filter.brandId).then((data) => {
+        setListSeries(getValueLabel(data.data));
+      });
+    }
+  }, [filter.brandId]);
+   useEffect(() => {
+      dispatch(fetchBrands());
+    }, []);
   return (
     <div className="h-screen overflow-auto">
       <h1 className="text-2xl font-semibold">Quản lý sản phẩm</h1>
@@ -92,29 +188,21 @@ function MangeProduct() {
               isClearable
               isSearchable
               placeholder="Chọn thương hiệu"
-              options={[
-                { value: "8GB", label: "8GB" },
-                { value: "16GB", label: "16GB" },
-                { value: "32GB", label: "32GB" },
-                { value: "64GB", label: "64GB" },
-              ]}
+              options={brands}
               onChange={(data) => {
-                // setFilter((prev) => ({ ...prev, status: data?.value }));
+                setListSeries([]);
+                setFilter((prev) => ({ ...prev,series:'',seriesValue:'' ,brand: data?.label?.toLowerCase() || '', brandId: data?.value || '' }));
               }}
             />
             <SelectItem
               className="z-50"
               isClearable
               isSearchable
+              value={{label:filter.seriesValue,value:filter.series}}
               placeholder="Chọn series"
-              options={[
-                { value: "8GB", label: "8GB" },
-                { value: "16GB", label: "16GB" },
-                { value: "32GB", label: "32GB" },
-                { value: "64GB", label: "64GB" },
-              ]}
+              options={listSeries}
               onChange={(data) => {
-                // setFilter((prev) => ({ ...prev, status: data?.value }));
+                setFilter((prev) => ({ ...prev, series: data?.value, seriesValue: data?.label }));
               }}
             />
             <InputField
@@ -175,19 +263,19 @@ function MangeProduct() {
                           <p className="line-clamp-2">{p.title}</p>
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {p.brand}
+                          {capitalizeFirstCharacter(p.brand)}
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {p.series}
+                          {p.series?.title}
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {p.discountPrice}
+                          {formatNumber(Number(p.discountPrice))}đ
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {p.quantity}
+                          {formatNumber(Number(p.quantity))}
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
-                          {p.soldQuantity}
+                          {formatNumber(p.soldQuantity)}
                         </td>
                         <td className="p-1 border-gray-200 border-b text-sm">
                           {p.totalRating}
@@ -203,20 +291,22 @@ function MangeProduct() {
                               className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
                               to={`/admin/manage/products/edit/${p.slug}`}
                             >
-                              <FaRegEdit />
+                              <FaRegEdit className="text-[18px]"/>
                             </Link>
                             <Link
                               className="mr-3 text-green-400 hover:text-green-900 disabled:opacity-70  hover:underline`}"
                               to={`/admin/manage/products/create-color/${p.slug}`}
                             >
-                              <IoMdAddCircleOutline />
+                              <IoMdAddCircleOutline className="text-[18px]"/>
                             </Link>
-                            <Link
-                              className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
-                              to={`/admin/manage/products/delete/${p.slug}`}
+                            <button className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
+                            onClick={(e)=>{
+                              e.stopPropagation()
+                              deleteProduct(p._id)
+                            }}
                             >
-                              <FaRegTrashAlt />
-                            </Link>
+                              <FaRegTrashAlt className="text-[18px]" />
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -268,10 +358,10 @@ function MangeProduct() {
                                       </div>
                                     </td>
                                     <td className="p-2 border-gray-200 border-b text-sm">
-                                      {color.quantity}
+                                      {formatNumber(Number(color.quantity))}
                                     </td>
                                     <td className="p-2 border-gray-200 border-b text-sm">
-                                      {color.soldQuantity}
+                                      {formatNumber(Number(color.soldQuantity))}
                                     </td>
                                     <td>
                                       <div className="flex items-center text-[16px]">
@@ -279,14 +369,15 @@ function MangeProduct() {
                                           className={`mr-3 text-yellow-400 hover:text-yellow-600 hover:underline`}
                                           to={`/admin/manage/products/edit-color/${p.slug}/${color._id}`}
                                         >
-                                          <FaRegEdit />
+                                          <FaRegEdit className="text-[18px]" />
                                         </Link>
-                                        <Link
+                                        <button
+                                          title="Xoá màu sắc"
                                           className=" text-red-600 hover:text-red-900 disabled:opacity-70  hover:underline`}"
-                                          to={`/admin/manage/products/delete-color/${p.slug}`}
+                                          onClick={()=>deleteProductColor({pId:p._id,cId:color._id})}
                                         >
-                                          <FaRegTrashAlt />
-                                        </Link>
+                                          <FaRegTrashAlt className="text-[18px]"/>
+                                        </button>
                                       </div>
                                     </td>
                                   </tr>

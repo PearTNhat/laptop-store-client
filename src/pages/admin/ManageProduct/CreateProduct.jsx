@@ -1,10 +1,15 @@
 import { useForm } from "react-hook-form";
 import InputForm from "~/components/InputForm";
-import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import MarkDownEditor from "~/components/MarkDownEditor";
-import { getValueLabel, toBase64, validateForm } from "~/utils/helper";
+import {
+  covertMoneyToNumber,
+  formatNumber,
+  getValueLabel,
+  toBase64,
+  validateForm,
+} from "~/utils/helper";
 import { createProduct } from "~/apis/product";
 import { Toast } from "~/utils/alert";
 import { fetchBrands } from "~/store/action/brand";
@@ -12,6 +17,7 @@ import { appActions } from "~/store/slice/app";
 import Loading from "~/components/Loading";
 import { apiGetSeriesBrand } from "~/apis/series";
 import { HiOutlineCamera } from "react-icons/hi";
+import SelectItem from "~/components/SelectItem";
 function CreateProduct() {
   const dispatch = useDispatch();
   const [invalidField, setInvalidField] = useState([]);
@@ -20,17 +26,18 @@ function CreateProduct() {
   const [thumbPreview, setThumbPreview] = useState(null);
   const [listSeires, setListSeries] = useState([]);
   const [payload, setPayload] = useState({
-    connectionPort: "",
+    connectionPort: "1 x USB 3.2 Gen 2 Type-C (10 Gbps, DisplayPort 1.4, Power Delivery 3.0), 1 x USB 3.2 Gen 1 Type-A, 2 x USB 2.0 Type-A, 1 x HDMI 2.1, 1 x Ethernet (RJ-45), 1 x headphone / microphone combo jack (3.5mm)",
     brand: "",
     series: "",
-    description: "",
+    features:'Laptop Gaming Dell G15 5510 i5 11400H/8GB/512GB/RTX 3050 Ti/15.6 inch FHD/Win 10',
+    description: "Laptop Gaming Dell G15 5510 i5 11400H/8GB/512GB/RTX 3050 Ti/15.6 inch FHD/Win 10",
   });
-  console.log(payload);
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm();
   const getSerieBrand = async (brandId) => {
     const response = await apiGetSeriesBrand({ brandId });
@@ -39,7 +46,10 @@ function CreateProduct() {
   const onSubmitNewProduct = async (data) => {
     try {
       const invalid = validateForm({ ...payload }, setInvalidField);
-      if (invalid > 0) return;
+      if (invalid > 0) {
+        Toast.fire({icon:'error',title:'Vui lòng điền đầy đủ thông tin'})
+        return
+      }
       const formData = new FormData();
       let { title, price, discountPrice, thumb, ...rest } = data;
       formData.append("primaryImage", thumb[0]);
@@ -64,10 +74,20 @@ function CreateProduct() {
       configs.screenTechnology.description = payload.screenTechnology;
       configs.audioTechnology = {};
       configs.audioTechnology.description = payload.audioTechnology;
-      delete payload.brand;
+      // delete payload.brand;
+      delete payload.series;
+      payload.brand = payload.brand.toLowerCase();
+      payload.series =payload.seriesId;
       formData.append(
         "document",
-        JSON.stringify({ title, price, discountPrice, configs, ...payload })
+        JSON.stringify({
+          title,
+          features: [payload.features],
+          price: covertMoneyToNumber(price),
+          discountPrice: covertMoneyToNumber(discountPrice),
+          configs,
+          ...payload,
+        })
       );
       dispatch(
         appActions.toggleModal({
@@ -94,6 +114,7 @@ function CreateProduct() {
       dispatch(
         appActions.toggleModal({ isShowModal: false, childrenModal: null })
       );
+      return Toast.fire({ icon: "error", title: error.message });
     }
   };
   const price = watch("price");
@@ -108,15 +129,14 @@ function CreateProduct() {
     if (watch("thumb").length > 0) {
       handleThumbToPreview(watch("thumb")[0]);
     }
-    console.log("zpo");
   }, [watch("thumb")]);
   useEffect(() => {
-    if (payload.brand) {
-      getSerieBrand(payload.brand).then((data) => {
+    if (payload.brandId) {
+      getSerieBrand(payload.brandId).then((data) => {
         setListSeries(getValueLabel(data.data));
       });
     }
-  }, [payload.brand]);
+  }, [payload.brandId]);
   return (
     <div className="h-screen overflow-auto">
       <div className="bg-[#f7f7f7] ">
@@ -128,29 +148,38 @@ function CreateProduct() {
         <form onSubmit={handleSubmit(onSubmitNewProduct)}>
           <div className="flex gap-4">
             {/* img */}
-            <div className="relative w-[200px] h-[200px] outline outline-1 rounded-md overflow-hidden">
-              <label
-                htmlFor="profilePicture"
-                className="absolute inset-0 cursor-pointer rounded-md bg-transparent"
-              >
-                {thumbPreview ? (
-                  <img
-                    src={thumbPreview}
-                    alt="avatar"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-primary bg-blue-50/50">
-                    <HiOutlineCamera className="w-8 h-auto" />
-                  </div>
-                )}
-              </label>
-              <input
-                type="file"
-                id="profilePicture"
-                {...register("thumb", { required: "This image is required." })}
-                className="sr-only"
-              />
+            <div className="">
+              <div className="relative w-[200px] h-[200px] outline outline-1 rounded-md overflow-hidden">
+                <label
+                  htmlFor="profilePicture"
+                  className="absolute inset-0 cursor-pointer rounded-md bg-transparent"
+                >
+                  {thumbPreview ? (
+                    <img
+                      src={thumbPreview}
+                      alt="avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-primary bg-blue-50/50">
+                      <HiOutlineCamera className="w-8 h-auto" />
+                    </div>
+                  )}
+                </label>
+                <input
+                  type="file"
+                  id="profilePicture"
+                  {...register("thumb", {
+                    required: "This image is required.",
+                  })}
+                  className="sr-only"
+                />
+              </div>
+              {errors["thumb"] && (
+                <small className="text-red-500">
+                  {errors["thumb"].message}
+                </small>
+              )}
             </div>
             <div className="flex gap-3 flex-1 flex-wrap">
               <InputForm
@@ -159,6 +188,7 @@ function CreateProduct() {
                 id="title"
                 validate={{ required: "This input is required." }}
                 label="Tên"
+                defaultValue='123'
                 register={register}
                 error={errors}
               />
@@ -171,8 +201,16 @@ function CreateProduct() {
                     value: 0,
                     message: "Quantity must be at least 0.",
                   },
-                  validate: (value) =>
-                    !isNaN(value) || "Quantity must be a number.",
+                }}
+                value={watch("price") || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!isNaN(covertMoneyToNumber(value))) {
+                    setValue(
+                      "price",
+                      formatNumber(Number(covertMoneyToNumber(value)))
+                    );
+                  }
                 }}
                 label="Giá ban đầu"
                 register={register}
@@ -186,11 +224,20 @@ function CreateProduct() {
                   required: "This input is required.",
                   validate: (value) => {
                     if (price === "" || price == 0) return true;
-                    if (isNaN(value)) return "Yêu cầu số.";
                     if (Number(value) > Number(price)) {
                       return "Giá cuối cùng phải <= giá ban đầu.";
                     }
                   },
+                }}
+                value={watch("discountPrice") || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!isNaN(covertMoneyToNumber(value))) {
+                    setValue(
+                      "discountPrice",
+                      formatNumber(Number(covertMoneyToNumber(value)))
+                    );
+                  }
                 }}
                 label="Giá cuối cùng"
                 register={register}
@@ -211,6 +258,7 @@ function CreateProduct() {
                 validate={{
                   required: "This input is required.",
                 }}
+                value='Intel Core i5-11300H'
                 placeholder="Vd: Intel Core i5-11300H"
                 label="CPU"
                 register={register}
@@ -223,6 +271,7 @@ function CreateProduct() {
                 validate={{
                   required: "This input is required.",
                 }}
+                value='NVIDIA GeForce RTX 3050 Ti 4GB GDDR6'
                 placeholder="Vd: NVIDIA GeForce RTX 3050 Ti 4GB GDDR6"
                 label="Card đồ họa"
                 register={register}
@@ -231,6 +280,7 @@ function CreateProduct() {
               <InputForm
                 id="ram"
                 iconRequire
+                value='8GB DDR4 3200MHz'
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
                   required: "This input is required.",
@@ -243,7 +293,8 @@ function CreateProduct() {
               <InputForm
                 id="ram-storage"
                 iconRequire
-                cssParents={"w-[calc(20%-9.6px)]"}
+                value='8GB'
+                cssParents={"w-[calc(25%-9.6px)]"}
                 validate={{
                   required: "This input is required.",
                 }}
@@ -258,6 +309,7 @@ function CreateProduct() {
             <InputForm
               id="hardDrive"
               iconRequire
+              value='256GB SSD'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -270,6 +322,7 @@ function CreateProduct() {
             <InputForm
               id="hardDrive-storage"
               iconRequire
+              value='256GB'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -281,7 +334,6 @@ function CreateProduct() {
             />
             <InputForm
               id="refreshRate"
-              iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 60Hz"
               label="Tần số quét"
@@ -299,15 +351,20 @@ function CreateProduct() {
             <InputForm
               id="screen"
               iconRequire
+              value='15.6 inch'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 15.6 inch"
               label="Kích thước màn hình"
+              validate={{
+                required: "This input is required.",
+              }}
               register={register}
               error={errors}
             />
             <InputForm
               id="resolution"
               iconRequire
+              value='1920x1080'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 1920x1080"
               label="Độ phân giải màn hình"
@@ -332,12 +389,8 @@ function CreateProduct() {
             />
             <InputForm
               id="material"
-              iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: Vỏ nhựa"
-              validate={{
-                required: "This input is required.",
-              }}
               label="Chất liệu"
               register={register}
               error={errors}
@@ -345,6 +398,7 @@ function CreateProduct() {
             <InputForm
               id="size"
               iconRequire
+              value='359.86 x 258.7 x 21.9-23.9 mm (W x D x H)'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 359.86 x 258.7 x 21.9-23.9 mm (W x D x H)"
               validate={{
@@ -357,6 +411,7 @@ function CreateProduct() {
             <InputForm
               id="weight"
               iconRequire
+              value='1.5kg'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -401,6 +456,7 @@ function CreateProduct() {
             <InputForm
               id="operatingSystem"
               iconRequire
+              value='Windows 10'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -413,6 +469,7 @@ function CreateProduct() {
             <InputForm
               id="battery"
               iconRequire
+              value='53.5Wh'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -433,6 +490,7 @@ function CreateProduct() {
             <InputForm
               id="need"
               iconRequire
+              value='Gaming'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -446,81 +504,97 @@ function CreateProduct() {
           <div className="flex gap-3 my-3">
             <div className="flex-1">
               <div className="">Thương hiệu</div>
-              <Select
+              <SelectItem
                 className="z-50"
-                classNamePrefix="select"
-                isClearable
+                name="brand"
                 isSearchable
                 options={brands}
                 onChange={(data) =>
-                  setPayload({ ...payload, brand: data.value })
+                  setPayload({
+                    ...payload,
+                    brandId: data.value,
+                    brand: data.label,
+                    seriesId: "",
+                    series: "",
+                  })
                 }
               />
             </div>
             <div className="flex-1">
               <div className="">Thuộc dòng</div>
-              <Select
+              <SelectItem
                 className="z-50"
-                classNamePrefix="select"
+                name="series"
                 isClearable
                 isSearchable
+                value={{ label: payload?.series, value: payload?.seriesId }}
                 options={listSeires}
                 onChange={(data) =>
-                  setPayload({ ...payload, series: data.value })
+                  setPayload({
+                    ...payload,
+                    series: data.label,
+                    seriesId: data.value,
+                  })
                 }
+                invalidField={invalidField}
+                setInvalidField={setInvalidField}
               />
             </div>
           </div>
           <div className="flex gap-3">
             <MarkDownEditor
               label={"Công nghệ màn hình"}
-              height={350}
+              height={300}
               changeValue={setPayload}
               name="screenTechnology"
             />
             <MarkDownEditor
               label={"Công nghệ audio"}
-              height={350}
+              height={300}
               changeValue={setPayload}
               name="audioTechnology"
             />
             <MarkDownEditor
               label={"Cổng kết nối"}
-              height={350}
+              height={300}
               iconRequire
+              value={payload.connectionPort}
               changeValue={setPayload}
               name="connectionPort"
               invalidField={invalidField}
               setInvalidField={setInvalidField}
             />
           </div>
-          <MarkDownEditor
-            label={"Description"}
-            height={400}
-            changeValue={setPayload}
-            name="description"
-            invalidField={invalidField}
-            setInvalidField={setInvalidField}
-          />
-          {/* <div className="my-3">
-            <div className="">Thumb Image</div>
-            <input
-              type="file"
-              {...register("thumb", { required: "This image is required." })}
+          <div className="">
+            <MarkDownEditor
+              label={"Mô tả ngắn gọn"}
+              iconRequire
+              value={payload.features}
+              height={300}
+              name="features"
+              changeValue={setPayload}
+              invalidField={invalidField}
+              setInvalidField={setInvalidField}
             />
-             {errors['thumb'] && <small className="text-red-500">{errors['thumb'].message}</small>}
-            <div className="flex">
-              {thumbPreview && (
-                <img src={thumbPreview} alt="thumb" className="w-1/3" />
-              )}
-            </div>
-          </div> */}
-          <button
-            type="submit"
-            className="bg-primary text-white p-2 rounded-md"
-          >
-            Create
-          </button>
+            <MarkDownEditor
+              label={"Description"}
+              height={400}
+              iconRequire
+              value={payload.description}
+              changeValue={setPayload}
+              name="description"
+              invalidField={invalidField}
+              setInvalidField={setInvalidField}
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="bg-primary text-white p-2 rounded-md mt-3"
+            >
+              Tạo mới sản phẩm
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { HiOutlineCamera } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createProductColor } from "~/apis/product";
@@ -11,7 +12,7 @@ import { toBase64 } from "~/utils/helper";
 //http://localhost:5173/admin/manage/products/create-color/:slug
 function CreateProductColor() {
   const { slug } = useParams();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.user);
   const {
     register,
@@ -22,29 +23,42 @@ function CreateProductColor() {
   const [thumbPreview, setThumbPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
   const handleCreateProductColor = async (data) => {
-    const formData = new FormData();
-    formData.append("primaryImage", data.thumb[0]);
-    for (let image of data.images) {
-      formData.append("images", image);
-    }
-    formData.append(
-      "document",
-      JSON.stringify({ color: data.color, quantity: data.quantity })
-    );
-    dispatch(appActions.toggleModal({isShowModal:true,childrenModal:<Loading/>}));
-    const response = await createProductColor({
-      accessToken: accessToken,
-      slug,
-      formData,
-    });
-    dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}));
-    if (response.success) {
-      return Toast.fire({
-        icon: "success",
-        title: "Create product color successfully",
+    try {
+      console.log(data)
+      const formData = new FormData();
+      formData.append("primaryImage", data.thumb[0]);
+      for (let image of data.images) {
+        formData.append("images", image);
+      }
+      formData.append(
+        "document",
+        JSON.stringify({ color: data.color, quantity: data.quantity })
+      );
+      dispatch(
+        appActions.toggleModal({
+          isShowModal: true,
+          childrenModal: <Loading />,
+        })
+      );
+      const response = await createProductColor({
+        accessToken: accessToken,
+        slug,
+        formData,
       });
-    } else {
-      return Toast.fire({ icon: "error", title: response.message });
+      dispatch(
+        appActions.toggleModal({ isShowModal: false, childrenModal: null })
+      );
+      if (response.success) {
+        return Toast.fire({
+          icon: "success",
+          title: "Create product color successfully",
+        });
+      }
+    } catch (error) {
+      dispatch(
+        appActions.toggleModal({ isShowModal: false, childrenModal: null })
+      );
+      return Toast.fire({ icon: "error", title: error.message });
     }
   };
   const handleThumbToPreview = async (file) => {
@@ -83,62 +97,117 @@ function CreateProductColor() {
       </div>
       <div className="my-3 px-4">
         <form onSubmit={handleSubmit(handleCreateProductColor)}>
-          <InputForm
-            cssParents={"mt-3"}
-            id="color"
-            validate={{ required: "This input is required." }}
-            label="Color"
-            register={register}
-            error={errors}
-          />
-          <InputForm
-            cssParents={"mt-3"}
-            id="quantity"
-            validate={{
-              required: "This input is required.",
-              min: { value: 1, message: "Quantity must be greater than 0" },
-            }}
-            label="Quantity"
-            register={register}
-            error={errors}
-          />
-          <div className="mt-3">
-            <div className="">Thumb Image</div>
-            <input
-              type="file"
-              {...register("thumb", { required: "This image is required." })}
+          <div className="flex gap-4">
+            <InputForm
+              cssParents={"mt-3"}
+              id="color"
+              validate={{ required: "This input is required." }}
+              label="Color"
+              register={register}
+              error={errors}
             />
-            <div className="">
-              {thumbPreview && (
-                <img src={thumbPreview} alt="thumb" className="w-1/3" />
-              )}
-            </div>
+            <InputForm
+              cssParents={"mt-3"}
+              id="quantity"
+              validate={{
+                required: "This input is required.",
+                min: { value: 1, message: "Quantity must be greater than 0" },
+              }}
+              label="Quantity"
+              register={register}
+              error={errors}
+            />
           </div>
-          <div className="my-3">
-            <div className="">Images</div>
-            <input
-              type="file"
-              multiple="multiple"
-              {...register("images", { required: "This image is required." })}
-            />
-            <div className="flex">
-              {imagesPreview.map((item, index) => (
-                <div key={index} className="w-1/3">
-                  <img
-                    src={item}
-                    alt="thumb"
-                    className="object-contain h-full px-2"
+          {/* thumb */}
+          <div className="flex">
+            <div className="mt-3 border-r-2 border-gray-300 pr-3">
+              <span>Ảnh đại diện</span>
+              <div className="">
+                <div className="relative w-[100px] h-[100px] outline outline-1 rounded-md overflow-hidden">
+                  <label
+                    htmlFor="profilePicture"
+                    className="absolute inset-0 cursor-pointer rounded-md bg-transparent"
+                  >
+                    {thumbPreview ? (
+                      <img
+                        src={thumbPreview}
+                        alt="avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-primary bg-blue-50/50">
+                        <HiOutlineCamera className="w-8 h-auto" />
+                      </div>
+                    )}
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    {...register("thumb", {
+                      required: "This image is required.",
+                    })}
+                    className="sr-only"
                   />
                 </div>
-              ))}
+                {errors["thumb"] && (
+                  <small className="text-red-500">
+                    {errors["thumb"].message}
+                  </small>
+                )}
+              </div>
+            </div>
+            {/* image */}
+            <div className="my-3 pl-3">
+              <span className="">Chọn ảnh (có thể chọn nhiều ảnh)</span>
+              <div className="flex gap-3 flex-wrap">
+                <div className="">
+                  <div className="relative outline h-[200px] w-[200px] outline-1 rounded-md overflow-hidden">
+                    <label
+                      htmlFor="images"
+                      className="absolute inset-0 cursor-pointer rounded-md bg-transparent"
+                    >
+                      <div className="w-full h-full flex items-center justify-center text-primary bg-blue-50/50">
+                        <HiOutlineCamera className="w-8 h-auto" />
+                      </div>
+                      s
+                    </label>
+                    <input
+                      type="file"
+                      multiple="multiple"
+                      id="images"
+                      {...register("images", {
+                        required: "This image is required.",
+                      })}
+                      className="sr-only"
+                    />
+                  </div>
+                  {errors["images"] && (
+                    <small className="text-red-500">
+                      {errors["images"].message}
+                    </small>
+                  )}
+                </div>
+                {imagesPreview.length > 0 &&
+                  imagesPreview.map((image) => (
+                    <div className="flex w-[200px] h-[200px] outline outline-1 rounded-md overflow-hidden" key={image}>
+                      <img
+                        src={image}
+                        alt="avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-          <button
-            type="submit"
-            className="bg-primary text-white p-2 rounded-md"
-          >
-            Create
-          </button>
+          <div className="my-3 flex justify-center">
+            <button
+              type="submit"
+              className="bg-primary text-white p-2 rounded-md"
+            >
+              Thêm màu mới
+            </button>
+          </div>
         </form>
       </div>
     </div>

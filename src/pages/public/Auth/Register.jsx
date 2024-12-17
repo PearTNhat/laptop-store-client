@@ -80,6 +80,7 @@ function Register() {
         <div className="flex gap-4">
           <InputField
             setInvalidField={setInvalidField}
+            cssDiv="mb-2"
             placeholder={"Họ"}
             nameKey={"firstName"}
             value={payload.firstName}
@@ -88,6 +89,7 @@ function Register() {
           />
           <InputField
             setInvalidField={setInvalidField}
+            cssDiv="mb-2"
             placeholder={"Tên"}
             nameKey={"lastName"}
             value={payload.lastName}
@@ -97,6 +99,7 @@ function Register() {
         </div>
         <InputField
           setInvalidField={setInvalidField}
+          cssDiv="mb-2"
           placeholder={"Email"}
           value={payload.email}
           nameKey={"email"}
@@ -105,6 +108,7 @@ function Register() {
         />
         <InputField
           setInvalidField={setInvalidField}
+          cssDiv="mb-2"
           placeholder={"Mật khẩu"}
           type={`${isShowPassword ? "text" : "password"}`}
           value={payload.password}
@@ -121,6 +125,7 @@ function Register() {
         />
         <InputField
           setInvalidField={setInvalidField}
+          cssDiv="mb-2"
           placeholder={"Xác nhận mật khẩu"}
           type={`${isShowPassword ? "text" : "password"}`}
           value={payload.confirmPassword}

@@ -2,6 +2,7 @@ import React from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
 
+
 const calculatePercent = (price, priceDiscount) => {
   if (price === 0 || !price || priceDiscount === 0 || !priceDiscount) {
     return 0;

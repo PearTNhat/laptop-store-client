@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { apiGetAllUsers, apiUpdateRole } from "~/apis/user";
+import { apiGetAllUsers, apiUpdateBlock, apiUpdateRole } from "~/apis/user";
 import DataTable from "./DataTable";
 import { DefaultUser } from "~/assets/images";
 import moment from "moment";
@@ -11,6 +11,8 @@ import { Toast } from "~/utils/alert";
 import { FaRegEdit } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { MdBlock } from "react-icons/md";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import Swal from "sweetalert2";
 const LIMIT = 10;
 const options = [
   { value: "admin", label: "Admin" },
@@ -66,6 +68,45 @@ function ManageUser() {
       });
     }
   }, [payload]);
+  const handleUpdateBlock = async ({ userId, isBlocked }) => {
+    try {
+      const result = await Swal.fire({
+        title: `Bạn có chắc chắn muốn ${
+          isBlocked ? "khóa" : "mở khóa"
+        } người dùng này không?`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Hủy",
+        confirmButtonText: "Đồng ý",
+      });
+      if (result.isConfirmed) {
+        const response = await apiUpdateBlock({
+          accessToken,
+          userId,
+          isBlocked,
+        });
+        if (response.success) {
+          Toast.fire({
+            icon: "success",
+            title: "Cập nhật thành công",
+          });
+          fetchAllUsers({ search: searchDebounce, page: currentPage });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: "Cập nhật thất bại",
+          });
+        }
+      }
+    } catch (error) {
+      Toast.fire({
+        icon: "error",
+        title: error.message,
+      });
+    }
+  };
   const searchDebounce = useDebounce(search, 500);
   useEffect(() => {
     fetchAllUsers({ search: searchDebounce, page: currentPage });
@@ -151,34 +192,54 @@ function ManageUser() {
             <td className="p-2 border-gray-200 border-b text-sm">
               <p>{moment(user.createdAt).format("DD/MM/YYYY HH:mm")}</p>
             </td>
-            <td className="p-2 border-gray-200 border-b text-sm">
-              {userData._id !== user._id && (
-                <>
-                  <button
-                    className={`mr-3 ${
-                      isEdit
-                        ? "text-red-600 hover:text-red-900"
-                        : "text-yellow-400 hover:text-yellow-600"
-                    } `}
-                    onClick={() => {
-                      if (isEdit) {
-                        setEdit(null);
-                      } else {
-                        setEdit(user._id);
+            <td className="p-2 border-gray-200 border-b text-sm ">
+              <div className="flex justify-center items-center">
+                {userData._id !== user._id && (
+                  <>
+                    <button
+                      className={`mr-3 ${
+                        isEdit
+                          ? "text-red-600 hover:text-red-900"
+                          : "text-yellow-400 hover:text-yellow-600"
+                      } `}
+                      onClick={() => {
+                        if (isEdit) {
+                          setEdit(null);
+                        } else {
+                          setEdit(user._id);
+                        }
+                      }}
+                    >
+                      {isEdit ? (
+                        <MdCancel className=" text-[18px]" />
+                      ) : (
+                        <FaRegEdit className=" text-[18px]" />
+                      )}
+                    </button>
+                    <button
+                      className=" text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+                      onClick={() =>
+                        handleUpdateBlock({
+                          userId: user._id,
+                          isBlocked: !user.isBlocked,
+                        })
                       }
-                    }}
-                  >
-                    {isEdit ? (
-                      <MdCancel className=" text-[18px]" />
-                    ) : (
-                      <FaRegEdit  className=" text-[18px]"/>
-                    )}
-                  </button>
-                  <button className=" text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed">
-                    <MdBlock className=" text-[18px]"/>
-                  </button>
-                </>
-              )}
+                    >
+                      {user?.isBlocked ? (
+                        <MdBlock
+                          className=" text-[18px]"
+                          title="Nhấn để mở khóa tài khoản"
+                        />
+                      ) : (
+                        <IoCheckmarkDoneSharp
+                          className=" text-[18px] text-green-500 hover:text-green-700"
+                          title="Nhấn để khóa tài khoản"
+                        />
+                      )}
+                    </button>
+                  </>
+                )}
+              </div>
             </td>
           </tr>
         );

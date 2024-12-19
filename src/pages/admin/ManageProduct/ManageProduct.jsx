@@ -220,8 +220,8 @@ function MangeProduct() {
           </form>
         </div>
         <div className="py-4">
-          <div className="shadow">
-            <table className="w-full">
+          <div className="shadow bg-white rounded-md overflow-hidden">
+            <table className="border border-gray-200 w-full">
               <thead className="">
                 <tr className="border-gray-200 border-y bg-blue-900 text-white">
                   {tableHeaderTitleList.map((title) => (

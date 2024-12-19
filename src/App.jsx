@@ -49,7 +49,7 @@ function App() {
           <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         </Route>
         <Route path={path.ADMIN} element={<AdminLayout />}>
-          <Route path={path.ADMIN_DASHBOARD} element={<DashBoard />} />
+          <Route index element={<DashBoard />} />
           <Route path={path.ADMIN_MANAGE_USERS} element={<ManageUser />} />
           <Route
             path={path.ADMIN_MANAGE_PRODUCTS}

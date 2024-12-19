@@ -184,3 +184,6 @@ body{
 .react-select__control{
     height: 45px !important;
 }
+.react-select__menu-list{
+    z-index: 9999;
+}

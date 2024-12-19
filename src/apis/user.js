@@ -195,6 +195,22 @@ const apiUpdateRole = async ({ accessToken, role,userId }) => {
     throw new Error(error.message);
   }
 }
+const apiUpdateBlock = async ({ accessToken, userId,isBlocked }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+    const { data } = await http.put("user/admin/block", { userId,isBlocked }, config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+}
 export {
   apiRegister,
   apiLogin,
@@ -208,5 +224,6 @@ export {
   apiUpdateCart,
   apiRemoveCartItem,
   apiUpdateWishlist,
-  apiUpdateRole
+  apiUpdateRole,
+  apiUpdateBlock
 };

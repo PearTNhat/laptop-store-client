@@ -22,7 +22,7 @@ function DataTable({
 
   return (
     <div className="h-screen overflow-auto">
-      <h1 className="text-2xl">{pageTitle}</h1>
+      <h1 className="text-2xl font-semibold">Quản lý người dùng</h1>
       <div className="p-1">
         <div className="flex justify-between mt-4">
           <form className="flex gap-3" onSubmit={(e) => submitSearchTitle(e)}>
@@ -51,16 +51,12 @@ function DataTable({
           )}
         </div>
         <div className="py-4">
-          <div className="shadow">
-            <table className="w-full">
+          <div className="shadow bg-white rounded-md overflow-hidden">
+            <table className="border border-gray-200 w-full">
               <thead className="">
                 <tr className="border-gray-200 border-b bg-blue-900 text-white font-semibold">
                   {tableHeaderTitleList.map((title) => (
-                    <th
-                      key={title}
-                      className="text-left p-2"
-                      scope="col"
-                    >
+                    <th key={title} className="text-left p-2" scope="col">
                       {title}
                     </th>
                   ))}

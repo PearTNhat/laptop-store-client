@@ -18,10 +18,10 @@ import { RiProductHuntLine } from "react-icons/ri";
 export const adminNavigation = [
     {
         id: 1,
-        text: 'Dashboard',
+        text: 'Thống kê',
         type:'SINGLE',
         icon: AiOutlineDashboard,
-        path: `${path.ADMIN}/${path.ADMIN_DASHBOARD}`
+        path: `${path.ADMIN}`
     },
     {
         id: 2,

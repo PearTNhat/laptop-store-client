@@ -3,16 +3,16 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { apiGetOrdersUser } from "~/apis/order";
-import Select from "react-select";
 import InputField from "~/components/InputField";
 import Pagination from "~/components/Pagination";
 import { useDebounce } from "~/hook/useDebounce";
 import { formatNumber } from "~/utils/helper";
 import { orderStatus } from "~/constants/order";
+import SelectItem from "~/components/SelectItem";
 const status = [
-  { value: "Pending", label: "Pending" },
-  { value: "Succeed", label: "Succeed" },
-  { value: "Cancelled", label: "Cancelled" },
+  { value: "-1", label: "Hủy đơn" },
+  { value: "0", label: "Đang xử lý" },
+  { value: "1", label: "Thành công" },
 ];
 function Order() {
   const { accessToken } = useSelector((state) => state.user);
@@ -63,6 +63,15 @@ function Order() {
       </div>
       <div className="">
         <form className="flex gap-3 justify-end px-2">
+          <SelectItem
+            placeholder="Trạng thái"
+            isClearable
+            isSearchable
+            options={status}
+            onChange={(data) => {
+              setFilter((prev) => ({ ...prev, status: data?.value }));
+            }}
+          />
           <InputField
             type="text"
             cssDiv="!mb-0"
@@ -74,15 +83,6 @@ function Order() {
                 value = value.trim();
               }
               setFilter((prev) => ({ ...prev, title: value }));
-            }}
-          />
-          <Select
-            className="z-50"
-            isClearable
-            isSearchable
-            options={status}
-            onChange={(data) => {
-              setFilter((prev) => ({ ...prev, status: data?.value }));
             }}
           />
         </form>
@@ -101,16 +101,23 @@ function Order() {
           </thead>
           <tbody>
             {orders?.map((order) => {
+              let totalMoney = order.total;
+              if (filter.title || filter.status) {
+                totalMoney = order.products?.reduce((total, p) => {
+                  return total + p.product.discountPrice * p.quantity;
+                }, 0);
+              }
               return (
                 <Fragment key={order._id}>
                   <tr className="font-semibold text-blue-500">
                     <td colSpan="6" className="p-2 ">
                       <p>
                         <span className="inline-block mr-3">
-                          Ngày: {moment(order.createdAt).format("DD/MM/YYYY HH:mm")}
+                          Ngày:{" "}
+                          {moment(order?.createdAt).format("DD/MM/YYYY HH:mm")}
                         </span>
                         <span className="text-black">
-                          Địa chỉ: {order.address}
+                          Địa chỉ: {order?.address}
                         </span>
                       </p>
                     </td>
@@ -127,7 +134,7 @@ function Order() {
                           <td className="p-2">
                             <Link to={`/${p.product.slug}`}>
                               <img
-                                src={ p.product.primaryImage.url}
+                                src={p.product.primaryImage.url}
                                 className="w-[100px]"
                                 alt=""
                               />
@@ -137,7 +144,9 @@ function Order() {
                             {p.product.title} - {color.color}
                           </td>
                           <td className="p-2 text-center">{p.quantity}</td>
-                          <td className="p-2">{p.product.discountPrice}</td>
+                          <td className="p-2">
+                            {formatNumber(p.product.discountPrice)}đ
+                          </td>
                           <td className="p-2">
                             <p
                               className={`${
@@ -146,7 +155,7 @@ function Order() {
                                   : "text-green-500"
                               }`}
                             >
-                              {orderStatus[p.status] }
+                              {orderStatus[p.status]}
                             </p>
                           </td>
                         </tr>
@@ -157,7 +166,7 @@ function Order() {
                     <td colSpan="7" className="border border-gray-300 p-2">
                       <span className="font-semibold">Tổng cộng:</span>{" "}
                       <span className="text-main">
-                        {formatNumber(order.total)} ₫
+                        {formatNumber(totalMoney)}đ
                       </span>
                     </td>
                   </tr>

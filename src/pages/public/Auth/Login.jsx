@@ -24,15 +24,25 @@ function Login() {
     emailResetPassword: "", // forgot password
   });
   // useCallBack tránh tạo lại hàm mới mỗi lần render (nếu dependencies không thay đổi)
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    const { email, password } = payload;
-    const invalid =  validateForm({ email, password }, setInvalidField);
-    if (invalid>0) return;
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const { email, password } = payload;
+      const invalid = validateForm({ email, password }, setInvalidField);
+      if (invalid > 0) return;
       const response = await apiLogin({ email, password });
       if (!response.success) {
         Swal.fire("Oops!", response.message, "error");
       } else {
+        if (response.status === 403) {
+          await Swal.fire({
+            title: 'Tài khoản của bạn đã bị khóa',
+            icon: "info",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Trở về",
+          });
+          return;
+        }
         dispatch(
           userActions.login({
             accessToken: response.accessToken,
@@ -45,20 +55,21 @@ function Login() {
         });
         navigate(`/${path.HOME}`);
       }
-    
-  }, [payload]);
+    },
+    [payload]
+  );
   //reset payload khi chuyển tính năng
   useEffect(() => {
     setPayload({
       email: "",
       password: "",
-      emailResetPassword:"",
+      emailResetPassword: "",
     });
-    setInvalidField([])
+    setInvalidField([]);
   }, [isForgetPassword]);
   const handleForgetPassword = async (email) => {
-    let invalid = validateForm({ emailResetPassword :email }, setInvalidField);
-    if(invalid>0) return;
+    let invalid = validateForm({ emailResetPassword: email }, setInvalidField);
+    if (invalid > 0) return;
     const res = await apiForgetPassword(email);
     if (res.success) {
       Swal.fire("Success", res.message, "success");
@@ -68,7 +79,7 @@ function Login() {
   };
   return (
     <div className="relative">
-  <div
+      <div
         className={`absolute inset-0 bg-white z-20 flex items-center justify-center ${
           isForgetPassword
             ? "translate-x-[0] opacity-100"
@@ -79,14 +90,14 @@ function Login() {
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
             Quên mật khẩu
           </h3>
-              <InputField
-                setInvalidField={setInvalidField}
-                placeholder={"Email"}
-                nameKey={"emailResetPassword"}
-                value={payload.emailResetPassword}
-                setPayload={setPayload}
-                invalidField={invalidField}
-              />
+          <InputField
+            setInvalidField={setInvalidField}
+            placeholder={"Email"}
+            nameKey={"emailResetPassword"}
+            value={payload.emailResetPassword}
+            setPayload={setPayload}
+            invalidField={invalidField}
+          />
           <div className="flex gap-2 justify-end mt-3">
             <Button
               className="!py-2"
@@ -105,9 +116,12 @@ function Login() {
         </div>
       </div>
       <div className="flex justify-center items-center my-16 ">
-        <form className="min-w-[300px] md:w-[400px] px-2" onSubmit={(e)=>handleSubmit(e)}>
+        <form
+          className="min-w-[300px] md:w-[400px] px-2"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <h3 className="text-center text-main font-semibold text-2xl mb-4 tracking-widest">
-           Đăng nhập
+            Đăng nhập
           </h3>
           <InputField
             setInvalidField={setInvalidField}
@@ -115,7 +129,7 @@ function Login() {
             placeholder={"Email"}
             value={payload.email}
             nameKey={"email"}
-            type='email'
+            type="email"
             setPayload={setPayload}
             invalidField={invalidField}
           />
@@ -138,25 +152,25 @@ function Login() {
           />
           <div className="mt-4 mb-2">
             <Button wf type="submit">
-             Đăng nhập
+              Đăng nhập
             </Button>
           </div>
           <div className="flex justify-between text-blue-500 text-[13px]">
-              <>
-                <Button
-                  style={"hover:text-main"}
-                  onClick={() => setIsForgetPassword(true)}
-                >
-                  Quên mật khẩu
-                </Button>
-                <Button
-                  to={`${path.PUBLIC}${path.REGISTER}`}
-                  style="hover:text-main"
-                >
-                  Tạo tài khoản
-                </Button>
-              </>
-            </div>
+            <>
+              <Button
+                style={"hover:text-main"}
+                onClick={() => setIsForgetPassword(true)}
+              >
+                Quên mật khẩu
+              </Button>
+              <Button
+                to={`${path.PUBLIC}${path.REGISTER}`}
+                style="hover:text-main"
+              >
+                Tạo tài khoản
+              </Button>
+            </>
+          </div>
         </form>
       </div>
     </div>

@@ -22,7 +22,8 @@ function SideBar() {
             { let showDropdown = activeDropdown.some(x => x === item.id) // kiem tra xem item.id co trong activeDropdown khong
             return <Fragment key={item.id}>
             {  item.type === 'SINGLE'  && (
-                <NavLink to={item.path} className={({isActive})=>{
+                <NavLink to={item.path} className={()=>{
+                  const isActive = pathname === item.path
                   return `${isActive && 'text-blue-500 '} flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`
                 }}>
                   <item.icon />

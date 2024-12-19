@@ -21,7 +21,7 @@ function SelectItem({
     <div>
       {value ? (
         <Select
-          className="z-50"
+          className="z-[9999]"
           classNamePrefix="react-select"
           {...attr}
           onFocusOut = {()=> setInvalidField && setInvalidField([])}
@@ -29,7 +29,7 @@ function SelectItem({
         />
       ) : (
         <Select
-          className="z-50"
+          className="z-[9999]"
           classNamePrefix="react-select"
           onFocusOut = {()=> setInvalidField && setInvalidField([])}
           {...attr}

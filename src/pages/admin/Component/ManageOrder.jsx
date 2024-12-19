@@ -57,9 +57,10 @@ function MangeProduct() {
   );
   const fetchAllOrders = async (params) => {
     const response = await apiGetAllOrders({ params, accessToken });
+    console.log(response);
     if (response.success) {
       const totalPage = Math.ceil(response.counts / 10);
-      if (totalPage < currentPage) {
+      if (totalPage < currentPage && response.counts !== 0) {
         setCurrentPage(currentPage - 1);
       }
       setTotalPageCount(totalPage);
@@ -96,23 +97,25 @@ function MangeProduct() {
     }
   };
   const handleUpdateInfoOrder = async (data) => {
-    
     const response = await apiUpdateInfoOrder({
-      orderId:payload.orderId,
+      orderId: payload.orderId,
       accessToken,
-      body:data,
-    })
-    if(response.success){
+      body: data,
+    });
+    if (response.success) {
       fetchAllOrders({ page: currentPage, limit: 10 });
       setIsEditOrder(null);
       setPayload({});
       Swal.fire({
-        title: "Cập nhật thông tin đơn hàng thành công", icon: "success"})
-      }else{
-        Swal.fire({
-          title: "Đã xảy ra lỗi", icon: "error"
-        })
-      }
+        title: "Cập nhật thông tin đơn hàng thành công",
+        icon: "success",
+      });
+    } else {
+      Swal.fire({
+        title: "Đã xảy ra lỗi",
+        icon: "error",
+      });
+    }
   };
   const handleDeleteOrder = async ({ title, _id }) => {
     const result = await Swal.fire({
@@ -186,6 +189,9 @@ function MangeProduct() {
     if (filter.title) {
       search.title = filter.title;
     }
+    if (filter.status) {
+      search.status = filter.status;
+    }
     if (!search) return;
     fetchAllOrders({ ...params, ...search });
   }, [currentParams]);
@@ -194,61 +200,67 @@ function MangeProduct() {
       ...currentParams,
       page: currentPage,
       title: debounceSearch,
+      status: filter.status,
     });
-  }, [currentPage, debounceSearch]);
+  }, [currentPage, debounceSearch, filter.status]);
   return (
     <div className="h-screen overflow-auto">
       <h1 className="text-2xl font-semibold">Quản lý đơn hàng</h1>
-      <div className="">
+      <div className="mt-4">
         <form onSubmit={handleSubmit(handleUpdateInfoOrder)}>
-          <div className="flex justify-end mr-4 gap-3">
-            <SelectItem
-              className="z-50"
-              isClearable
-              isSearchable
-              placeholder="Chọn trạng thái"
-              options={[
-                { value: "-1", label: "Hủy đơn" },
-                { value: "0", label: "Đang xử lý" },
-                { value: "1", label: "Thành công" },
-              ]}
-              onChange={(data) => {
-                // setFilter((prev) => ({ ...prev, status: data?.value }));
-              }}
-            />
-            <InputField
-              type="text"
-              placeholder={"Tìm kiếm mã đơn hàng, thông tin khách hàng"}
-              className="px-4 py-[0.625rem] border-gray-200 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              onChange={(e) => {
-                let value = e.target.value;
-                if (value.startsWith(" ")) {
-                  value = value.trim();
-                }
-                setFilter((prev) => ({ ...prev, title: value }));
-              }}
-            />
+          <div className="flex justify-between ">
+            <div className="">
+              {isEditOrder && (
+                <button
+                  type="submit"
+                  className="bg-blue-600  hover:bg-blue-700 text-white h-[40px] px-3 rounded-md"
+                >
+                  Cập nhật
+                </button>
+              )}
+              {isEditProduct && (
+                <button
+                  type="button"
+                  className="bg-blue-600  hover:bg-blue-700 text-white h-[40px] px-3 rounded-md"
+                  onClick={handleUpdateStatusProduct}
+                >
+                  Cập nhật
+                </button>
+              )}
+            </div>
+            <div className="flex mr-4 gap-3">
+              <SelectItem
+                className="z-50"
+                isClearable
+                isSearchable
+                placeholder="Chọn trạng thái"
+                options={[
+                  { value: "-1", label: "Hủy đơn" },
+                  { value: "0", label: "Đang xử lý" },
+                  { value: "1", label: "Thành công" },
+                ]}
+                onChange={(data) => {
+                  setFilter((prev) => ({ ...prev, status: data?.value }));
+                }}
+              />
+              <InputField
+                type="text"
+                placeholder={"Tìm kiếm mã, thông tin khách hàng"}
+                className="px-4 py-[0.625rem] border-gray-200 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                onChange={(e) => {
+                  let value = e.target.value;
+                  if (value.startsWith(" ")) {
+                    value = value.trim();
+                  }
+                  setFilter((prev) => ({ ...prev, title: value }));
+                }}
+              />
+            </div>
           </div>
-          {isEditOrder && (
-            <button
-              type="submit"
-              className="bg-blue-600  hover:bg-blue-700 text-white h-[40px] px-3 rounded-md"
-            >
-              Cập nhật
-            </button>
-          )}
-          {isEditProduct && (
-            <button
-              type="button"
-              className="bg-blue-600  hover:bg-blue-700 text-white h-[40px] px-3 rounded-md"
-              onClick={handleUpdateStatusProduct}
-            >
-              Cập nhật
-            </button>
-          )}
+
           <div className="py-4">
-            <div className="shadow">
-              <table className="w-full">
+            <div className="shadow bg-white rounded-md overflow-hidden">
+              <table className="border border-gray-200 w-full">
                 <thead className="">
                   <tr className="border-gray-200 border-y bg-blue-900 text-white">
                     {tableHeaderTitleList.map((title) => (
@@ -267,6 +279,12 @@ function MangeProduct() {
                     const isSelected = selectedProduct.some(
                       (item) => item === order._id
                     );
+                    let totalMoney = order.total;
+                    if (filter.title || filter.status) {
+                      totalMoney = order.products?.reduce((total, p) => {
+                        return total + p.product.discountPrice * p.quantity;
+                      }, 0);
+                    }
                     return (
                       <Fragment key={order._id}>
                         <tr
@@ -286,7 +304,7 @@ function MangeProduct() {
                             {order.products.length} sản phẩm
                           </td>
                           <td className="p-1 border-gray-200 border-b text-sm">
-                            {formatNumber(order.total)}đ
+                            {formatNumber(totalMoney)}đ
                           </td>
                           <td className="p-1 border-gray-200 border-b text-sm">
                             {isEditOrder === order._id ? (
@@ -371,7 +389,7 @@ function MangeProduct() {
                                     setIsEditOrder(null);
                                   } else {
                                     setIsEditOrder(order._id);
-                                    setPayload({orderId:order._id});
+                                    setPayload({ orderId: order._id });
                                   }
                                 }}
                               >
@@ -399,12 +417,15 @@ function MangeProduct() {
                           </td>
                         </tr>
                         {isSelected && (
-                          <tr className="animate-drop-down-animation">
+                          <tr
+                            className={`animate-drop-down-animation relative`}
+                            style={{ zIndex: orders.length - index }}
+                          >
                             <td
                               colSpan="12"
                               className="border-gray-200 border-b text-sm font-normal text-left"
                             >
-                              <table className="min-w-full bg-gray-100">
+                              <table className="min-w-full bg-gray-100 relative z-10">
                                 <thead>
                                   <tr>
                                     <th className="p-2 border-gray-200 border-b text-sm">
@@ -418,6 +439,9 @@ function MangeProduct() {
                                     </th>
                                     <th className="p-2 border-gray-200 border-b text-sm">
                                       Số lượng
+                                    </th>
+                                    <th className="p-2 border-gray-200 border-b text-sm">
+                                      Giá
                                     </th>
                                     <th className="p-2 border-gray-200 border-b text-sm">
                                       Trạng thái
@@ -449,6 +473,9 @@ function MangeProduct() {
                                         </td>
                                         <td className="p-2 border-gray-200 border-b text-sm">
                                           {item.quantity}
+                                        </td>
+                                        <td className="p-2 border-gray-200 border-b text-sm">
+                                          {formatNumber(product.discountPrice)}đ
                                         </td>
                                         <td className="p-2 border-gray-200 border-b text-sm">
                                           {isEditProduct === product._id ? (

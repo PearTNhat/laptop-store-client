@@ -55,7 +55,7 @@ function MangeProduct() {
     });
     if (response.success) {
       const totalPage = Math.ceil(response.counts / 10);
-      if (totalPage < currentPage) {
+      if (totalPage < currentPage &&  response.counts !== 0) {
         setCurrentPage(currentPage - 1);
       }
       setTotalPageCount(totalPage);

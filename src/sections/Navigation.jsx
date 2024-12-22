@@ -36,25 +36,15 @@ function Navigation() {
             className="pl-7 pr-4 py-2 border-gray-300 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             onChange={(e) => {
                 let value = e.target.value;
-                if (value.startsWith(" ")) {
-                value = value.trim();
-                }
                 setSearch(value);
             }}
             onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  let searchParams =''
+                  currentParams.title = search
                   for (let key in currentParams) {
-                      searchParams += `${key}=${currentParams[key]}&`
+                     searchParams.set(key, currentParams[key])
                   }
-                  if(searchParams.endsWith('&')){
-                      searchParams = searchParams.slice(0, -1)
-                  }
-                  if(search){
-                    searchParams += `&title=${search}`
-                  }
-                  navigate(`/laptop/?`+searchParams)
-                  
+                  navigate(`/laptop?`+searchParams)
               } 
             }}
             />

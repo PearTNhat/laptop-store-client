@@ -10,7 +10,9 @@ import { userDropdown } from "~/constants/dropdown";
 import Button from "~/components/Button";
 import { userActions } from "~/store/slice/userSlice";
 import { Toast } from "~/utils/alert";
+import { fetchBrands } from "~/store/action/brand";
 import Cart from "~/components/MyCart/Cart";
+import { useEffect } from "react";
 function Header() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -21,6 +23,9 @@ function Header() {
       title: "Logout successfully",
     });
   };
+  useEffect(() => {
+    dispatch(fetchBrands())
+  }, []);
   return (
     <div className="main-container py-[35px]">
       <div className="flex justify-between items-center">

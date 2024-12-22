@@ -12,8 +12,8 @@ function DescriptionModal({currentParams}) {
   const [desc, setDesc] = useState(currentParams?.desc)
   const [ ,setSearchParams] = useSearchParams();
   const handleSearch = async ()=>{
-    const params = { ...currentParams, desc };
-    if(!desc) delete params.desc
+    const params = { ...currentParams, desc:desc.trim() };
+    if(!desc.trim()) delete params.desc
     setSearchParams(params)
     dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))
   }
@@ -23,14 +23,14 @@ function DescriptionModal({currentParams}) {
       <p className="font-bold text-xl pl-2">Tìm kiếm laptop theo mô tả</p>
       <IoClose className="absolute top-1/2 -translate-y-1/2 right-0 pr-2 text-4xl cursor-pointer" onClick={()=>dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))}/>
     </div>
-    <div className="px-2">
+    <div className="px-6">
       <img src={Logo} alt="digital world" className="pt-4 mx-auto" />
       <p className="text-xl font-medium py-2">Mô tả</p>
       <textarea 
       placeholder="Điền mô tả về nhu cầu của bạn" 
       value={desc} 
       onChange={(e)=>setDesc(e.target.value)}
-      className="w-full border border-gray-300 rounded-sm p-1 focus:outline-none mt-1" rows="4"></textarea>
+      className="w-full border border-gray-300 rounded-sm p-1 focus:outline-none mt-1 " rows="4"></textarea>
       <Button wf className={'my-4'} onClick={handleSearch}>Tìm kiếm</Button>
     </div>
 

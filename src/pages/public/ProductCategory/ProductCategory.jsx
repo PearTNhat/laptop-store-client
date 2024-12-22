@@ -7,28 +7,34 @@ import InputOrCheckBoxFilter from "~/components/Filter/InputOrCheckBoxFilter";
 import SelectionFilter from "~/components/Filter/SelectionFilter";
 import Pagination from "~/components/Pagination";
 import { AiIcon } from "~/assets/images";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { appActions } from "~/store/slice/app";
 import DescriptionModal from "./component/DescriptionModal";
-import { fetchBrands } from "~/store/action/brand";
+
 import CheckBoxFilter from "~/components/Filter/CheckBoxFilter";
 import Loading from "~/components/Loading";
-const colors = [
-  { value: "Titan Đen", label: "Titan Đen" },
-  { value: "Titan Trắng", label: "Titan Trắng" },
-  { value: "Titan Xanh", label: "Titan Xanh" },
-  { value: "Titan tự nhiên", label: "Titan tự nhiên" },
-];
+import { Toast } from "~/utils/alert";
+import { colors } from "~/constants/product";
+
 const rams = [
+  { value: "4GB", label: "4GB" },
   { value: "8GB", label: "8GB" },
   { value: "16GB", label: "16GB" },
   { value: "32GB", label: "32GB" },
   { value: "64GB", label: "64GB" },
 ];
+const hardDrive = [
+  { value: "128GB", label: "128GB" },
+  { value: "256GB", label: "256GB" },
+  { value: "512GB", label: "512GB" },
+  { value: "1TB", label: "1TB" },
+  { value: "2TB", label: "2TB" },
+];
 const LIMIT = 12;
 function ProductCategory() {
   const dispatch = useDispatch();
-  // const { brands } = useSelector((state) => state.brand);
+  const { brands } = useSelector((state) => state.brand);
+  const [brandName, setBrandName] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,21 +44,38 @@ function ProductCategory() {
     [searchParams]
   );
   const fetchProductCategory = async (filter) => {
-    const params = { ...filter };
-    dispatch(appActions.toggleModal({ isShowModal: true,animation:false,childrenModal: <Loading /> }));
-    const response = await getAllProducts({ params });
-    dispatch(appActions.toggleModal({ isShowModal: false,childrenModal: null }));
-    const totalPage = Math.ceil(response.counts / 12) || 1;
-    if (response.success) {
-      setProducts(response.data);
-      setTotalPageCount(totalPage);
+    try {
+      const params = { ...filter };
+      dispatch(
+        appActions.toggleModal({
+          isShowModal: true,
+          animation: false,
+          childrenModal: <Loading />,
+        })
+      );
+      const response = await getAllProducts({ params });
+      dispatch(
+        appActions.toggleModal({ isShowModal: false, childrenModal: null })
+      );
+      const totalPage = Math.ceil(response.counts / 12) || 1;
+      if (response.success) {
+        setProducts(response.data);
+        setTotalPageCount(totalPage);
+      } else {
+        Toast.fire({ icon: "error", title: response.message });
+      }
+    } catch (error) {
+      Toast.fire({ icon: "error", title: error.message });
+      dispatch(
+        appActions.toggleModal({ isShowModal: false, childrenModal: null })
+      );
     }
   };
   const handleSmartSearch = () => {
     dispatch(
       appActions.toggleModal({
         isShowModal: true,
-        animation:true,
+        animation: true,
         childrenModal: <DescriptionModal currentParams={currentParams} />,
       })
     );
@@ -65,8 +88,16 @@ function ProductCategory() {
   }, [currentPage]);
   useEffect(() => {
     window.scrollTo(0, 0);
-    dispatch(fetchBrands());
   }, []);
+  useEffect(() => {
+    setBrandName(
+      brands.map((brand) => ({
+        value: brand?.label?.toLowerCase(),
+        label: brand.label,
+      }))
+    );
+  }, [brands]);
+
   return (
     <div className="my-8">
       <div className="bg-[#f7f7f7]">
@@ -85,14 +116,20 @@ function ProductCategory() {
               <div className="flex gap-2 my-4">
                 <InputOrCheckBoxFilter
                   title="Giá"
-                  name="price"
+                  name="discountPrice"
                   type="input"
                   currentParams={currentParams}
                 />
                 <CheckBoxFilter
                   currentParams={currentParams}
+                  title="Thương hiệu"
+                  name="brands"
+                  data={brandName}
+                />
+                <CheckBoxFilter
+                  currentParams={currentParams}
                   title="Màu sắc"
-                  name="color"
+                  name="colors"
                   data={colors}
                 />
                 <CheckBoxFilter
@@ -101,11 +138,12 @@ function ProductCategory() {
                   name="ram"
                   data={rams}
                 />
-                {/* <InputOrCheckBoxFilter
-                  title="Thương hiệu"
-                  name="color"
-                  data={colors}
-                /> */}
+                <CheckBoxFilter
+                  currentParams={currentParams}
+                  title="Lưu trữ"
+                  name="hardDrive"
+                  data={hardDrive}
+                />
               </div>
             </div>
             <div className="">

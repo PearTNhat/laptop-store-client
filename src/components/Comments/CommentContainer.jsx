@@ -53,6 +53,7 @@ function CommentContainer({ title, pId, comments, totalRating,setFetchAgain }) {
       });
       dispatch(appActions.toggleModal({ isShowModal: false, childrenModal: false }))
     }
+    setAffectedComment(null)
     setFetchAgain((prev) => !prev)
   }
   const handleUpdateComment = async ({commentId,content,rating}) => {

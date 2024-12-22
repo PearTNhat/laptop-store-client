@@ -7,8 +7,8 @@ const sortBy = [
     {id:1 ,name:'Bán chạy nhất', value:'-soldQuantity'},
     {id:2 ,name:'Thứ tự,A-Z', value:'title'},
     {id:3 ,name:'Thứ tự,Z-A', value:'-title'},
-    {id:4 ,name:'Giá, thấp đến cao', value:'price'},
-    {id:5 ,name:'Giá, cao đến thấp', value:'-price'},
+    {id:4 ,name:'Giá, thấp đến cao', value:'discountPrice'},
+    {id:5 ,name:'Giá, cao đến thấp', value:'-discountPrice'},
     {id:6 ,name:'Sản phẩm mới nhất', value:'-createdAt'},
     {id:7 ,name:'Sản phẩm củ', value:'createdAt'},
 ]

@@ -2,11 +2,15 @@ import { http } from "~/utils/http"
 
 const getAllProducts = async ({ params }) => {
     try {
-        const { data } = await http.get('product', { params })
+        const configs={
+            timeout: 50000,
+            params
+        }
+        const { data } = await http.get('product',configs)
         return data
     } catch (error) {
         if (error.response && error.response.data) {
-            throw new Error(error.response.data.message)
+            return error.response.data
         }
         throw new Error(error.message)
     }

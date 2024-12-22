@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import QuantityInput from "../QuantityInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatNumber } from "~/utils/helper";
 import { apiRemoveCartItem, apiUpdateCart } from "~/apis/user";
 import { Toast } from "~/utils/alert";
@@ -17,9 +17,7 @@ function DetailCart() {
   } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [quantity, setQuantity] = useState(() =>
-    carts.reduce((acc, cart) => ({ ...acc, [cart._id]: cart.quantity }), {})
-  );
+  const [quantity, setQuantity] = useState({});
   const handleUpdateQuantity = async ({ product, color, quantity }) => {
     const response = await apiUpdateCart({
       accessToken,
@@ -70,6 +68,14 @@ function DetailCart() {
       Toast.fire({ icon: "error", title: "Fail to delete item" });
     }
   };
+  useEffect(() => {
+    dispatch(fetchCurrentUser({ token: accessToken }));
+  }, []);
+  useEffect(() => {
+    setQuantity(
+      carts.reduce((acc, cart) => ({ ...acc, [cart._id]: cart.quantity }), {})
+    );
+  }, [carts]);
   return (
     <div className="h-screen overflow-auto">
       <div className="bg-gray-100 h-[60px]">
@@ -84,7 +90,7 @@ function DetailCart() {
           <span className="font-semibold col-span-1 p-2"></span>
         </div>
         <div className="">
-          {carts?.map((cart,idx) => {
+          {Object.keys(quantity).length > 0  && carts?.map((cart,idx) => {
             const color = cart.product.colors.find(
               (color) => color.color === cart.color
             );

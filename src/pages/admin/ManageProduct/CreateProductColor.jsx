@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { HiOutlineCamera } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createProductColor } from "~/apis/product";
 import InputForm from "~/components/InputForm";
 import Loading from "~/components/Loading";
@@ -11,6 +11,7 @@ import { Toast } from "~/utils/alert";
 import { toBase64 } from "~/utils/helper";
 //http://localhost:5173/admin/manage/products/create-color/:slug
 function CreateProductColor() {
+  const navigate = useNavigate();
   const { slug } = useParams();
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.user);
@@ -49,9 +50,10 @@ function CreateProductColor() {
         appActions.toggleModal({ isShowModal: false, childrenModal: null })
       );
       if (response.success) {
+        navigate("/admin/manage/products");
         return Toast.fire({
           icon: "success",
-          title: "Create product color successfully",
+          title: "Tạo màu mới thành công.",
         });
       }
     } catch (error) {

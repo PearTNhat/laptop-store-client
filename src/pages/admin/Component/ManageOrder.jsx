@@ -259,8 +259,8 @@ function MangeProduct() {
           </div>
 
           <div className="py-4">
-            <div className="shadow bg-white rounded-md overflow-hidden">
-              <table className="border border-gray-200 w-full">
+            <div className="shadow bg-white rounded-md">
+              <table className="border border-gray-200 w-full rounded-md">
                 <thead className="">
                   <tr className="border-gray-200 border-y bg-blue-900 text-white">
                     {tableHeaderTitleList.map((title) => (
@@ -504,6 +504,7 @@ function MangeProduct() {
                                               className={`${
                                                 item.status === 0
                                                   ? "text-yellow-400"
+                                                  : item.status === -1 ? "text-red-500" 
                                                   : "text-green-500"
                                               }`}
                                             >

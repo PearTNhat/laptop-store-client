@@ -18,7 +18,9 @@ import Loading from "~/components/Loading";
 import { apiGetSeriesBrand } from "~/apis/series";
 import { HiOutlineCamera } from "react-icons/hi";
 import SelectItem from "~/components/SelectItem";
+import { useNavigate } from "react-router-dom";
 function CreateProduct() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [invalidField, setInvalidField] = useState([]);
   const { brands } = useSelector((state) => state.brand);
@@ -103,9 +105,10 @@ function CreateProduct() {
         appActions.toggleModal({ isShowModal: false, childrenModal: null })
       );
       if (response.success) {
+        navigate("/admin/manage/products");
         return Toast.fire({
           icon: "success",
-          title: "Create product successfully",
+          title: "Tạo san phẩm mới thành công.",
         });
       } else {
         return Toast.fire({ icon: "error", title: response.message });
@@ -258,7 +261,7 @@ function CreateProduct() {
                 validate={{
                   required: "This input is required.",
                 }}
-                value='Intel Core i5-11300H'
+                defaultValue='Intel Core i5-11300H'
                 placeholder="Vd: Intel Core i5-11300H"
                 label="CPU"
                 register={register}
@@ -271,7 +274,7 @@ function CreateProduct() {
                 validate={{
                   required: "This input is required.",
                 }}
-                value='NVIDIA GeForce RTX 3050 Ti 4GB GDDR6'
+                defaultValue='NVIDIA GeForce RTX 3050 Ti 4GB GDDR6'
                 placeholder="Vd: NVIDIA GeForce RTX 3050 Ti 4GB GDDR6"
                 label="Card đồ họa"
                 register={register}
@@ -280,7 +283,7 @@ function CreateProduct() {
               <InputForm
                 id="ram"
                 iconRequire
-                value='8GB DDR4 3200MHz'
+                defaultValue='8GB DDR4 3200MHz'
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
                   required: "This input is required.",
@@ -293,7 +296,7 @@ function CreateProduct() {
               <InputForm
                 id="ram-storage"
                 iconRequire
-                value='8GB'
+                defaultValue='8GB'
                 cssParents={"w-[calc(25%-9.6px)]"}
                 validate={{
                   required: "This input is required.",
@@ -309,7 +312,7 @@ function CreateProduct() {
             <InputForm
               id="hardDrive"
               iconRequire
-              value='256GB SSD'
+              defaultValue='256GB SSD'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -322,7 +325,7 @@ function CreateProduct() {
             <InputForm
               id="hardDrive-storage"
               iconRequire
-              value='256GB'
+              defaultValue='256GB'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -351,7 +354,7 @@ function CreateProduct() {
             <InputForm
               id="screen"
               iconRequire
-              value='15.6 inch'
+              defaultValue='15.6 inch'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 15.6 inch"
               label="Kích thước màn hình"
@@ -364,7 +367,7 @@ function CreateProduct() {
             <InputForm
               id="resolution"
               iconRequire
-              value='1920x1080'
+              defaultValue='1920x1080'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 1920x1080"
               label="Độ phân giải màn hình"
@@ -398,7 +401,7 @@ function CreateProduct() {
             <InputForm
               id="size"
               iconRequire
-              value='359.86 x 258.7 x 21.9-23.9 mm (W x D x H)'
+              defaultValue='359.86 x 258.7 x 21.9-23.9 mm (W x D x H)'
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 359.86 x 258.7 x 21.9-23.9 mm (W x D x H)"
               validate={{
@@ -411,7 +414,7 @@ function CreateProduct() {
             <InputForm
               id="weight"
               iconRequire
-              value='1.5kg'
+              defaultValue='1.5kg'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -456,7 +459,7 @@ function CreateProduct() {
             <InputForm
               id="operatingSystem"
               iconRequire
-              value='Windows 10'
+              defaultValue='Windows 10'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -469,7 +472,7 @@ function CreateProduct() {
             <InputForm
               id="battery"
               iconRequire
-              value='53.5Wh'
+              defaultValue='53.5Wh'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",
@@ -490,7 +493,7 @@ function CreateProduct() {
             <InputForm
               id="need"
               iconRequire
-              value='Gaming'
+              defaultValue='Gaming'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
                 required: "This input is required.",

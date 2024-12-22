@@ -2,13 +2,15 @@ import moment from "moment";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import { apiGetOrdersUser } from "~/apis/order";
+import { apiGetOrdersUser, apiUpdateStatusOrderProduct } from "~/apis/order";
 import InputField from "~/components/InputField";
 import Pagination from "~/components/Pagination";
 import { useDebounce } from "~/hook/useDebounce";
 import { formatNumber } from "~/utils/helper";
 import { orderStatus } from "~/constants/order";
 import SelectItem from "~/components/SelectItem";
+import { Toast } from "~/utils/alert";
+import Swal from "sweetalert2";
 const status = [
   { value: "-1", label: "Hủy đơn" },
   { value: "0", label: "Đang xử lý" },
@@ -37,6 +39,37 @@ function Order() {
       }
       setOrders(response.data);
       setTotalPageCount(totalPage);
+    }
+  };
+  const handelCancelOrder = async ({ orderId, productId }) => {
+    try {
+      const result = await Swal.fire({
+        title: "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Hủy",
+        confirmButtonText: "Đồng ý",
+      });
+      if (result.isDismissed) return;
+      if (result.isConfirmed) {
+        const res = await apiUpdateStatusOrderProduct({
+          accessToken,
+          orderId,
+          productId,
+          status: -1,
+        });
+        console.log(res);
+        if (res.success) {
+          Toast.fire({ icon: "success", title: "Hủy đơn hàng thành công" });
+          fetchOrderUser(currentParams);
+        } else {
+          Toast.fire({ icon: "error", title: "Hủy đơn hàng thất bại" });
+        }
+      }
+    } catch (error) {
+      Toast.fire({ icon: "error", title: error.message });
     }
   };
   useEffect(() => {
@@ -97,6 +130,7 @@ function Order() {
               <th className="p-2">Số lượng</th>
               <th className="p-2">Giá</th>
               <th className="p-2">Trạng thái</th>
+              <th className="p-2">Chức năng</th>
             </tr>
           </thead>
           <tbody>
@@ -152,11 +186,28 @@ function Order() {
                               className={`${
                                 p.status === 0
                                   ? "text-yellow-400"
+                                  : p.status === -1
+                                  ? "text-red-500"
                                   : "text-green-500"
-                              }`}
+                              } text-center`}
                             >
                               {orderStatus[p.status]}
                             </p>
+                          </td>
+                          <td className="p-2">
+                            <button
+                              className={`text-red-400 underline hover:text-red-500 text-center w-full ${
+                                p.status == -1 && "hidden"
+                              }`}
+                              onClick={() =>
+                                handelCancelOrder({
+                                  orderId: order._id,
+                                  productId: p.product._id,
+                                })
+                              }
+                            >
+                              Hủy đơn
+                            </button>
                           </td>
                         </tr>
                       );

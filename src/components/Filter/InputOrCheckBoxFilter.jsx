@@ -36,11 +36,11 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
   useEffect(() => {
     const fetchHighestPrice = async () => {
       const response = await getAllProducts({
-        params: { sort: "-price", limit: 1 },
+        params: { sort: "-discountPrice", limit: 1 },
       });
       if (response.success) {
-        setHightestPrice(response.data[0]?.price);
-        setFilterPrice({...filterPrice,"price[lte]":response.data[0]?.price})
+        setHightestPrice(response.data[0]?.discountPrice);
+        setFilterPrice({...filterPrice,"discountPrice[lte]":response.data[0]?.discountPrice})
       }
     };
     fetchHighestPrice();
@@ -51,11 +51,11 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
   useEffect(() => {
     if (name !== activeFilter) return;
     const search = { ...currentParams };
-    if (filterPrice["price[gte]"]) {
-      search["price[gte]"] = filterPrice["price[gte]"];
+    if (filterPrice["discountPrice[gte]"]) {
+      search["discountPrice[gte]"] = filterPrice["discountPrice[gte]"];
     }
-    if (filterPrice["price[lte]"]) {
-      search["price[lte]"] = filterPrice["price[lte]"];
+    if (filterPrice["discountPrice[lte]"]) {
+      search["discountPrice[lte]"] = filterPrice["discountPrice[lte]"];
     }
     setSearchParams(search);
     // cần dependency activeFilter để chọn vào cái nào thì search ngay cái đó
@@ -89,35 +89,35 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
             <button
               className="cursor-pointer hover:text-main"
               onClick={() =>
-                setFilterPrice({ ...filterPrice, "price[gte]": "", "price[lte]": "" })
+                setFilterPrice({ ...filterPrice, "discountPrice[gte]": "", "discountPrice[lte]": "" })
               }
             >
               Reset
             </button>
           </div>
-          <div className="flex gap-3 pt-[16px]  px-[16px]">
+          <div className="flex gap-3 py-[16px]  px-[16px] ">
             <InputField
               placeholder={"Từ"}
-              value={formatNumber(Number(filterPrice["price[gte]"])) || 0}
-              nameKey={"price[gte]"}
+              value={formatNumber(Number(filterPrice["discountPrice[gte]"])) || 0}
+              nameKey={"discountPrice[gte]"}
               onChange={(e) => {
                 if (/^-?\d+$/.test(e.target.value)) {
                   setFilterPrice({
                     ...filterPrice,
-                    "price[gte]": covertMoneyToNumber(e.target.value),
+                    "discountPrice[gte]": covertMoneyToNumber(e.target.value),
                   });
                 }
               }}
             />
             <InputField
               placeholder={"Đến"}
-              value={formatNumber(Number(filterPrice["price[lte]"])) || ""}
-              nameKey={"price[lte]"}
+              value={formatNumber(Number(filterPrice["discountPrice[lte]"])) || ""}
+              nameKey={"discountPrice[lte]"}
               onChange={(e) => {
                 if (/^-?\d+$/.test(covertMoneyToNumber(e.target.value))) {
                   setFilterPrice({
                     ...filterPrice,
-                    "price[lte]": covertMoneyToNumber(e.target.value),
+                    "discountPrice[lte]": covertMoneyToNumber(e.target.value),
                   });
                 }
               }}

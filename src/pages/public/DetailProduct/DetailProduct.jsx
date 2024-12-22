@@ -5,6 +5,7 @@ import Breadcrumbs from "~/components/Breadcrumbs";
 import Button from "~/components/Button";
 import {
   calculatePercent,
+  capitalizeFirstCharacter,
   convertNumberToStar,
   formatNumber,
 } from "~/utils/helper";
@@ -49,11 +50,21 @@ function DetailProduct() {
     if (!flag) setColorProduct(data.colors[0]);
     if (success && otherProduct.length === 0) {
       const oProducts = await getAllProducts({
-        params: { "slug[ne]": slug },
+        params: { "slug[ne]": slug,"sort":"-totalRating","need":data.configs?.need.description},
       });
       if (oProducts?.success) setOtherProduct(oProducts.data);
     }
   }
+  const handleBuyNow = async () => {
+    try {
+      const res = await handleAddToCart();
+      if (res === 1) {
+        navigate("/user/cart");
+      }
+    } catch (error) {
+      Toast.fire({ icon: "error", title: error.message });
+    }
+  };
   const handleAddToCart = async () => {
     if (!accessToken) {
       Swal.fire({
@@ -82,6 +93,7 @@ function DetailProduct() {
         title: "Add to cart success",
       });
       dispatch(fetchCurrentUser({ token: accessToken }));
+      return 1;
     } else {
       Toast.fire({
         icon: "error",
@@ -122,18 +134,23 @@ function DetailProduct() {
           </div>
           <div className="max-md:w-full w-[calc(60%-8px)] mt-6">
             <h2 className="font-medium text-2xl">{product.title}</h2>
+            <p><span className="text-gray-500">Thương hiệu:</span> <span className="text-red-400">{capitalizeFirstCharacter(product.brand)}</span></p>
             <div className="flex items-center text-[13px] font-medium gap-1 my-2">
               <p className="text-xl font-semibold text-black">
                 {formatNumber(product.discountPrice)} ₫
               </p>
-              {/* Giá chưa giảm */}
-              <p className="line-through text-[#6b7280] ">
-                {formatNumber(product.price)} ₫
-              </p>
-              {/* % */}
-              <p className={`ml-1 text-main`}>
-                -{calculatePercent(product.price, product.discountPrice)}%
-              </p>
+              {product.price !== 0 && (
+                <>
+                  {/* Giá chưa giảm */}
+                  <p className="line-through text-[#6b7280] ">
+                    {formatNumber(product.price)} ₫
+                  </p>
+                  {/* % */}
+                  <p className={`ml-1 text-main`}>
+                    -{calculatePercent(product.price, product.discountPrice)}%
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="flex text-yellow-300 text-[13px] my-2">
@@ -149,39 +166,43 @@ function DetailProduct() {
               <p className="font-medium">Mô tả ngắn gọn:</p>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: product?.features
+                  __html: product?.features,
                 }}
               ></div>
-            <div className="flex items-center  gap-2 mt-3">
-              <p className="font-medium w-[80px]">Màu sắc:</p>
-              <div className="flex flex-wrap gap-2 cursor-pointer">
-                {product.colors?.map((color) => (
-                  <div
-                    key={color.color}
-                    className={`flex items-center border ${
-                      color.color === colorProduct.color
-                        ? " border-main"
-                        : "border-gray-300"
-                    } rounded-sm py-1`}
-                    onClick={() => setColorProduct(color)}
-                  >
-                    <img
-                      src={color.primaryImage?.url}
-                      alt={color.color}
-                      className="w-[32px] h-[32px]"
-                    />
-                    <small className="font-normal pr-1">{color.color}</small>
-                  </div>
-                ))}
+              <div className="flex items-center  gap-2 mt-3">
+                <p className="font-medium w-[80px]">Màu sắc:</p>
+                <div className="flex flex-wrap gap-2 cursor-pointer">
+                  {product.colors?.map((color) => (
+                    <div
+                      key={color.color}
+                      className={`flex items-center border ${
+                        color.color === colorProduct.color
+                          ? " border-main"
+                          : "border-gray-300"
+                      } rounded-sm py-1`}
+                      onClick={() => setColorProduct(color)}
+                    >
+                      <img
+                        src={color.primaryImage?.url}
+                        alt={color.color}
+                        className="w-[32px] h-[32px]"
+                      />
+                      <small className="font-normal pr-1">{color.color}</small>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-3">
+                <p className="font-medium w-[80px]">Số lượng:</p>
+                <QuantityInput setQuantity={setQuantity} quantity={quantity} />
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-3">
-              <p className="font-medium w-[80px]">Số lượng:</p>
-              <QuantityInput setQuantity={setQuantity} quantity={quantity} />
-            </div>
-            </div>
             <div className="flex gap-5 my-3">
-              <Button wf className={"uppercase font-medium"}>
+              <Button
+                wf
+                className={"uppercase font-medium"}
+                onClick={handleBuyNow}
+              >
                 Mua ngay
               </Button>
               <Button
@@ -204,13 +225,6 @@ function DetailProduct() {
                   }`}
                   ref={descRef}
                 >
-                  {/* {product?.description?.length > 1 && (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(product?.description),
-                      }}
-                    ></div>
-                  )} */}
                   {product?.description?.length === 1 && (
                     <div
                       dangerouslySetInnerHTML={{

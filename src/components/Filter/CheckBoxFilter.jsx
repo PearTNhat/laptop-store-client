@@ -43,6 +43,12 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
         }
       }}
     >
+      {
+        filter[name].length > 0 &&
+        <span className="absolute bg-main top-[0] translate-y-[-50%] right-[-5px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
+        {filter[name].length}
+      </span>
+      }
       <div className="flex items-center p-3 cursor-pointer">
         <span className="capitalize text-sm">{title}</span>
         <RiArrowDropDownLine className="text-xl" />
@@ -57,11 +63,11 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
         <div className="flex justify-between items-center gap-2 px-[16px] py-3 border border-b-gray-400 text-sm">
           <div className="flex gap-1">
             <span>Selected: </span>
-            <span>{filter.length}</span>
+            <span>{filter[name].length}</span>
           </div>
           <button
             className="cursor-pointer hover:text-main"
-            onClick={() => setFilter({ ...filter, colors: [] })}
+            onClick={() => setFilter({ ...filter, [name]: [] })}
           >
             Reset
           </button>

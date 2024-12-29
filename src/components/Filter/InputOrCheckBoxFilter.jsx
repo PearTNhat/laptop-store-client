@@ -89,7 +89,7 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
             <button
               className="cursor-pointer hover:text-main"
               onClick={() =>
-                setFilterPrice({ ...filterPrice, "discountPrice[gte]": "", "discountPrice[lte]": "" })
+                setFilterPrice({ ...filterPrice, "discountPrice[gte]": "", "discountPrice[lte]": hightestPrice })
               }
             >
               Reset
@@ -101,7 +101,7 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
               value={formatNumber(Number(filterPrice["discountPrice[gte]"])) || 0}
               nameKey={"discountPrice[gte]"}
               onChange={(e) => {
-                if (/^-?\d+$/.test(e.target.value)) {
+                if (/^-?\d+$/.test(covertMoneyToNumber(e.target.value))) {
                   setFilterPrice({
                     ...filterPrice,
                     "discountPrice[gte]": covertMoneyToNumber(e.target.value),

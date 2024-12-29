@@ -160,7 +160,7 @@ function ProductCategory() {
             <i>
               <img src={AiIcon} className="w-[30px] h-[30px]" alt="" />
             </i>
-            Tìm kiếm theo mô tả
+            Tìm kiếm theo nhu cầu
           </button>
         </div>
         <div className="flex flex-wrap gap-3">

@@ -7,7 +7,7 @@ const apiCreateOrder = async ({ accessToken, body }) => {
                 'Authorization': `Bearer ${accessToken}`
             },
         }
-        const { data } = await http.post('order', body, config)
+        const { data } = await http.post('order/payment', body, config)
         return data
     } catch (error) {
         if (error.response && error.response.data) {
@@ -25,6 +25,17 @@ const apiGetOrdersUser = async ({ accessToken, params }) => {
             params
         }
         const { data } = await http.get('order/user', config)
+        return data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data
+        }
+        throw new Error(error.message)
+    }
+}
+const apiCheckStatusOrder = async ({ orderId  }) => {
+    try {
+        const { data } = await http.post('order/payment/'+orderId)
         return data
     } catch (error) {
         if (error.response && error.response.data) {
@@ -123,7 +134,9 @@ const apiDeleteProductOrder = async ({ accessToken, orderId, productId }) => {
 export {
     apiCreateOrder,
     apiGetOrdersUser,
+    apiCheckStatusOrder,
     apiGetAllOrders, apiDeleteOrder,
     apiDeleteProductOrder, apiUpdateInfoOrder,
     apiUpdateStatusOrderProduct
+
 }

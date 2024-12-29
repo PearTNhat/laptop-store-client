@@ -210,6 +210,9 @@ const convertObjToValueLabel = (obj) => {
 const getValueLabel = (obj) => {
   return obj.map(item => ({ value: item._id, label: item.title }));
 }
+const clearCharacter = (description) => {
+  return description.replace(/[^a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸỳỵỷỹ\s]/g, ' ');
+};
 export {
   calculatePercent,
   formatNumber,
@@ -220,5 +223,6 @@ export {
   toBase64,
   capitalizeFirstCharacter,
   convertObjToValueLabel,
-  getValueLabel
+  getValueLabel,
+  clearCharacter
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { apiCreateOrder } from "~/apis/order";
 import { Logo } from "~/assets/images";
@@ -21,7 +21,6 @@ function Checkout() {
       address: userData?.address,
     },
   });
-  const navigate = useNavigate();
   const [total] = useState(() =>
     userData?.carts.reduce(
       (acc, cart) => acc + cart.product.discountPrice * cart.quantity,
@@ -39,11 +38,9 @@ function Checkout() {
       body,
     });
     if (response?.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Mua hàng thành công",
-      });
-      navigate("/");
+      if (response.data.shortLink) {
+        window.location.href = response.data.shortLink;
+      }
     } else {
       Swal.fire({
         icon: "error",

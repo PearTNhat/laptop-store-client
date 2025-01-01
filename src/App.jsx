@@ -15,9 +15,7 @@ import {
   ManageUser,
 } from "./pages/admin";
 import CreateProduct from "./pages/admin/ManageProduct/CreateProduct";
-import CreateProductColor from "./pages/admin/ManageProduct/CreateProductColor";
-import EditProduct from "./pages/admin/ManageProduct/EditProduct";
-import EditProductColor from "./pages/admin/ManageProduct/EditProductColor";
+import HandleProductColor from "./pages/admin/ManageProduct/HandleProductColor";
 import {
   Order,
   UserInfo,
@@ -26,6 +24,7 @@ import {
 } from "./pages/Member/UserProfile";
 import DetailCart from "./components/MyCart/DetailCart";
 import Checkout from "./components/Checkout";
+import EditProduct from "./pages/admin/ManageProduct/EditProduct";
 
 function App() {
   const { isShowModal,animation, childrenModal } = useSelector((state) => state.app);
@@ -65,11 +64,11 @@ function App() {
           />
           <Route
             path={path.ADMIN_MANAGE_PRODUCTS_CREATE_COLOR}
-            element={<CreateProductColor />}
+            element={<HandleProductColor />}
           />
           <Route
             path={path.ADMIN_MANAGE_PRODUCTS_EDIT_COLOR}
-            element={<EditProductColor />}
+            element={<HandleProductColor />}
           />
           <Route path={path.ADMIN_MANAGE_ORDERS} element={<ManageOrder />} />
         </Route>

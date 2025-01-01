@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { HiOutlineCamera } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { createProductColor } from "~/apis/product";
+import { createProductColor, getProduct, updateProductColor } from "~/apis/product";
 import InputForm from "~/components/InputForm";
 import Loading from "~/components/Loading";
 import { appActions } from "~/store/slice/app";
 import { Toast } from "~/utils/alert";
 import { toBase64 } from "~/utils/helper";
 //http://localhost:5173/admin/manage/products/create-color/:slug
-function CreateProductColor() {
+function HandleProductColor() {
   const navigate = useNavigate();
-  const { slug } = useParams();
+  const { slug, colorId } = useParams();
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.user);
   const {
@@ -20,20 +21,30 @@ function CreateProductColor() {
     handleSubmit,
     formState: { errors },
     watch,
+    reset
   } = useForm();
+  const [product, setProduct] = useState(null);
+  const [color, setColor] = useState(null);
   const [thumbPreview, setThumbPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-  const handleCreateProductColor = async (data) => {
+  const fetProduct = async () => {
+    const response = await getProduct({ slug });
+    if (response.success) {
+      setProduct(response.data);
+      setColor(response.data.colors.find((item) => item._id === colorId));
+    }
+  };
+  const handleSubmitProductColor = async (data) => {
     try {
-      console.log(data)
       const formData = new FormData();
       formData.append("primaryImage", data.thumb[0]);
-      for (let image of data.images) {
-        formData.append("images", image);
-      }
       formData.append(
         "document",
-        JSON.stringify({ color: data.color, quantity: data.quantity })
+        JSON.stringify({
+          color: data.color,
+          quantity: data.quantity,
+          images: imagesPreview,
+        })
       );
       dispatch(
         appActions.toggleModal({
@@ -41,11 +52,21 @@ function CreateProductColor() {
           childrenModal: <Loading />,
         })
       );
-      const response = await createProductColor({
-        accessToken: accessToken,
-        slug,
-        formData,
-      });
+      let response;
+      if (colorId) {
+        response = await updateProductColor({
+          accessToken: accessToken,
+          slug,
+          formData,
+          params: { colorId },
+        });
+      } else {
+        response = await createProductColor({
+          accessToken: accessToken,
+          slug,
+          formData,
+        });
+      }
       dispatch(
         appActions.toggleModal({ isShowModal: false, childrenModal: null })
       );
@@ -53,7 +74,7 @@ function CreateProductColor() {
         navigate("/admin/manage/products");
         return Toast.fire({
           icon: "success",
-          title: "Tạo màu mới thành công.",
+          title: `${colorId ? 'Cập nhật màu sản phẩm thành công':'Tạo màu mới thành công.'}`,
         });
       }
     } catch (error) {
@@ -63,12 +84,15 @@ function CreateProductColor() {
       return Toast.fire({ icon: "error", title: error.message });
     }
   };
+  const handleRemoveImage = (index) => {
+    const newImages = imagesPreview.filter((_, i) => i !== index);
+    setImagesPreview(newImages);
+  }
   const handleThumbToPreview = async (file) => {
     const preview = await toBase64(file);
     setThumbPreview(preview);
   };
   const handleImagesPreview = async (files) => {
-    const listPreviews = [];
     for (let file of files) {
       if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type))
         return Toast.fire({
@@ -76,17 +100,29 @@ function CreateProductColor() {
           title: "Image is in wrong format.",
         });
       const preview = await toBase64(file);
-      listPreviews.push(preview);
+      setImagesPreview((prev) => [...prev, preview]);
     }
-    setImagesPreview(listPreviews);
   };
   useEffect(() => {
-    if (watch("thumb").length > 0) {
+    if(!colorId) return;
+    fetProduct();
+  }, []);
+  useEffect(() => {
+    if(!colorId) return;
+    reset({
+      color: color?.color || "",
+      quantity: color?.quantity || 0,
+    });
+    setThumbPreview(color?.primaryImage?.url);
+    setImagesPreview(color?.images?.map((item) => item.url));
+  }, [product]);
+  useEffect(() => {
+    if (watch("thumb")?.length > 0) {
       handleThumbToPreview(watch("thumb")[0]);
     }
   }, [watch("thumb")]);
   useEffect(() => {
-    if (watch("images").length > 0) {
+    if (watch("images")?.length > 0) {
       handleImagesPreview(watch("images"));
     }
   }, [watch("images")]);
@@ -94,17 +130,17 @@ function CreateProductColor() {
     <div className="h-screen overflow-auto">
       <div className="bg-[#f7f7f7] px-2 py-4">
         <h3 className="uppercase text-2xl font-semibold text-black">
-          Thêm màu mới cho sản phẩm
+          {colorId ? `Cập nhật màu sản phẩm: ${color?.color}` : 'Thêm màu mới cho sản phẩm'}
         </h3>
       </div>
       <div className="my-3 px-4">
-        <form onSubmit={handleSubmit(handleCreateProductColor)}>
+        <form onSubmit={handleSubmit(handleSubmitProductColor)}>
           <div className="flex gap-4">
             <InputForm
               cssParents={"mt-3"}
               id="color"
               validate={{ required: "This input is required." }}
-              label="Color"
+              label="Màu sắc"
               register={register}
               error={errors}
             />
@@ -113,9 +149,9 @@ function CreateProductColor() {
               id="quantity"
               validate={{
                 required: "This input is required.",
-                min: { value: 1, message: "Quantity must be greater than 0" },
+                min: { value: 1, message: "Số lượng phải lớn hơn 0" },
               }}
-              label="Quantity"
+              label="Số lượng"
               register={register}
               error={errors}
             />
@@ -145,9 +181,7 @@ function CreateProductColor() {
                   <input
                     type="file"
                     id="profilePicture"
-                    {...register("thumb", {
-                      required: "This image is required.",
-                    })}
+                    {...register("thumb", colorId ?   {}: { required: "Yếu cầu hình ảnh" })}
                     className="sr-only"
                   />
                 </div>
@@ -171,15 +205,12 @@ function CreateProductColor() {
                       <div className="w-full h-full flex items-center justify-center text-primary bg-blue-50/50">
                         <HiOutlineCamera className="w-8 h-auto" />
                       </div>
-                      s
                     </label>
                     <input
                       type="file"
                       multiple="multiple"
                       id="images"
-                      {...register("images", {
-                        required: "This image is required.",
-                      })}
+                      {...register("images", colorId ?   {}: { required: "Yếu cầu hình ảnh" })}
                       className="sr-only"
                     />
                   </div>
@@ -189,14 +220,24 @@ function CreateProductColor() {
                     </small>
                   )}
                 </div>
-                {imagesPreview.length > 0 &&
-                  imagesPreview.map((image) => (
-                    <div className="flex w-[200px] h-[200px] outline outline-1 rounded-md overflow-hidden" key={image}>
+                {imagesPreview?.length > 0 &&
+                  imagesPreview.map((image, index) => (
+                    <div
+                      className=" relative flex w-[200px] h-[200px] outline outline-1 rounded-md overflow-hidden"
+                      key={image}
+                    >
                       <img
                         src={image}
                         alt="avatar"
                         className="w-full h-full object-cover"
                       />
+                      <div
+                        title="Xóa"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute right-1 top-1 rounded-md bg-black bg-opacity-40 text-white p-1 cursor-pointer hover:text-red-500 hover:bg-opacity-15"
+                      >
+                        <FaRegTrashAlt />
+                      </div>
                     </div>
                   ))}
               </div>
@@ -205,9 +246,9 @@ function CreateProductColor() {
           <div className="my-3 flex justify-center">
             <button
               type="submit"
-              className="bg-primary text-white p-2 rounded-md"
+              className="bg-primary text-white py-2 px-10 rounded-md"
             >
-              Thêm màu mới
+              {colorId ? 'Cập nhật' : 'Thêm mới'}
             </button>
           </div>
         </form>
@@ -216,4 +257,4 @@ function CreateProductColor() {
   );
 }
 
-export default CreateProductColor;
+export default HandleProductColor;

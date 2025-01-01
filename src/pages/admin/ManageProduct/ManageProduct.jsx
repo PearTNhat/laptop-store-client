@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "~/store/action/brand";
 import { apiGetSeriesBrand } from "~/apis/series";
 import { capitalizeFirstCharacter, formatNumber, getValueLabel } from "~/utils/helper";
+import Loading from "~/components/Loading";
+import { appActions } from "~/store/slice/app";
 const tableHeaderTitleList = [
   "#",
   "Ảnh",
@@ -79,8 +81,9 @@ function MangeProduct() {
       });
       if (result.isDismissed) return;
       if (result.isConfirmed) {
+        dispatch(appActions.toggleModal({isShowModel:true,childrenModal: <Loading /> }))
         const res = await apiDeleteProduct({accessToken, pId: id });
-        console.log(res)
+        dispatch(appActions.toggleModal({isShowModel:false,childrenModal:null }))
         if (res.success) {
           fetchAllProduct(currentParams)
           return Toast.fire({
@@ -107,7 +110,9 @@ function MangeProduct() {
       });
       if (result.isDismissed) return;
       if (result.isConfirmed) {
+        dispatch(appActions.toggleModal({isShowModel:true,childrenModal: <Loading /> }))
         const res = await apiDeleteProductColor({accessToken, pId, cId });
+        dispatch(appActions.toggleModal({isShowModel:false }))
         if (res.success) {
           fetchAllProduct(currentParams)
           return Toast.fire({

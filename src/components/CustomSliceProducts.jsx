@@ -1,16 +1,27 @@
+import { useCallback, useState } from "react";
 import Slider from "react-slick";
 import Product from "~/pages/public/Home/component/Product/Product";
 /* eslint-disable react/prop-types */
 function CustomSliceProducts({ customSetting, products, isNew, isTrending }) {
+  const [isDragging, setIsDragging] = useState(false);
   const settings = {
     infinite: false,
-    // autoplay: true,
-    autoplaySpeed: 2000,
-    speed: 500,
     slidesToShow: 4,
-    slidesToScroll: 1,
+    slidesToScroll: 4,
     customSetting,
+    beforeChange: () => setIsDragging(true),
+    afterChange: () => setIsDragging(false),
   };
+  const handleClick = useCallback(
+    (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [isDragging]
+  );
+
   return (
     <Slider {...settings}>
       {products.map((item) => (
@@ -28,6 +39,7 @@ function CustomSliceProducts({ customSetting, products, isNew, isTrending }) {
             colors={item.colors}
             totalRating={item.totalRating}
             className={"p-3 mb-3 mx-3"}
+            onClickLink={handleClick}
           />
         </div>
       ))}

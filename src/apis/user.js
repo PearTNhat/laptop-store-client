@@ -114,12 +114,12 @@ const apiGetAllUsers = async ({ accessToken, ...params }) => {
     throw new Error(error.message);
   }
 }
-const apiRefreshToken = async (accessToken) => {
+const apiRefreshToken = async () => {
   const config = {
     withCredentials: true
   }
   try {
-    const { data } = await http.post("user/refresh-token", { accessToken }, config);
+    const { data } = await http.post("user/refresh-token", config);
     return data;
   } catch (error) {
     if (error.response && error.response.data) {

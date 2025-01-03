@@ -13,7 +13,7 @@ function CustomPaging({images}) {
     },
     dots: true,
     dotsClass: "slick-dots slick-thumb",
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1

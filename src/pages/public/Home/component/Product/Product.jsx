@@ -24,6 +24,7 @@ function Product({
   totalRating,
   isNew,
   isTrending,
+  onClickLink
 }) {
   const {
     userData: { wishlist, carts },
@@ -43,6 +44,7 @@ function Product({
     label.img = TrendingLabel;
     label.text = "Trending";
   }
+  
   const handleAddWishList = async (e) => {
     e.stopPropagation();
     await apiUpdateWishlist({ accessToken, product: pid });
@@ -88,7 +90,7 @@ function Product({
       }
     >
       <div className="mb-3 relative">
-        <Link to={`${path.PUBLIC}${slug}`} className="block">
+        <Link to={`${path.PUBLIC}${slug}`} className="block" onClick={onClickLink}>
           <div className="css-w-img ">
             <div className="css-img-item">
               <img

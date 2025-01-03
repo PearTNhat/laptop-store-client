@@ -16,6 +16,7 @@ export const http = axios.create({
 http.interceptors.request.use(async function (config) {
 
   const accessToken = config.headers?.Authorization?.startsWith('Bearer') && config.headers?.Authorization.split(' ')[1]
+  console.log('accesstoken',accessToken)
   if(!accessToken) return config
   const decodeAccessToken = jwtDecode(accessToken)
   const currentTime = Date.now()/1000
@@ -25,12 +26,12 @@ http.interceptors.request.use(async function (config) {
     dispatch(
       appActions.toggleModal({ isShowModal: false, childrenModal: null })
     );
-    const res = await apiRefreshToken(accessToken)
+    const res = await apiRefreshToken()
     if(res?.success){
       config.headers.Authorization = `Bearer ${res.accessToken}`
       dispatch(userActions.setAccessToken({accessToken:res.accessToken}))
     }else{
-      await Swal.fire("Oops!", "Login expired, Please login again", "info").then(()=>{
+      await Swal.fire("Oops!", "Đăng nhập đã hết hạn vui lòng đăng nhập lại", "info").then(()=>{
         dispatch(userActions.logout())
         window.location.href = '/login'
       })

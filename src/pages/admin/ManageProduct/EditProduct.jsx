@@ -160,8 +160,6 @@ function EditProduct() {
       connectionPort: configsObj?.connectionPort,
     });
   }, [product]);
-  console.log(payload);
-  console.log(listSeries);
 
   const handleThumbToPreview = async (file) => {
     const preview = await toBase64(file);

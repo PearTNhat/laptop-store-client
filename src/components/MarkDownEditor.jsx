@@ -1,15 +1,20 @@
 /* eslint-disable react/prop-types */
-//import { useRef } from 'react';
+// 878
 import { Editor } from '@tinymce/tinymce-react';
+import { memo, useEffect, useState } from 'react';
 
-export default function MarkDownEditor({label,value='',changeValue,name,height,invalidField,setInvalidField,iconRequire, classParent}) {
+function MarkDownEditor({label,value='',changeValue,name,height,invalidField,setInvalidField,iconRequire, classParent}) {
   const error = invalidField?.find((item) => item.name === name);
+  const [localValue, setLocalValue] = useState(value);
+  useEffect(() => {
+    setLocalValue(value)
+  }, [value]);
   return (
     <div className={classParent}>
       <span className='inline-block my-2'>{iconRequire &&<span className='text-red-500'>*</span>}{label}</span>
       <Editor
-        apiKey='j9p5nmemoud9rzhrgc1gjydlx1t1x0t14wsstn6ccmb3cmya'
-        initialValue={value}
+        apiKey={import.meta.env.VITE_API_KEY_TINY}
+        value={localValue}
         init={{
           height,
           menubar: true,
@@ -25,7 +30,10 @@ export default function MarkDownEditor({label,value='',changeValue,name,height,i
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
         }}
         onChange = {(e)=>{
-          changeValue( (prev) => ({...prev,[name]:e.target.getContent()}))
+          changeValue((prev) => ({...prev,[name]:e.target.getContent()}))
+        }}
+        onEditorChange={(e)=>{
+          setLocalValue(e)
         }}
         onFocusOut = {()=> setInvalidField && setInvalidField([])}
       />
@@ -33,3 +41,4 @@ export default function MarkDownEditor({label,value='',changeValue,name,height,i
     </div>
   );
 }
+export default memo(MarkDownEditor);

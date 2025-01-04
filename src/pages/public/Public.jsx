@@ -2,12 +2,12 @@ import { Outlet } from 'react-router-dom'
 import Footer from '~/sections/Footer'
 import Header from '~/sections/Header'
 import Navigation from '~/sections/Navigation'
-import TopBar from '~/sections/TopBar.jsx'
+import Topbar from '~/sections/Topbar'
 // trang này sẽ hiển thị khi người dùng chưa đăng nhập
 function Public() {
   return (
     <div className='relative'>
-      <TopBar/>
+      <Topbar/>
       <Header/>
       <Navigation/>
       <Outlet/>

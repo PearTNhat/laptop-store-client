@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import path from "~/constants/path"
 import { fetchCurrentUser } from "~/store/action/user"
 
-function TopBar() {
+function Topbar() {
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   useEffect(() => {
@@ -30,4 +30,4 @@ function TopBar() {
   )
 }
 
-export default TopBar
+export default Topbar

@@ -28,6 +28,6 @@ function TopBar() {
         </div>
     </div>
   )
-}0
+}
 
 export default TopBar

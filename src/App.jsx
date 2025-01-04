@@ -28,10 +28,11 @@ import EditProduct from "./pages/admin/ManageProduct/EditProduct";
 
 function App() {
   const { isShowModal,animation, childrenModal } = useSelector((state) => state.app);
+  console.log('clg',import.meta.env.VITE_BASE_URL)
   return (
     <div className="relative h-full w-full overflow-auto">
     {isShowModal && <Modal animation={animation}>{childrenModal}</Modal>}
-      <Routes>
+      <Routes >
         <Route path="/user" element={<UserProfileLayout />}>
           <Route path={path.USER_PROFILE} element={<UserInfo />} />
           <Route path={path.USER_CART} element={<DetailCart />} />

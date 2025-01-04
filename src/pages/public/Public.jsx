@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import Footer from '~/sections/Footer'
 import Header from '~/sections/Header'
 import Navigation from '~/sections/Navigation'
-import TopBar from '~/sections/TopBar'
+import TopBar from '~/sections/TopBar.jsx'
 // trang này sẽ hiển thị khi người dùng chưa đăng nhập
 function Public() {
   return (

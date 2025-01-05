@@ -104,7 +104,7 @@ function EditProduct() {
     if (response.success) {
       return Toast.fire({
         icon: "success",
-        title: "Update product successfully",
+        title: "Câp nhật sản phẩm thành công",
       });
     } else {
       return Toast.fire({ icon: "error", title: response.message });
@@ -220,7 +220,7 @@ function EditProduct() {
                 cssParents={"w-[calc(25%-9px)]"}
                 iconRequire
                 id="title"
-                validate={{ required: "This input is required." }}
+                validate={{ required: "Không dược để trống trường này" }}
                 label="Tên"
                 register={register}
                 error={errors}
@@ -229,7 +229,7 @@ function EditProduct() {
                 cssParents={"w-[calc(25%-9px)]"}
                 id="price"
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                   min: {
                     value: 0,
                     message: "Quantity must be at least 0.",
@@ -254,7 +254,7 @@ function EditProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                   validate: (value) => {
                     if (price === "" || price == 0) return true;
                     if (Number(value) > Number(price)) {
@@ -288,7 +288,7 @@ function EditProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 label="CPU"
                 register={register}
@@ -299,7 +299,7 @@ function EditProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 label="Card đồ họa"
                 register={register}
@@ -310,7 +310,7 @@ function EditProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 label="Mô tả ram"
                 register={register}
@@ -321,7 +321,7 @@ function EditProduct() {
                 iconRequire
                 cssParents={"w-[calc(20%-9.6px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 label="Dung lượng Ram"
                 register={register}
@@ -335,7 +335,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Mô tả ổ cứng"
               register={register}
@@ -346,7 +346,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Dung lượng cứng"
               register={register}
@@ -401,7 +401,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Chất liệu"
               register={register}
@@ -412,7 +412,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Kích thước"
               register={register}
@@ -423,7 +423,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Trọng lượng"
               register={register}
@@ -462,7 +462,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Hệ điều hành"
               register={register}
@@ -473,7 +473,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Pin"
               register={register}
@@ -491,7 +491,7 @@ function EditProduct() {
               iconRequire
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Nhu cầu"
               register={register}

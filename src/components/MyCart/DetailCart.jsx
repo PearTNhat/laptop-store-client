@@ -34,18 +34,18 @@ function DetailCart() {
     if (!address || !phone) {
       let text;
       if (!address && !phone) {
-        text = "address and phone number";
+        text = "Địa chỉ và số điện thoại";
       } else {
-        text = !address ? "address" : !phone ? "phone number" : "";
+        text = !address ? "địa chỉ" : !phone ? "số điện thoại" : "";
       }
       await Swal.fire({
         icon: "info",
-        title: "Almost!",
-        text: `Please update your ${text} before checkout.`,
+        title: "Opp!",
+        text: `Vui lòng cập nhật ${text} của bạn trước khi mua hàng.`,
         showCancelButton: true,
         showConfirmButton: true,
-        confirmButtonText: "Update now",
-        cancelButtonText: "Cancel",
+        confirmButtonText: "Cập nhật ngay",
+        cancelButtonText: "Hủy",
       }).then((result) => {
         if (result.isConfirmed) {
           console.log(result);
@@ -62,10 +62,10 @@ function DetailCart() {
       body: { product, color },
     });
     if (response?.success) {
-      Toast.fire({ icon: "success", title: "Delete item successfully" });
+      Toast.fire({ icon: "success", title: "Xóa sản phẩm thành công" });
       dispatch(fetchCurrentUser({ token: accessToken }));
     } else {
-      Toast.fire({ icon: "error", title: "Fail to delete item" });
+      Toast.fire({ icon: "error", title: "Xảy ra lỗi khi xóa sản phẩm" });
     }
   };
   useEffect(() => {

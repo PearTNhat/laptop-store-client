@@ -32,7 +32,7 @@ function UserInfo() {
     dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))
     if(response.success){
       dispatch(fetchCurrentUser({token: accessToken}))
-      return Toast.fire({icon:'success',title:'Update product successfully'})
+      return Toast.fire({icon:'success',title:'Cập nhật thông tin thành công'})
     }else{
       return Toast.fire({icon:'error',title:response.message})
     }

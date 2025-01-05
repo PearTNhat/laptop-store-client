@@ -189,7 +189,7 @@ function CreateProduct() {
                 cssParents={"w-[calc(25%-9px)]"}
                 iconRequire
                 id="title"
-                validate={{ required: "This input is required." }}
+                validate={{ required: "Không dược để trống trường này" }}
                 label="Tên"
                 defaultValue='123'
                 register={register}
@@ -199,7 +199,7 @@ function CreateProduct() {
                 cssParents={"w-[calc(25%-9px)]"}
                 id="price"
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                   min: {
                     value: 0,
                     message: "Quantity must be at least 0.",
@@ -224,7 +224,7 @@ function CreateProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                   validate: (value) => {
                     if (price === "" || price == 0) return true;
                     if (Number(value) > Number(price)) {
@@ -259,7 +259,7 @@ function CreateProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 defaultValue='Intel Core i5-11300H'
                 placeholder="Vd: Intel Core i5-11300H"
@@ -272,7 +272,7 @@ function CreateProduct() {
                 iconRequire
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 defaultValue='NVIDIA GeForce RTX 3050 Ti 4GB GDDR6'
                 placeholder="Vd: NVIDIA GeForce RTX 3050 Ti 4GB GDDR6"
@@ -286,7 +286,7 @@ function CreateProduct() {
                 defaultValue='8GB DDR4 3200MHz'
                 cssParents={"w-[calc(25%-9px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 placeholder="Vd: 8GB DDR4 3200MHz"
                 label="Mô tả ram"
@@ -299,7 +299,7 @@ function CreateProduct() {
                 defaultValue='8GB'
                 cssParents={"w-[calc(25%-9.6px)]"}
                 validate={{
-                  required: "This input is required.",
+                  required: "Không dược để trống trường này",
                 }}
                 placeholder="Vd: 8GB"
                 label="Dung lượng Ram"
@@ -315,7 +315,7 @@ function CreateProduct() {
               defaultValue='256GB SSD'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder={"Vd: 256GB SSD"}
               label="Mô tả ổ cứng"
@@ -328,7 +328,7 @@ function CreateProduct() {
               defaultValue='256GB'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder="Vd: 256GB"
               label="Dung lượng cứng"
@@ -359,7 +359,7 @@ function CreateProduct() {
               placeholder="Vd: 15.6 inch"
               label="Kích thước màn hình"
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               register={register}
               error={errors}
@@ -405,7 +405,7 @@ function CreateProduct() {
               cssParents={"w-[calc(20%-9.6px)]"}
               placeholder="Vd: 359.86 x 258.7 x 21.9-23.9 mm (W x D x H)"
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               label="Kích thước"
               register={register}
@@ -417,7 +417,7 @@ function CreateProduct() {
               defaultValue='1.5kg'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder="Vd: 1.5kg"
               label="Trọng lượng"
@@ -462,7 +462,7 @@ function CreateProduct() {
               defaultValue='Windows 10'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder="Vd: Windows 10"
               label="Hệ điều hành"
@@ -475,7 +475,7 @@ function CreateProduct() {
               defaultValue='53.5Wh'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder="Vd: 3 cell"
               label="Pin"
@@ -496,7 +496,7 @@ function CreateProduct() {
               defaultValue='Gaming'
               cssParents={"w-[calc(20%-9.6px)]"}
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
               }}
               placeholder="Vd: Gaming"
               label="Nhu cầu"

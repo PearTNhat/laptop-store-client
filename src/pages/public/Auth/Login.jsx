@@ -51,7 +51,7 @@ function Login() {
         );
         Toast.fire({
           icon: "success",
-          title: "Login successfully",
+          title: "Đăng nhập thành công",
         });
         navigate(`/${path.HOME}`);
       }

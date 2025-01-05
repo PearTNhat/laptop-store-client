@@ -41,7 +41,7 @@ function Register() {
     if (!response.success) {
       Swal.fire("Oops!", response.message, "error");
     } else {
-      Swal.fire("Success!", response.message, "Register successfully. Please login to continue");
+      Swal.fire("Success!", response.message, "Đăng ký thành công. Vui lòng đăng nhập");
       navigate(`${path.PUBLIC}${path.LOGIN}`);
     }
   }

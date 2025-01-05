@@ -139,7 +139,7 @@ function HandleProductColor() {
             <InputForm
               cssParents={"mt-3"}
               id="color"
-              validate={{ required: "This input is required." }}
+              validate={{ required: "Không dược để trống trường này" }}
               label="Màu sắc"
               register={register}
               error={errors}
@@ -148,7 +148,7 @@ function HandleProductColor() {
               cssParents={"mt-3"}
               id="quantity"
               validate={{
-                required: "This input is required.",
+                required: "Không dược để trống trường này",
                 min: { value: 1, message: "Số lượng phải lớn hơn 0" },
               }}
               label="Số lượng"

@@ -61,7 +61,7 @@ function CommentContainer({ title, pId, comments, totalRating,setFetchAgain }) {
     if(res.success){
       Toast.fire({
         icon: "success",
-        title: "Update comment successfully",
+        title: "Câp nhật bình luận thành công",
       });
       if(rating){
         dispatch(appActions.toggleModal({ isShowModal: false, childrenModal: false }))
@@ -75,7 +75,7 @@ function CommentContainer({ title, pId, comments, totalRating,setFetchAgain }) {
     if (res.success) {
       Toast.fire({
         icon: "success",
-        title: "Delete comment successfully",
+        title: "Xóa bình luận thành công",
       });
       setFetchAgain((prev) => !prev)
     }

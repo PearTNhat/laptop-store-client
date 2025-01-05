@@ -12,10 +12,10 @@ function Cart() {
   const handleDeleteItem = async ({product,color}) => {
     const response = await apiRemoveCartItem({accessToken, body: { product,color }});
     if(response?.success){
-        Toast.fire({icon: 'success',title: 'Delete item successfully'})
+        Toast.fire({icon: 'success',title: 'Xoá sản phẩm thành công'})
         dispatch(fetchCurrentUser({ token: accessToken }));
     }else{
-        Toast.fire({icon: 'error',title:'Fail to delete item'})
+        Toast.fire({icon: 'error',title:'Lỗi khi xóa sản phẩm'})
     }
   }
   return (

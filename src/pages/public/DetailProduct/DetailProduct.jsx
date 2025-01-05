@@ -69,11 +69,11 @@ function DetailProduct() {
     if (!accessToken) {
       Swal.fire({
         title: "Oops!",
-        text: "Please login to add to cart",
+        text: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng",
         icon: "info",
-        cancelButtonText: "Cancel",
+        cancelButtonText: "Hủy",
         showCancelButton: true,
-        confirmButtonText: "Go to login",
+        confirmButtonText: "Tới đăng nhập",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");

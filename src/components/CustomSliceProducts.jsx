@@ -1,13 +1,15 @@
 import { useCallback, useState } from "react";
 import Slider from "react-slick";
+import useWindowSizeCustom from "~/hook/useWindowSizeCustom";
 import Product from "~/pages/public/Home/component/Product/Product";
 /* eslint-disable react/prop-types */
 function CustomSliceProducts({ customSetting, products, isNew, isTrending }) {
   const [isDragging, setIsDragging] = useState(false);
+  const {width} = useWindowSizeCustom();
   const settings = {
     infinite: false,
-    slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToShow: width<768?2:4,
+    slidesToScroll: width<768?2:4,
     customSetting,
     beforeChange: () => setIsDragging(true),
     afterChange: () => setIsDragging(false),

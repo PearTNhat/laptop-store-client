@@ -3,3 +3,4 @@ export const orderStatus = {
     "0":"Đang xử lý",
     "1":"Thành công"
 }
+export const characterSplit = '_'

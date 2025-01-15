@@ -109,11 +109,11 @@ function ProductCategory() {
         </div>
       </div>
       <div className="main-container">
-        <div className="flex justify-between items-center">
-          <div className="flex justify-between items-center gap-2">
+        <div className="flex flex-wrap justify-between items-center">
+          <div className="flex flex-wrap justify-between items-center gap-2">
             <div className="">
               <p className="font-semibold">Lọc theo</p>
-              <div className="flex gap-2 my-4">
+              <div className="flex flex-wrap gap-2 my-4 ">
                 <InputOrCheckBoxFilter
                   title="Giá"
                   name="discountPrice"
@@ -163,7 +163,7 @@ function ProductCategory() {
             Tìm kiếm theo nhu cầu
           </button>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3 mt-3">
           {products.length === 0 && (
             <p className="text-center text-2xl w-full">
               Không tìm thấy sản phẩm

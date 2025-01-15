@@ -8,15 +8,18 @@ export const userDropdown = [
         title: 'Thông tin',
         navigation: `${path.USER_PROFILE}`,
         icon: React.createElement(FaUserCircle),
+        role: 'user',
     },
     {
         title: 'Quản lý',
         navigation: `${path.ADMIN}`,
         icon: React.createElement(GrUserAdmin),
+        role: 'admin',
     },
     {
         title: 'Đăng xuất',
         icon:  React.createElement(CiLogout),
+        role: 'user',
         onClick: (func) => {
             return func()
         }

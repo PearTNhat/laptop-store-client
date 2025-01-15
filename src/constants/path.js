@@ -29,4 +29,5 @@ const path= {
     ADMIN_MANAGE_PRODUCTS_EDIT_COLOR: 'manage/products/edit-color/:slug/:colorId',
     ADMIN_MANAGE_ORDERS: 'manage/orders',
 }
+
 export default path

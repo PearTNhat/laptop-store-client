@@ -56,8 +56,8 @@ function UserInfo() {
     }
   }, [watch('avatar')])
   return (
-    <div>
-      <div className="bg-gray-100 h-[60px]">
+    <div className="">
+      <div className=" bg-gray-100 h-[60px]">
         <h1 className="text-2xl font-semibold p-3">Thông tin</h1>
       </div>
       <div className="max-w-[600px] mx-auto">

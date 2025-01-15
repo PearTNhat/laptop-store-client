@@ -42,6 +42,7 @@ function MangeProduct() {
   const [isEditProduct, setIsEditProduct] = useState(null);
   const [isEditOrder, setIsEditOrder] = useState(null);
   const [payload, setPayload] = useState({});
+  console.log("isedit", isEditProduct);
   const {
     register,
     handleSubmit,
@@ -478,7 +479,8 @@ function MangeProduct() {
                                           {formatNumber(product.discountPrice)}đ
                                         </td>
                                         <td className="p-2 border-gray-200 border-b text-sm">
-                                          {isEditProduct === product._id ? (
+                                          {isEditProduct === product._id &&
+                                          payload.orderId === order._id ? (
                                             <SelectItem
                                               isSearchable
                                               options={convertObjToValueLabel(
@@ -500,16 +502,17 @@ function MangeProduct() {
                                               )}
                                             />
                                           ) : (
-                                            <p
+                                            <span
                                               className={`${
                                                 item.status === 0
-                                                  ? "text-yellow-400"
-                                                  : item.status === -1 ? "text-red-500" 
-                                                  : "text-green-500"
-                                              }`}
+                                                  ? " text-yellow-600 bg-yellow-100"
+                                                  : item.status === -1
+                                                  ? "text-orange-600 bg-orange-100"
+                                                  : "text-green-600 bg-green-100"
+                                              } py-1 px-2 rounded-md text-xs`}
                                             >
                                               {orderStatus[item.status]}
-                                            </p>
+                                            </span>
                                           )}
                                         </td>
                                         <td className="text-center">
@@ -518,7 +521,8 @@ function MangeProduct() {
                                             <button
                                               type="button"
                                               className={`mr-3 ${
-                                                isEditProduct === product._id
+                                                isEditProduct === product._id &&
+                                                payload.orderId === order._id
                                                   ? "text-red-600 hover:text-red-900"
                                                   : "text-yellow-400 hover:text-yellow-600"
                                               } `}

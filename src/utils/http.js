@@ -12,11 +12,10 @@ export const http = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
 // Add a request interceptor
 http.interceptors.request.use(async function (config) {
-
   const accessToken = config.headers?.Authorization?.startsWith('Bearer') && config.headers?.Authorization.split(' ')[1]
-  console.log('accesstoken',accessToken)
   if(!accessToken) return config
   const decodeAccessToken = jwtDecode(accessToken)
   const currentTime = Date.now()/1000

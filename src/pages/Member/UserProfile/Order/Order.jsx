@@ -182,17 +182,17 @@ function Order() {
                             {formatNumber(p.product.discountPrice)}đ
                           </td>
                           <td className="p-2">
-                            <p
+                            <span
                               className={`${
                                 p.status === 0
-                                  ? "text-yellow-400"
+                                  ? " text-yellow-600 bg-yellow-100"
                                   : p.status === -1
-                                  ? "text-red-500"
-                                  : "text-green-500"
-                              } text-center`}
+                                  ? "text-orange-600 bg-orange-100"
+                                  : "text-green-600 bg-green-100"
+                              } py-1 px-2 rounded-md text-xs`}
                             >
                               {orderStatus[p.status]}
-                            </p>
+                            </span>
                           </td>
                           <td className="p-2">
                             <button

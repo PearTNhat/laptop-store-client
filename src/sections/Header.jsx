@@ -24,7 +24,7 @@ function Header() {
     });
   };
   useEffect(() => {
-    dispatch(fetchBrands())
+    dispatch(fetchBrands());
   }, []);
   return (
     <div className="main-container py-[35px]">
@@ -53,13 +53,14 @@ function Header() {
             <div className="text-[12px] text-center">Hỗ trợ 24/7</div>
           </div>
           {/* wishlist */}
-          {
-            user.accessToken && (
-            <Link to={path.USER_WISHLIST} className="px-[20px] border-r border-r-gray-300 flex h-[37.5px] items-center">
-                <FaRegHeart className="text-main cursor-pointer" />
+          {user.accessToken && (
+            <Link
+              to={path.USER_WISHLIST}
+              className="px-[20px] border-r border-r-gray-300 flex h-[37.5px] items-center"
+            >
+              <FaRegHeart className="text-main cursor-pointer" />
             </Link>
-            )
-          }
+          )}
           {/* cart */}
           {user.accessToken && (
             <div
@@ -72,15 +73,14 @@ function Header() {
                 <span className="absolute bg-main top-[2px] right-[11px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
                   {user.userData?.carts?.length}
                 </span>
-              )
-              }
+              )}
               <div className="group-hover:block dropdown py-2 px-1">
-                  <Cart />
+                <Cart />
               </div>
             </div>
           )}
           {/* User */}
-          { user.accessToken && (
+          {user.accessToken && (
             <div className="pl-[20px]">
               <div className="w-[40px] h-[40px]  cursor-pointer">
                 <div className="relative group h-full">
@@ -96,7 +96,7 @@ function Header() {
                   <ul className="group-hover:block dropdown py-2 px-1">
                     {userDropdown.map((item, i) => {
                       if (
-                        item.title === "Admin" &&
+                        item.role === "admin" &&
                         user.userData.role !== "admin"
                       )
                         return null;
@@ -129,7 +129,7 @@ function Header() {
                               }
                             >
                               <p className=" text-right text-sm w-[70px]">
-                              {item.title}
+                                {item.title}
                               </p>
                               {item.icon}
                             </Button>

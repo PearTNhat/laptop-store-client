@@ -215,8 +215,8 @@ function DetailProduct() {
               </Button>
             </div>
           </div>
-          <div className="flex flex-1 gap-5">
-            <div className="w-[calc(70%)] pr-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-4 rounded-md">
+          <div className="max-md:flex-col  flex flex-1 gap-5">
+            <div className="max-md:w-full w-[calc(70%)] pr-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] p-4 rounded-md">
               <h2 className="font-semibold text-xl mb-4">Mô tả sản phẩm</h2>
               <div className="flex flex-col">
                 <ul
@@ -245,7 +245,7 @@ function DetailProduct() {
                 )}
               </div>
             </div>
-            <div className="w-[calc(30%)]">
+            <div className="max-md:w-full w-[calc(30%)]">
               <DetailInfo configs={product.configs} />
             </div>
           </div>

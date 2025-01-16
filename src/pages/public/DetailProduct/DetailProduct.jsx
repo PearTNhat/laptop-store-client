@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { Toast } from "~/utils/alert";
 import { fetchCurrentUser } from "~/store/action/user";
 import DetailInfo from "./component/DetailInfo";
+import { connectSocket, disconnectSocket, socket } from "~/socket/connect";
 function DetailProduct() {
   const { slug } = useParams();
   const descRef = useRef(null);
@@ -50,7 +51,11 @@ function DetailProduct() {
     if (!flag) setColorProduct(data.colors[0]);
     if (success && otherProduct.length === 0) {
       const oProducts = await getAllProducts({
-        params: { "slug[ne]": slug,"sort":"-totalRating","need":data.configs?.need.description},
+        params: {
+          "slug[ne]": slug,
+          sort: "-totalRating",
+          need: data.configs?.need.description,
+        },
       });
       if (oProducts?.success) setOtherProduct(oProducts.data);
     }
@@ -109,14 +114,27 @@ function DetailProduct() {
     }
   }, [product]);
   useEffect(() => {
-    getProductDetail(slug);
-    window.scrollTo(0, 0);
-  }, [slug]);
-  useEffect(() => {
     // tranh truong hop len lai dau trang
     if (!product?._id) return;
     getProductDetail(slug);
+    // console.log('fetchAgain',fetchAgain)
   }, [fetchAgain]);
+  console.log('fetchAgain',fetchAgain)
+  useEffect(() => {
+    connectSocket();
+    getProductDetail(slug);
+    socket.on("receive-comment", () => {
+      setFetchAgain((prev) => {
+        console.log('detail',!prev)
+        return !prev
+      });
+    });
+    window.scrollTo(0, 0);
+    return () => {
+      disconnectSocket();
+    };
+  }, []);
+
   return (
     <div className="text-black my-2">
       <div className="py-2 mb-8 bg-[#f7f7f7]">
@@ -134,7 +152,12 @@ function DetailProduct() {
           </div>
           <div className="max-md:w-full w-[calc(60%-8px)] mt-6">
             <h2 className="font-medium text-2xl">{product.title}</h2>
-            <p><span className="text-gray-500">Thương hiệu:</span> <span className="text-red-400">{capitalizeFirstCharacter(product.brand)}</span></p>
+            <p>
+              <span className="text-gray-500">Thương hiệu:</span>{" "}
+              <span className="text-red-400">
+                {capitalizeFirstCharacter(product.brand)}
+              </span>
+            </p>
             <div className="flex items-center text-[13px] font-medium gap-1 my-2">
               <p className="text-xl font-semibold text-black">
                 {formatNumber(product.discountPrice)} ₫

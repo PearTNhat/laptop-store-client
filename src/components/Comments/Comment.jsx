@@ -7,6 +7,7 @@ import { LuPencil } from "react-icons/lu";
 import { IoTrashOutline } from "react-icons/io5";
 import { convertNumberToStar } from "~/utils/helper";
 import CommentForm from "./CommentForm";
+import { useState } from "react";
 
 function Comment({ 
     userId, 
@@ -26,6 +27,8 @@ function Comment({
     const replyCommentId = parentId ? parentId : comment._id
     const isReply = affectedComment?.type === "REPLY" && affectedComment?.id === comment._id
     const isEdit = affectedComment?.type === "EDIT" && affectedComment?.id === comment._id
+    const [clickLike, setClickLike] = useState(false)
+    console.log(liked,clickLike)
     return (
         <div className={`mt-4`}>
             <div className="flex gap-1">
@@ -40,13 +43,14 @@ function Comment({
                 </div>
                 {/* content */}
                 <div className="mt-3 p-2 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] rounded-md">
-                    <p>{comment.replyOnUser && comment.user._id !== userId  && <span className="text-blue-500 leading-[16px]">@{comment.replyOnUser.firstName + ' '+comment.replyOnUser.lastName}</span>} {comment.content}</p>
+                    <p className="text-sm">{comment.replyOnUser && comment.replyOnUser._id !== comment.user._id  && <span className="text-blue-500 leading-[16px]">@{comment.replyOnUser.firstName + ' '+comment.replyOnUser.lastName}</span>} {comment.content}</p>
                     <div className="flex mt-1 gap-2 text-[14px]">
                         <button className="flex justify-center items-center gap-1" onClick={()=>{
                             handleLikeComment({commentId:comment._id})
                             setAffectedComment(null)
+                            setClickLike(!clickLike)
                             }}>
-                            {liked ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
+                            {liked || clickLike? <FaHeart className="text-red-500" /> : <FaRegHeart />}
                             <span className="text-xs">{comment.likes.length} Like</span>
                         </button>
                         <button className="flex justify-center items-center gap-1" onClick={()=>{

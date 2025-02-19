@@ -125,7 +125,6 @@ function DetailProduct() {
     getProductDetail(slug);
     socket.on("receive-comment", () => {
       setFetchAgain((prev) => {
-        console.log('detail',!prev)
         return !prev
       });
     });

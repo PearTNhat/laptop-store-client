@@ -38,8 +38,8 @@ function Checkout() {
       body,
     });
     if (response?.success) {
-      if (response.data.shortLink) {
-        window.location.href = response.data.shortLink;
+      if (response.data.payUrl) {
+        window.location.href = response.data.payUrl;
       }
     } else {
       Swal.fire({

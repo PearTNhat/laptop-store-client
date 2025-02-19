@@ -42,7 +42,6 @@ function MangeProduct() {
   const [isEditProduct, setIsEditProduct] = useState(null);
   const [isEditOrder, setIsEditOrder] = useState(null);
   const [payload, setPayload] = useState({});
-  console.log("isedit", isEditProduct);
   const {
     register,
     handleSubmit,
@@ -58,7 +57,6 @@ function MangeProduct() {
   );
   const fetchAllOrders = async (params) => {
     const response = await apiGetAllOrders({ params, accessToken });
-    console.log(response);
     if (response.success) {
       const totalPage = Math.ceil(response.counts / 10);
       if (totalPage < currentPage && response.counts !== 0) {

@@ -42,9 +42,7 @@ function Home() {
     navigate('/',{replace:true});
   };
   useEffect(() => {
-    console.log(orderId);
     if (orderId) {
-      console.log("zo");
       checkStatusOrder(orderId);
     }
   }, [orderId]);

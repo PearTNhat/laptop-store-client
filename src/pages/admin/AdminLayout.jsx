@@ -16,7 +16,7 @@ function AdminLayout() {
       <div className="max-md:w-full min-w-[calc(15%-6px)] flex-shrink-0 border-r-gray-300 border-r ">
         <SideBar />
       </div>
-      <div className="max-md:mt-[65px] max-md:w-full w-[calc(85%-6px)] bg-[rgb(248,248,252)] p-2 overflow-x-scroll overflow-y-hidden">
+      <div className="max-md:mt-[65px] max-md:w-full w-[calc(85%-6px)] bg-[rgb(248,248,252)] p-2 overflow-x-auto overflow-y-hidden">
         <div className="max-md:w-full min-w-[1000px]">
           <Outlet />
         </div>

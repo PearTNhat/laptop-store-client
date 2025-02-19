@@ -48,7 +48,6 @@ function DetailCart() {
         cancelButtonText: "Hủy",
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log(result);
           navigate(path.USER_PROFILE);
         }
       });

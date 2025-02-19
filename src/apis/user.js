@@ -75,7 +75,6 @@ const getCurrentUser = async ({ token }) => {
     if (error.response && error.response.data) {
       return error.response.data;
     }
-    console.log('Error', error.message)
     throw new Error(error.message);
   }
 };
@@ -141,7 +140,6 @@ const apiUpdateCart = async ({ accessToken, body }) => {
     if (error.response && error.response.data) {
       return error.response.data;
     }
-    console.log(error.message)
   }
 }
 const apiRemoveCartItem = async ({ accessToken, body }) => {
@@ -163,7 +161,6 @@ const apiRemoveCartItem = async ({ accessToken, body }) => {
 }
 const apiUpdateWishlist = async ({ accessToken, product }) => {
   try {
-    console.log(accessToken)
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`

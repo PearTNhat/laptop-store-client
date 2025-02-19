@@ -28,7 +28,6 @@ function Comment({
     const isReply = affectedComment?.type === "REPLY" && affectedComment?.id === comment._id
     const isEdit = affectedComment?.type === "EDIT" && affectedComment?.id === comment._id
     const [clickLike, setClickLike] = useState(false)
-    console.log(liked,clickLike)
     return (
         <div className={`mt-4`}>
             <div className="flex gap-1">

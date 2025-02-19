@@ -12,7 +12,6 @@ function WishList() {
         {
           wishlist?.map(wl => {
             let item = wl.product
-            console.log(wl)
             if(!item) return null
             return (
               <div className="max-lg:col-span-6 lg:col-span-3" key={item._id}>

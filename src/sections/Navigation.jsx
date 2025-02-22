@@ -33,7 +33,7 @@ function Navigation() {
             nameKey='search'
             clsWrapIcon="left-1"
             icon={<IoIosSearch className="text-xl text-gray-500 "/>}
-            className="pl-7 pr-4 py-2 border-gray-300 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-7 pr-4 py-2 border-gray-300 border-[1px] rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             onChange={(e) => {
                 let value = e.target.value;
                 setSearch(value);

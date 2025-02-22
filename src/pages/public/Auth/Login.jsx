@@ -77,13 +77,18 @@ function Login() {
       Swal.fire("Oops!", res.message, "error");
     }
   };
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 500);
+  }, []);
   return (
     <div className="relative">
       <div
         className={`absolute inset-0 bg-white z-20 flex items-center justify-center ${
           isForgetPassword
-            ? "translate-x-[0] opacity-100"
-            : "translate-x-[-1000px] opacity-0"
+            ? "translate-x-[0] opacity-100 w-auto "
+            : "translate-x-[-1000px] opacity-0 w-0"
         } transition-all duration-500`}
       >
         <div className="w-[300px] md:w-[400px]">
@@ -115,7 +120,7 @@ function Login() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center my-16 ">
+      <div className="flex justify-center items-center my-16 " >
         <form
           className="min-w-[300px] md:w-[400px] px-2"
           onSubmit={(e) => handleSubmit(e)}

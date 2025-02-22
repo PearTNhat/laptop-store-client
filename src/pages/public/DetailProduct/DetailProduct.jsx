@@ -119,7 +119,6 @@ function DetailProduct() {
     getProductDetail(slug);
     // console.log('fetchAgain',fetchAgain)
   }, [fetchAgain]);
-  console.log('fetchAgain',fetchAgain)
   useEffect(() => {
     connectSocket();
     getProductDetail(slug);

@@ -28,8 +28,8 @@ function PriceStartProduct({
         >
           {title}
         </h2>
-        <div className="flex items-center justify-between text-[13px] font-medium gap-1">
-          <div className="flex items-center">
+        <div className="flex flex-wrap items-center justify-between text-[13px] max-sm:text-[10px] font-medium gap-1">
+          <div className="flex items-center ">
             {/* Giá chưa giảm */}
             {price !== 0 && (
               <>
@@ -56,7 +56,7 @@ function PriceStartProduct({
 
         <div className="flex flex-wrap items-center justify-between">
           {/* Giá đã giảm */}
-          <p className="text-[16px] font-semibold text-black">
+          <p className="text-[16px] max-sm:text-xs font-semibold text-black">
             {formatNumber(discountPrice)} ₫
           </p>
           <div className="flex text-yellow-300 text-[13px]">

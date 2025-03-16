@@ -60,7 +60,7 @@ function Order() {
           productId,
           status: -1,
         });
-        console.log(res);
+  
         if (res.success) {
           Toast.fire({ icon: "success", title: "Hủy đơn hàng thành công" });
           fetchOrderUser(currentParams);

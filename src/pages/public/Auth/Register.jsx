@@ -80,7 +80,7 @@ function Register() {
     if(!verifyOtp) return
     const today = moment().format("YYYY-MM-DD HH:mm:ss");
     countTime = setInterval(() => {
-      const distance = (new Date(today).getTime() + 2*60 * 1000 ) - Number(Date.now());
+      const distance = (new Date(today).getTime() + 5*60 * 1000 ) - Number(Date.now());
       const { hours, minutes, seconds } = getTimeHMS(distance);
       setTime({ hours, minutes, seconds });
     }, 1000);

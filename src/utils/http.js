@@ -21,7 +21,6 @@ http.interceptors.request.use(async function (config) {
   const currentTime = Date.now()/1000
   if(decodeAccessToken.exp < currentTime){
     const dispatch= store.dispatch
-    console.log('Token expired')
     dispatch(
       appActions.toggleModal({ isShowModal: false, childrenModal: null })
     );

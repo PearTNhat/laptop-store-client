@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 function FinalRegister() {
   const navigate = useNavigate();
   const {status} = useParams();
-  console.log(status)
   useEffect(() => {
     if(status === 'success') {
       Swal.fire('Success', "Go to login", 'success').then(() => {

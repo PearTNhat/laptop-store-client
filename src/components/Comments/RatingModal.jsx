@@ -6,13 +6,13 @@ import { IoClose } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import Button from "../Button";
 import { appActions } from "~/store/slice/app";
-const startText = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Perfect']
+const startText = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Tuyệt']
 function RatingModal({ title,handleSubmitComment,rating=5,content='',confirmText="Submit" }) {
   const dispatch = useDispatch()
   const [hover, setHover] = useState(null);
   const [payload, setPayload] = useState({rating,content})
   return (
-    <div className="w-[600px] bg-white rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
+    <div className="max-sm:w-[calc(100vw-10px)] w-[640px] bg-white rounded-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
       <div className="relative py-3 bg-gray-100 text-bl">
         <p className="font-bold text-xl pl-2">Đánh giá và nhận xét</p>
         <IoClose className="absolute top-1/2 -translate-y-1/2 right-0 pr-2 text-4xl cursor-pointer" onClick={()=>dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))}/>

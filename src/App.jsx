@@ -27,11 +27,13 @@ import Checkout from "./components/Checkout";
 import EditProduct from "./pages/admin/ManageProduct/EditProduct";
 
 function App() {
-  const { isShowModal,animation, childrenModal } = useSelector((state) => state.app);
+  const { isShowModal, animation, childrenModal } = useSelector(
+    (state) => state.app
+  );
   return (
     <div className="relative h-full w-full overflow-auto">
-    {isShowModal && <Modal animation={animation}>{childrenModal}</Modal>}
-      <Routes >
+      {isShowModal && <Modal animation={animation}>{childrenModal}</Modal>}
+      <Routes>
         <Route path="/user" element={<UserProfileLayout />}>
           <Route path={path.USER_PROFILE} element={<UserInfo />} />
           <Route path={path.USER_CART} element={<DetailCart />} />

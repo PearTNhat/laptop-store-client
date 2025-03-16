@@ -22,6 +22,9 @@ function SideBar() {
       setIsMenuOpen(false);
     }
   }, [width]);
+  const handleClickItemDropDown = () => {
+    setIsMenuOpen(false);
+  };
   return (
     <div className="max-md:fixed max-md:w-full z-[999] bg-white p-2 ">
       <div className="pb-4">
@@ -58,6 +61,7 @@ function SideBar() {
                       isActive && "text-blue-500 "
                     } flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`;
                   }}
+                  onClick={()=> handleClickItemDropDown()}
                 >
                   <item.icon />
                   <p>{item.text}</p>
@@ -105,6 +109,7 @@ function SideBar() {
                               activePath && "text-blue-500"
                             } flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`;
                           }}
+                          onClick={()=> handleClickItemDropDown()}
                         >
                           <p>{subitem.text}</p>
                         </NavLink>

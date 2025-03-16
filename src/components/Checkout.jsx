@@ -31,7 +31,8 @@ function Checkout() {
     const body = {
       products: userData.carts,
       total,
-      ...data
+      name: data.name.trim(),
+      ...data,
     };
     const response = await apiCreateOrder({
       accessToken,
@@ -64,7 +65,19 @@ function Checkout() {
             <InputForm
               cssParents={"flex-1"}
               id="name"
-              validate={{ required: "Không được để trống" }}
+              validate={{
+                required: "Không được để trống",
+                validate: (value) => {
+                  const trimmedValue = value.trim();
+                  if (trimmedValue.length === 0) {
+                    return "Không được để trống";
+                  }
+                  if (!/^[a-zA-Z\s]+$/.test(trimmedValue)) {
+                    return "Tên không bao gồm kí tự số và kí tự đặc biệt";
+                  }
+                  return true;
+                },
+              }}
               label="Tên"
               register={register}
               error={errors}

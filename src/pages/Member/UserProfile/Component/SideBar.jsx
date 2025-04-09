@@ -24,7 +24,11 @@ function SideBar() {
     }
   }, [width]);
   const handleClickItemDropDown = () => {
-    setIsMenuOpen(false);
+    if (width > 768) {
+      setIsMenuOpen(true);
+    } else {
+      setIsMenuOpen(false);
+    }
   };
   return (
     <div className="max-md:fixed max-md:w-full z-[999999] bg-white">
@@ -48,7 +52,13 @@ function SideBar() {
           </div>
         </div>
       </div>
-      <div className={`${isMenuOpen ? "max-md:flex max-md:flex-col max-md:animate-drop-down-animation" : "hidden"}  max-md:items-center gap-2 p-2`}>
+      <div
+        className={`${
+          isMenuOpen
+            ? "max-md:flex max-md:flex-col max-md:animate-drop-down-animation"
+            : "hidden"
+        }  max-md:items-center gap-2 p-2`}
+      >
         <div className="flex flex-col items-center gap-2 p-2">
           <div className="w-[80px] h-[80px] outline outline-1 rounded-full overflow-hidden">
             <img
@@ -73,7 +83,7 @@ function SideBar() {
                       isActive && "text-blue-500 "
                     } max-md:w-[200px] flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`;
                   }}
-                  onClick={()=> handleClickItemDropDown()}
+                  onClick={() => handleClickItemDropDown()}
                 >
                   <item.icon />
                   <p>{item.text}</p>

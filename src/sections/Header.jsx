@@ -42,7 +42,7 @@ function Header() {
               <FaPhoneAlt className="text-main mr-4 text-[10px]" />
               <span className="font-semibold">1800900</span>
             </div>
-            <div className="text-[12px]">Mon-sat 9:00AMM - 6:00PM</div>
+            <div className="text-[12px]">Mon-sat 9:00AM - 6:00PM</div>
           </div>
           {/* mail */}
           <div className="max-lg:hidden text-[13px] px-[20px] border-r border-r-gray-300">

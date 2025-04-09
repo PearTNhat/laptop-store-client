@@ -5,25 +5,30 @@ import { Logo } from "~/assets/images";
 import { adminNavigation } from "~/constants/navigation";
 import path from "~/constants/path";
 import useWindowSizeCustom from "~/hook/useWindowSizeCustom";
-import { IoMenu ,IoClose} from "react-icons/io5";
+import { IoMenu, IoClose } from "react-icons/io5";
 
 function SideBar() {
   const [activeDropdown, setActiveDropdown] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const { pathname } = useLocation();
   const { width } = useWindowSizeCustom();
   const toggleMenuHandler = () => {
+    console.log("toggleMenuHandler");
     setIsMenuOpen(!isMenuOpen);
   };
   useEffect(() => {
     if (width > 768) {
       setIsMenuOpen(true);
     } else {
-      setIsMenuOpen(false);
+      setIsMenuOpen(true);
     }
   }, [width]);
   const handleClickItemDropDown = () => {
-    setIsMenuOpen(false);
+    if (width > 768) {
+      setIsMenuOpen(true);
+    } else {
+      setIsMenuOpen(false);
+    }
   };
   return (
     <div className="max-md:fixed max-md:w-full z-[999] bg-white p-2 ">
@@ -47,7 +52,11 @@ function SideBar() {
           </div>
         </div>
       </div>
-      <div className={`${isMenuOpen ? "block max-md:animate-drop-down-animation" : "hidden"}`}>
+      <div
+        className={`${
+          isMenuOpen ? "block max-md:animate-drop-down-animation" : "hidden"
+        }`}
+      >
         {adminNavigation.map((item, index) => {
           let showDropdown = activeDropdown.some((x) => x === item.id); // kiem tra xem item.id co trong activeDropdown khong
           return (
@@ -61,7 +70,7 @@ function SideBar() {
                       isActive && "text-blue-500 "
                     } flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`;
                   }}
-                  onClick={()=> handleClickItemDropDown()}
+                  onClick={handleClickItemDropDown}
                 >
                   <item.icon />
                   <p>{item.text}</p>
@@ -109,7 +118,7 @@ function SideBar() {
                               activePath && "text-blue-500"
                             } flex items-center gap-2 p-2 hover:bg-gray-200 cursor-pointer`;
                           }}
-                          onClick={()=> handleClickItemDropDown()}
+                          onClick={handleClickItemDropDown}
                         >
                           <p>{subitem.text}</p>
                         </NavLink>

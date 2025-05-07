@@ -65,13 +65,15 @@ function Product({
       return;
     }
     try {
-      const res =  await apiUpdateWishlist({ accessToken, product: pid });
-      if(res?.success){
+      const res = await apiUpdateWishlist({ accessToken, product: pid });
+      if (res?.success) {
         Toast.fire({
           icon: "success",
-          title: `${isLiked ?"Xóa sản phẩm trong" :"Thêm sản phẩm vào"} danh sách yêu thích thành công `,
+          title: `${
+            isLiked ? "Xóa sản phẩm trong" : "Thêm sản phẩm vào"
+          } danh sách yêu thích thành công `,
         });
-      }else{
+      } else {
         Toast.fire({
           icon: "error",
           title: "Thêm vào danh sách yêu thích thất bại",

@@ -2,8 +2,15 @@ import { useCallback, useState } from "react";
 import Slider from "react-slick";
 import useWindowSizeCustom from "~/hook/useWindowSizeCustom";
 import Product from "~/pages/public/Home/component/Product/Product";
+import SkeletonProduct from "~/pages/public/Home/component/Product/SkeletonProduct";
 /* eslint-disable react/prop-types */
-function CustomSliceProducts({ customSetting, products, isNew, isTrending }) {
+function CustomSliceProducts({
+  customSetting,
+  products,
+  isNew,
+  isTrending,
+  loading,
+}) {
   const [isDragging, setIsDragging] = useState(false);
   const { width } = useWindowSizeCustom();
   const settings = {
@@ -26,25 +33,31 @@ function CustomSliceProducts({ customSetting, products, isNew, isTrending }) {
 
   return (
     <Slider {...settings}>
-      {products?.map((item) => (
-        <div key={item._id} className="mt-4">
-          <Product
-            pid={item._id}
-            price={item.price}
-            discountPrice={item.discountPrice}
-            primaryImage={item.primaryImage.url}
-            soldQuantity={item.soldQuantity}
-            title={item.title}
-            slug={item.slug}
-            isNew={isNew}
-            isTrending={isTrending}
-            colors={item.colors}
-            totalRating={item.totalRating}
-            className={"p-3 mb-3 mx-3"}
-            onClickLink={handleClick}
-          />
-        </div>
-      ))}
+      {loading
+        ? Array.from({ length: 6 }).map((_, idx) => (
+            <div key={idx} className="mt-4">
+              <SkeletonProduct className="p-3 mb-3 mx-3" />
+            </div>
+          ))
+        : products.map((item) => (
+            <div key={item._id} className="mt-4">
+              <Product
+                pid={item._id}
+                price={item.price}
+                discountPrice={item.discountPrice}
+                primaryImage={item.primaryImage.url}
+                soldQuantity={item.soldQuantity}
+                title={item.title}
+                slug={item.slug}
+                isNew={isNew}
+                isTrending={isTrending}
+                colors={item.colors}
+                totalRating={item.totalRating}
+                className="p-3 mb-3 mx-3"
+                onClickLink={handleClick}
+              />
+            </div>
+          ))}
     </Slider>
   );
 }

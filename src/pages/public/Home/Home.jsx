@@ -5,7 +5,7 @@ import ListProduct from "./component/ListProduct";
 import SideBar from "./component/SideBar";
 import CustomSliceStatic from "~/components/CustomSliceStatic";
 import HotCollections from "./component/HotCollections";
-import {  useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { Toast } from "~/utils/alert";
 import { apiCheckStatusOrder } from "~/apis/order";
@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 function Home() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const {orderId} = useMemo(
+  const { orderId } = useMemo(
     () => Object.fromEntries([...searchParams]),
     [searchParams]
   );
@@ -25,21 +25,21 @@ function Home() {
           icon: "success",
           title: "Mua hàng thành công",
         });
-        navigate('/',{replace:true});
+        navigate("/", { replace: true });
         return;
       }
       Swal.fire({
         icon: "error",
         title: "Mua hàng thất bại",
       });
-      navigate('/',{replace:true});
+      navigate("/", { replace: true });
     } catch (err) {
       Toast.fire({
         icon: "error",
         title: err.message,
       });
     }
-    navigate('/',{replace:true});
+    navigate("/", { replace: true });
   };
   useEffect(() => {
     if (orderId) {

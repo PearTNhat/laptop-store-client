@@ -4,11 +4,11 @@ const ENDPOINT = import.meta.env.VITE_BASE_URL_SERVER;
 
 let socket;
 function connectSocket() {
-    socket = io(ENDPOINT);
+  socket = io(ENDPOINT);
 }
 function disconnectSocket() {
-    if (socket) {
-      socket.disconnect();
-    }
+  if (socket) {
+    socket.disconnect();
   }
-export { socket, connectSocket,disconnectSocket };
+}
+export { socket, connectSocket, disconnectSocket };

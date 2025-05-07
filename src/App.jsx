@@ -74,7 +74,6 @@ function App() {
           />
           <Route path={path.ADMIN_MANAGE_ORDERS} element={<ManageOrder />} />
         </Route>
-        {/* <Route path ={path.FINAL_REGISTER} element={<FinalRegister/>}/> */}
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </div>

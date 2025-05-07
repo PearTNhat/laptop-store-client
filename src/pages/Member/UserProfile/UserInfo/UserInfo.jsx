@@ -21,20 +21,30 @@ function UserInfo() {
     handleSubmit,
     formState: { errors, isDirty },
     reset,
-    watch
+    watch,
   } = useForm();
-  const handleSubmitUserInfo =async (data) => {
-    const formData = new FormData()
-    formData.append('avatar',data.avatar[0])
-    formData.append('document',JSON.stringify({...data}))
-    dispatch(appActions.toggleModal({isShowModal:true,childrenModal:<Loading/>}))
-    const response = await apiUpdateCurrentUser({accessToken:accessToken,formData})
-    dispatch(appActions.toggleModal({isShowModal:false,childrenModal:null}))
-    if(response.success){
-      dispatch(fetchCurrentUser({token: accessToken}))
-      return Toast.fire({icon:'success',title:'Cập nhật thông tin thành công'})
-    }else{
-      return Toast.fire({icon:'error',title:response.message})
+  const handleSubmitUserInfo = async (data) => {
+    const formData = new FormData();
+    formData.append("avatar", data.avatar[0]);
+    formData.append("document", JSON.stringify({ ...data }));
+    dispatch(
+      appActions.toggleModal({ isShowModal: true, childrenModal: <Loading /> })
+    );
+    const response = await apiUpdateCurrentUser({
+      accessToken: accessToken,
+      formData,
+    });
+    dispatch(
+      appActions.toggleModal({ isShowModal: false, childrenModal: null })
+    );
+    if (response.success) {
+      dispatch(fetchCurrentUser({ token: accessToken }));
+      return Toast.fire({
+        icon: "success",
+        title: "Cập nhật thông tin thành công",
+      });
+    } else {
+      return Toast.fire({ icon: "error", title: response.message });
     }
   };
   useEffect(() => {
@@ -46,15 +56,15 @@ function UserInfo() {
       address: userData.address || "",
     });
   }, [userData]);
-  const handleAvatarToPreview =async (file) => {
-    const preview =await toBase64(file)
-    setPreviewAvatar(preview)
-  }
+  const handleAvatarToPreview = async (file) => {
+    const preview = await toBase64(file);
+    setPreviewAvatar(preview);
+  };
   useEffect(() => {
-    if(watch('avatar')?.length>0){  
-      handleAvatarToPreview(watch('avatar')[0])
+    if (watch("avatar")?.length > 0) {
+      handleAvatarToPreview(watch("avatar")[0]);
     }
-  }, [watch('avatar')])
+  }, [watch("avatar")]);
   return (
     <div className="">
       <div className=" bg-gray-100 h-[60px]">
@@ -70,7 +80,7 @@ function UserInfo() {
               >
                 {userData?.avatar?.url ? (
                   <img
-                    src={previewAvatar ? previewAvatar :userData?.avatar?.url}
+                    src={previewAvatar ? previewAvatar : userData?.avatar?.url}
                     alt="avatar"
                     className="w-full h-full object-cover"
                   />
@@ -125,13 +135,13 @@ function UserInfo() {
             />
           </div>
           <InputForm
-              id="address"
-              validate={{ required: "Không được để trống" }}
-              cssParents="flex-1"
-              label="Địa chỉ"
-              register={register}
-              error={errors}
-            />
+            id="address"
+            validate={{ required: "Không được để trống" }}
+            cssParents="flex-1"
+            label="Địa chỉ"
+            register={register}
+            error={errors}
+          />
           <p className="mt-2 capitalize">Vai trò: {userData?.role}</p>
           <p className="mt-2">
             Ngày tạo: {moment(userData.createdAt).format("DD/MM/YYYY HH:mm")}

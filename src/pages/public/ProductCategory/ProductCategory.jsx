@@ -6,10 +6,8 @@ import Product from "../Home/component/Product/Product";
 import InputOrCheckBoxFilter from "~/components/Filter/InputOrCheckBoxFilter";
 import SelectionFilter from "~/components/Filter/SelectionFilter";
 import Pagination from "~/components/Pagination";
-import { AiIcon } from "~/assets/images";
 import { useDispatch, useSelector } from "react-redux";
 import { appActions } from "~/store/slice/app";
-import DescriptionModal from "./component/DescriptionModal";
 
 import CheckBoxFilter from "~/components/Filter/CheckBoxFilter";
 import Loading from "~/components/Loading";
@@ -71,15 +69,15 @@ function ProductCategory() {
       );
     }
   };
-  const handleSmartSearch = () => {
-    dispatch(
-      appActions.toggleModal({
-        isShowModal: true,
-        animation: true,
-        childrenModal: <DescriptionModal currentParams={currentParams} />,
-      })
-    );
-  };
+  // const handleSmartSearch = () => {
+  //   dispatch(
+  //     appActions.toggleModal({
+  //       isShowModal: true,
+  //       animation: true,
+  //       childrenModal: <DescriptionModal currentParams={currentParams} />,
+  //     })
+  //   );
+  // };
   useEffect(() => {
     fetchProductCategory(currentParams);
   }, [currentParams]);
@@ -153,7 +151,7 @@ function ProductCategory() {
               </div>
             </div>
           </div>
-          <button
+          {/* <button
             className="flex gap-3 items-center bg-red-500 p-2 rounded-md text-white"
             onClick={handleSmartSearch}
           >
@@ -161,7 +159,7 @@ function ProductCategory() {
               <img src={AiIcon} className="w-[30px] h-[30px]" alt="" />
             </i>
             Tìm kiếm theo nhu cầu
-          </button>
+          </button> */}
         </div>
         <div className="flex flex-wrap gap-3 mt-3">
           {products.length === 0 && (

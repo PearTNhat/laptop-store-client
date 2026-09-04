@@ -34,7 +34,7 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
   return (
     <div
       ref={ref}
-      className="relative bg-white border border-gray-400 hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+      className="relative bg-white border border-gray-200 rounded-lg hover:border-main hover:shadow-md transition-all duration-300"
       onClick={() => {
         if (activeFilter === name) {
           setActiveFilter(null);
@@ -45,22 +45,22 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
     >
       {
         filter[name].length > 0 &&
-        <span className="absolute bg-main top-[0] translate-y-[-50%] right-[-5px] p-2 leading-none text-white w-[10px] h-[10px] rounded-full flex justify-center items-center text-[10px]">
+        <span className="absolute bg-main top-[-5px] right-[-5px] text-white w-[18px] h-[18px] rounded-full flex justify-center items-center text-[10px] shadow-sm font-semibold">
         {filter[name].length}
       </span>
       }
-      <div className="flex items-center p-3 cursor-pointer">
-        <span className="capitalize text-sm">{title}</span>
-        <RiArrowDropDownLine className="text-xl" />
+      <div className="flex items-center px-4 py-2 cursor-pointer gap-2">
+        <span className="capitalize text-sm text-gray-700 font-medium">{title}</span>
+        <RiArrowDropDownLine className={`text-xl text-gray-500 transition-transform duration-300 ${activeFilter === name ? 'rotate-180' : ''}`} />
       </div>
       <div
         ref={ref}
         className={`${
-          activeFilter === name ? "block" : "hidden"
-        } absolute z-10  rounded-md  bg-white border border-gray-300 top-[calc(100%+4px)]`}
+          activeFilter === name ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-2"
+        } absolute z-50 rounded-xl bg-white shadow-xl border border-gray-100 top-[calc(100%+8px)] w-max min-w-[200px] transition-all duration-300 left-0 overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center gap-2 px-[16px] py-3 border border-b-gray-400 text-sm">
+        <div className="flex justify-between items-center gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-sm">
           <div className="flex gap-1">
             <span>Selected: </span>
             <span>{filter[name].length}</span>
@@ -75,13 +75,13 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
         {data.map((item) => (
           <div
             key={item.value}
-            className="px-[16px] py-[5px] flex items-center gap-2 whitespace-nowrap"
+            className="px-4 py-2.5 flex items-center gap-3 whitespace-nowrap hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <input
               type="checkbox"
               id={item.value}
               checked={filter[name]?.includes(item.value)}
-              className="w-[20px] h-[20px] rounded-sm d-checkbox d-checkbox-info"
+              className="w-5 h-5 rounded d-checkbox d-checkbox-error border-gray-300"
               onChange={(e) => {
                 if (e.target.checked) {
                     setFilter((prev) => ({[name]: [...prev[name], item.value]}));
@@ -90,7 +90,7 @@ function CheckBoxFilter({ data, name,title,currentParams }) {
                 }
               }}
             />
-            <label className="cursor-pointer capitalize" htmlFor={item.value}>
+            <label className="cursor-pointer capitalize text-gray-700 w-full" htmlFor={item.value}>
               {item.label}
             </label>
           </div>

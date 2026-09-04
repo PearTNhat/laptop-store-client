@@ -31,16 +31,18 @@ function CustomSliceProducts({
     [isDragging]
   );
 
+  const shouldShowSkeleton = loading || !products || products.length === 0;
+
   return (
     <Slider {...settings}>
-      {loading
-        ? Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="mt-4">
-              <SkeletonProduct className="p-3 mb-3 mx-3" />
+      {shouldShowSkeleton
+        ? Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="px-2 py-4">
+              <SkeletonProduct className="p-4" />
             </div>
           ))
         : products.map((item) => (
-            <div key={item._id} className="mt-4">
+            <div key={item._id} className="px-2 py-4">
               <Product
                 pid={item._id}
                 price={item.price}
@@ -53,7 +55,7 @@ function CustomSliceProducts({
                 isTrending={isTrending}
                 colors={item.colors}
                 totalRating={item.totalRating}
-                className="p-3 mb-3 mx-3"
+                className="p-4 h-full"
                 onClickLink={handleClick}
               />
             </div>

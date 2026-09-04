@@ -6,64 +6,62 @@ import {
   convertNumberToStar,
   formatNumber,
 } from "~/utils/helper";
-import { ThunderIcon } from "~/assets/icon";
+
 function PriceStartProduct({
   to,
   price,
   totalRating,
   title,
   discountPrice,
-  detailDeals = false,
   soldQuantity,
 }) {
   const stars = convertNumberToStar(totalRating);
   let Component = "div";
   if (to) Component = Link;
+  const hasDiscount = Boolean(
+    Number(price) > 0 &&
+    Number(discountPrice) > 0 &&
+    Number(price) > Number(discountPrice)
+  );
+  const percent = hasDiscount ? calculatePercent(price, discountPrice) : 0;
+
   return (
-    <div className="">
-      <Component to={to}>
+    <div className="pt-1">
+      <Component to={to} className="block group/link">
         <h2
-          className="text-[15px] text-black font-medium truncate"
+          className="text-sm font-semibold text-gray-800 group-hover/link:text-main truncate transition-colors"
           title={title}
         >
           {title}
         </h2>
-        <div className="flex flex-wrap items-center justify-between text-[13px] max-sm:text-[10px] font-medium gap-1">
-          <div className="flex items-center ">
-            {/* Giá chưa giảm */}
-            {price !== 0 && (
-              <>
-                <p className="line-through text-[#6b7280] ">
-                  {formatNumber(price)}₫
-                </p>
-                {/* % */}
-                <p
-                  className={`ml-1 text-main ${
-                    detailDeals &&
-                    "bg-[#FDE68A] relative pl-2 pr-1 rounded-r-md h-[18px]"
-                  }`}
-                >
-                  {detailDeals && (
-                    <ThunderIcon className={"absolute left-[-2px]"} />
-                  )}{" "}
-                  -{calculatePercent(price, discountPrice)}%
-                </p>
-              </>
-            )}
+
+        {/* Rating and Sold */}
+        <div className="flex items-center justify-between text-xs mt-1.5 gap-1">
+          <div className="flex text-amber-400 text-[11px] items-center gap-0.5 flex-shrink-0">
+            {stars.map((star, index) => (
+              <span key={index}>{star}</span>
+            ))}
           </div>
-          <p>{soldQuantity} đã bán</p>
+          <span className="text-[11px] text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded-full border border-gray-100 whitespace-nowrap">
+            Đã bán: <strong className="text-gray-700">{soldQuantity || 0}</strong>
+          </span>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between">
-          {/* Giá đã giảm */}
-          <p className="text-[16px] max-sm:text-xs font-semibold text-black">
-            {formatNumber(discountPrice)} ₫
-          </p>
-          <div className="flex text-yellow-300 text-[13px]">
-            {stars.map((star, index) => {
-              return <span key={index}>{star}</span>;
-            })}
-          </div>
+        {/* Prices Section - Clean, High-Contrast, Never Line-Break Currency */}
+        <div className="mt-2 flex items-baseline gap-1.5 flex-wrap">
+          <span className="text-base sm:text-[17px] font-bold text-red-600 whitespace-nowrap">
+            {formatNumber(discountPrice || price)}₫
+          </span>
+          {hasDiscount && (
+            <span className="line-through text-xs text-gray-400 whitespace-nowrap">
+              {formatNumber(price)}₫
+            </span>
+          )}
+          {hasDiscount && (
+            <span className="text-[10px] font-extrabold text-red-600 bg-red-50 border border-red-200 px-1 py-0.2 rounded whitespace-nowrap">
+              -{percent}%
+            </span>
+          )}
         </div>
       </Component>
     </div>

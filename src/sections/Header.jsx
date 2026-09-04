@@ -27,38 +27,38 @@ function Header() {
     dispatch(fetchBrands());
   }, []);
   return (
-    <div className="main-container py-[35px]">
+    <div className="main-container py-6">
       <div className="flex justify-between items-center">
-        <div className="">
+        <div className="w-[200px]">
           <Link to={`/${path.HOME}`}>
-            <img src={Logo} alt="logo-digital" />
+            <img src={Logo} alt="logo-digital" className="w-full object-contain" />
           </Link>
         </div>
 
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center gap-8">
           {/* phone */}
-          <div className="max-lg:hidden text-[13px] px-[20px] border-r border-r-gray-300">
-            <div className="flex justify-center items-center ">
-              <FaPhoneAlt className="text-main mr-4 text-[10px]" />
-              <span className="font-semibold">1800900</span>
+          <div className="max-lg:hidden flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <FaPhoneAlt className="text-main text-sm" />
+              <span className="font-bold text-gray-800 text-[15px]">1800 900</span>
             </div>
-            <div className="text-[12px]">Mon-sat 9:00AM - 6:00PM</div>
+            <div className="text-[12px] text-gray-500 mt-1">Mon-Sat 9:00AM - 6:00PM</div>
           </div>
           {/* mail */}
-          <div className="max-lg:hidden text-[13px] px-[20px] border-r border-r-gray-300">
-            <div className="flex justify-center items-center ">
-              <MdEmail className="text-main mr-4" />
-              <span className="font-semibold">abc.support@gmail.com</span>
+          <div className="max-lg:hidden flex flex-col items-center">
+            <div className="flex items-center gap-2">
+              <MdEmail className="text-main text-[16px]" />
+              <span className="font-bold text-gray-800 text-[15px]">abc.support@gmail.com</span>
             </div>
-            <div className="text-[12px] text-center">Hỗ trợ 24/7</div>
+            <div className="text-[12px] text-gray-500 mt-1">Hỗ trợ trực tuyến 24/7</div>
           </div>
           {/* wishlist */}
           {user.accessToken && (
             <Link
               to={path.USER_WISHLIST}
-              className="px-[20px] border-r border-r-gray-300 flex h-[37.5px] items-center"
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-red-50 hover:text-main transition-colors text-gray-600 ml-4"
             >
-              <FaRegHeart className="text-main cursor-pointer" />
+              <FaRegHeart className="text-xl" />
             </Link>
           )}
           {/* cart */}

@@ -31,9 +31,9 @@ function SelectionFilter({currentParams}) {
     setSearchParams(search)
   },[selected])
   return (
-    <select onChange={(e)=> setSelected(e.target.value)} value={selected} className="p-2  border border-gray-400 focus:border-gray-400 focus:outline-none  hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)] h-[44px] rounded-none max-w-xs">
-    <option defaultValue value="">Lựa chọn</option>
-    {sortBy.map((item) => <option key={item.id} value={item.value} >{item.name}</option>)}
+    <select onChange={(e)=> setSelected(e.target.value)} value={selected} className="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-200 focus:border-main focus:ring-1 focus:ring-main focus:outline-none hover:border-main hover:shadow-md transition-all duration-300 rounded-lg w-full max-w-xs cursor-pointer h-10">
+      <option defaultValue value="">Sắp xếp mặc định</option>
+      {sortBy.map((item) => <option key={item.id} value={item.value} >{item.name}</option>)}
     </select>
   )
 }

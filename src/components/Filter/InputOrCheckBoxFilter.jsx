@@ -63,7 +63,7 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
   return (
     <div
       ref={ref}
-      className="relative bg-white border border-gray-400 hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+      className="relative bg-white border border-gray-200 rounded-lg hover:border-main hover:shadow-md transition-all duration-300"
       onClick={() => {
         if (activeFilter === name) {
           setActiveFilter(null);
@@ -72,20 +72,20 @@ function InputOrCheckBoxFilter({ title, name, type = "checkbox" ,currentParams})
         }
       }}
     >
-      <div className="flex items-center p-3 cursor-pointer">
-        <span className="capitalize text-sm">{title}</span>
-        <RiArrowDropDownLine className="text-xl" />
+      <div className="flex items-center px-4 py-2 cursor-pointer gap-2">
+        <span className="capitalize text-sm text-gray-700 font-medium">{title}</span>
+        <RiArrowDropDownLine className={`text-xl text-gray-500 transition-transform duration-300 ${activeFilter === name ? 'rotate-180' : ''}`} />
       </div>
 
       {type === "input" && (
         <div
           className={`${
-            activeFilter === name ? "block" : "hidden"
-          } w-[348px] absolute z-10  rounded-md overflow-hidden bg-white border border-gray-300 left-[-1px] top-[calc(100%+4px)]`}
+            activeFilter === name ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-2"
+          } w-[348px] absolute z-50 rounded-xl overflow-hidden bg-white shadow-xl border border-gray-100 left-0 top-[calc(100%+8px)] transition-all duration-300`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex justify-between items-center px-[16px] py-3 border border-b-gray-400 text-sm">
-            <p>Giá cao nhất là: {formatNumber(hightestPrice)}₫</p>
+          <div className="flex justify-between items-center px-4 py-3 bg-gray-50 border-b border-gray-100 text-sm">
+            <p className="font-medium text-gray-700">Giá cao nhất là: {formatNumber(hightestPrice)}₫</p>
             <button
               className="cursor-pointer hover:text-main"
               onClick={() =>

@@ -1,29 +1,30 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
+import path from "~/constants/path"
+
 function SideBar() {
- // const disPatch = useDispatch()
-  // const productCategory = useSelector(state => state.productCategory)
-  // useEffect(() => {
-  //   disPatch(fetchProductCategory())
-  // }, [])
+  const { brands } = useSelector((state) => state.brand);
+
   return (
-    <div className=""></div>
-    // <div className='w-[25%] border shadow-md'>
-    //   {
-    //     productCategory.categories.map(category => (
-    //       <NavLink key={category._id} className={({ isActive }) => {
-    //         const style = isActive ? 'text-main' : 'hover:text-main'
-    //         return style + ' px-5 py-[15px] flex items-center'
-    //       }} to={`${category.slug}?category=${category.slug}`}>
-    //         <div className="w-5 h-5">
-    //           <img src={category.icon} alt={category.title} />
-    //         </div>
-    //         <span className="block ml-2">{category.title}</span>
-    //       </NavLink>
-    //     ))
-    //   }
-    // </div>
+    <div className='w-full lg:w-[25%] flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden'>
+      {
+        brands?.map((brand, idx) => {
+          const brandValue = brand?.label?.toLowerCase();
+          return (
+            <NavLink 
+              key={idx} 
+              className={({ isActive }) => {
+                // Chúng ta không dùng isActive của NavLink vì query param mới quyết định, nhưng cứ để class hover cơ bản
+                return 'text-gray-700 hover:bg-gray-50 hover:text-main px-5 py-3 flex items-center transition-all duration-300 last:rounded-b-lg border-b last:border-none border-gray-100'
+              }} 
+              to={`${path.PUBLIC}${path.PRODUCTS_CATEGORY}?brands=${brandValue}`}
+            >
+              <span className="block font-medium">{brand.label}</span>
+            </NavLink>
+          )
+        })
+      }
+    </div>
   )
 }
 

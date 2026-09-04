@@ -3,8 +3,8 @@ import path from "~/constants/path";
 import { BsFillCartPlusFill } from "react-icons/bs";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
+import { DefaultProduct } from "~/assets/images";
 import { FaHeart } from "react-icons/fa";
-import { DefaultProduct, NewLabel, TrendingLabel } from "~/assets/images";
 import SelectOption from "~/components/SelectOption";
 import PriceStartProduct from "~/components/PriceStartProduct";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,15 +37,11 @@ function Product({
   const dispatch = useDispatch();
   const isLiked = wishlist?.some((item) => item.product?._id === pid);
   const isExistInCart = carts?.some((item) => item.product?._id === pid);
-  let label = {};
-  if (isNew) {
-    label.img = NewLabel;
-    label.text = "New";
-  }
-  if (isTrending) {
-    label.img = TrendingLabel;
-    label.text = "Trending";
-  }
+
+  const discountPercent =
+    price && discountPrice && Number(price) > Number(discountPrice)
+      ? Math.round(((Number(price) - Number(discountPrice)) / Number(price)) * 100)
+      : 0;
 
   const handleAddWishList = async (e) => {
     e.stopPropagation();
@@ -134,32 +130,51 @@ function Product({
   return (
     <div
       className={
-        "rounded-md border border-gray-300  cursor-pointer group " + className
+        "rounded-xl border border-gray-100 cursor-pointer group hover:shadow-xl hover:-translate-y-1 hover:border-gray-200 transition-all duration-300 bg-white " + className
       }
     >
-      <div className="mb-3 relative">
+      <div className="mb-3 relative rounded-t-xl">
         <Link
           to={`${path.PUBLIC}${slug}`}
-          className="block"
+          className="block overflow-hidden rounded-t-xl"
           onClick={onClickLink}
         >
-          <div className="css-w-img ">
+          <div className="css-w-img">
             <div className="css-img-item">
               <img
                 src={primaryImage || DefaultProduct}
                 alt={title}
-                className="m-auto"
+                className="m-auto transition-transform duration-300 group-hover:scale-105"
               />
             </div>
           </div>
         </Link>
-        <img
-          src={label.img}
-          alt={label.text}
-          className="absolute w-[67px] right-[-12px] top-[-10px]"
-        />
+
+        {/* High-Contrast Crisp Badges (Never Clipped, Super Clear) */}
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
+          <div>
+            {discountPercent > 0 && (
+              <span className="inline-flex items-center gap-1 bg-[#e11b1b] text-white font-extrabold text-[11px] px-2.5 py-0.5 rounded shadow-sm">
+                <span>⚡ -{discountPercent}%</span>
+              </span>
+            )}
+          </div>
+          <div>
+            {isTrending && (
+              <span className="inline-flex items-center gap-1 bg-[#ea580c] text-white font-extrabold text-[10px] tracking-wider uppercase px-2.5 py-0.5 rounded-full shadow-sm">
+                <span>🔥 TRENDING</span>
+              </span>
+            )}
+            {isNew && !isTrending && (
+              <span className="inline-flex items-center gap-1 bg-[#0284c7] text-white font-extrabold text-[10px] tracking-wider uppercase px-2.5 py-0.5 rounded-full shadow-sm">
+                <span>✨ NEW</span>
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* cart heart */}
-        <div className="hidden  group-hover:flex justify-center items-center gap-2 w-full group-hover:animate-slide-top absolute">
+        <div className="hidden group-hover:flex justify-center items-center gap-2 w-full bottom-3 group-hover:animate-slide-top absolute z-20">
           <div onClick={(e) => handleAddWishList(e)}>
             <SelectOption
               Icon={FaHeart}

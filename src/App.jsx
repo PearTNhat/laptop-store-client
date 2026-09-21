@@ -25,6 +25,7 @@ import {
 import DetailCart from "./components/MyCart/DetailCart";
 import Checkout from "./components/Checkout";
 import EditProduct from "./pages/admin/ManageProduct/EditProduct";
+import ChatWidget from "./components/Chatbot/ChatWidget";
 
 function App() {
   const { isShowModal, animation, childrenModal } = useSelector(
@@ -76,6 +77,7 @@ function App() {
         </Route>
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
+      <ChatWidget />
     </div>
   );
 }

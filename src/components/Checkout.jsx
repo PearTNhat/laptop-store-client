@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { apiCreateOrder } from "~/apis/order";
+import { apiCreateOrder, apiCreateOrderCOD } from "~/apis/order";
+import { fetchCurrentUser } from "~/store/action/user";
 import { Logo } from "~/assets/images";
 import { formatNumber } from "~/utils/helper";
 import InputForm from "./InputForm";
@@ -23,8 +24,10 @@ import {
 
 function Checkout() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { userData, accessToken } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("COD"); // "COD" | "MOMO"
 
   const carts = userData?.carts || [];
 
@@ -59,38 +62,72 @@ function Checkout() {
 
     setLoading(true);
     try {
-      const body = {
-        products: carts,
-        total,
-        name: data.name.trim(),
-        phone: data.phone.trim(),
-        address: data.address.trim(),
-        payName: "MoMo",
-      };
+      if (paymentMethod === "COD") {
+        const body = {
+          products: carts,
+          total,
+          name: data.name.trim(),
+          phone: data.phone.trim(),
+          address: data.address.trim(),
+          payName: "COD",
+        };
 
-      const response = await apiCreateOrder({
-        accessToken,
-        body,
-      });
+        const response = await apiCreateOrderCOD({
+          accessToken,
+          body,
+        });
 
-      if (response?.success) {
-        if (response.data?.payUrl) {
-          window.location.href = response.data.payUrl;
-        } else {
+        if (response?.success) {
+          dispatch(fetchCurrentUser({ token: accessToken }));
           await Swal.fire({
             icon: "success",
             title: "Đặt hàng thành công!",
-            text: "Cảm ơn bạn đã mua hàng tại Laptop Store. Chúng tôi sẽ liên hệ sớm nhất.",
+            text: "Cảm ơn bạn đã mua hàng tại Laptop Store! Đơn hàng COD của bạn đã được ghi nhận và đang được xử lý.",
             confirmButtonColor: "#ee3131",
           });
           navigate(path.USER_ORDER);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Đặt hàng thất bại",
+            text: response?.message || "Có lỗi xảy ra trong quá trình đặt hàng COD.",
+          });
         }
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Mua hàng thất bại",
-          text: response?.message || "Có lỗi xảy ra trong quá trình thanh toán.",
+        const body = {
+          products: carts,
+          total,
+          name: data.name.trim(),
+          phone: data.phone.trim(),
+          address: data.address.trim(),
+          payName: "MoMo",
+        };
+
+        const response = await apiCreateOrder({
+          accessToken,
+          body,
         });
+
+        if (response?.success) {
+          if (response.data?.payUrl) {
+            window.location.href = response.data.payUrl;
+          } else {
+            dispatch(fetchCurrentUser({ token: accessToken }));
+            await Swal.fire({
+              icon: "success",
+              title: "Đặt hàng thành công!",
+              text: "Cảm ơn bạn đã mua hàng tại Laptop Store. Chúng tôi sẽ liên hệ sớm nhất.",
+              confirmButtonColor: "#ee3131",
+            });
+            navigate(path.USER_ORDER);
+          }
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Mua hàng thất bại",
+            text: response?.message || "Có lỗi xảy ra trong quá trình thanh toán.",
+          });
+        }
       }
     } catch (err) {
       Swal.fire({
@@ -247,14 +284,65 @@ function Checkout() {
                     </h2>
                   </div>
 
-                  <div className="pt-1">
-                    {/* MoMo Payment Gateway Card */}
+                  <div className="pt-1 space-y-3">
+                    {/* 1. COD Payment Option */}
                     <div
-                      className="p-4 rounded-2xl border-2 shadow-xs flex items-center justify-between transition-all"
-                      style={{
-                        borderColor: "#a50064",
-                        backgroundColor: "#fdf2f8",
-                      }}
+                      onClick={() => setPaymentMethod("COD")}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                        paymentMethod === "COD"
+                          ? "border-emerald-500 bg-emerald-50/40 shadow-xs ring-1 ring-emerald-500/20"
+                          : "border-gray-200 hover:border-gray-300 bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <div
+                          className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0 transition-colors ${
+                            paymentMethod === "COD"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-gray-100 text-gray-500"
+                          }`}
+                        >
+                          <FiTruck className="text-2xl" />
+                        </div>
+
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-bold text-gray-900">
+                              Thanh toán khi nhận hàng (COD)
+                            </p>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                              Khuyên dùng
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                            Nhận hàng, kiểm tra sản phẩm trước khi thanh toán tiền mặt cho nhân viên giao hàng
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="ml-3 flex-shrink-0">
+                        <div
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                            paymentMethod === "COD"
+                              ? "border-emerald-600 bg-emerald-600 text-white"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {paymentMethod === "COD" && (
+                            <div className="w-2 h-2 rounded-full bg-white" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2. MoMo Payment Gateway Card */}
+                    <div
+                      onClick={() => setPaymentMethod("MOMO")}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 flex items-center justify-between ${
+                        paymentMethod === "MOMO"
+                          ? "border-[#a50064] bg-[#fdf2f8] shadow-xs ring-1 ring-[#a50064]/20"
+                          : "border-gray-200 hover:border-gray-300 bg-white"
+                      }`}
                     >
                       <div className="flex items-center gap-3.5">
                         {/* MoMo Official Styled Icon */}
@@ -273,22 +361,33 @@ function Checkout() {
                         </div>
 
                         <div>
-                          <p className="text-xs font-bold text-gray-900 flex items-center gap-2">
-                            <span>Cổng thanh toán trực tuyến MoMo</span>
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-100">
-                              Bảo mật
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-bold text-gray-900">
+                              Cổng thanh toán trực tuyến MoMo
+                            </p>
+                            <span className="px-2 py-0.5 rounded-full bg-purple-50 text-[#a50064] text-[10px] font-semibold border border-purple-100">
+                              Ví điện tử
                             </span>
-                          </p>
+                          </div>
                           <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                            Hỗ trợ Ví MoMo, Quét mã QR Ngân hàng (VietQR), Thẻ ATM nội địa & Thẻ quốc tế Visa/MasterCard
+                            Hỗ trợ Ví MoMo, Quét mã QR Ngân hàng (VietQR), Thẻ ATM nội địa & Quốc tế
                           </p>
                         </div>
                       </div>
 
-                      <FiCheckCircle
-                        className="text-xl flex-shrink-0 ml-3"
-                        style={{ color: "#a50064" }}
-                      />
+                      <div className="ml-3 flex-shrink-0">
+                        <div
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                            paymentMethod === "MOMO"
+                              ? "border-[#a50064] bg-[#a50064] text-white"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {paymentMethod === "MOMO" && (
+                            <div className="w-2 h-2 rounded-full bg-white" />
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -389,8 +488,10 @@ function Checkout() {
                     <FiLock className="text-sm" />
                     <span>
                       {loading
-                        ? "Đang kết nối cổng MoMo..."
-                        : `Thanh toán qua MoMo (${formatNumber(total)}₫)`}
+                        ? (paymentMethod === "COD" ? "Đang xử lý đặt hàng..." : "Đang kết nối cổng MoMo...")
+                        : (paymentMethod === "COD"
+                            ? `Đặt hàng COD (${formatNumber(total)}₫)`
+                            : `Thanh toán qua MoMo (${formatNumber(total)}₫)`)}
                     </span>
                   </button>
 

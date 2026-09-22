@@ -15,19 +15,25 @@ export const apiSendChatMessage = async ({ message, conversationId, guestId }) =
       {
         headers,
         withCredentials: true,
-        timeout: 35000 // Timeout 35s cho lượt xử lý AI + Tools
+        timeout: 75000 // Tăng timeout lên 75s cho các lượt suy luận Gemini + gọi Tool tra cứu DB
       }
     );
     return data;
   } catch (error) {
+    console.error("[Chat API Error]:", error);
     if (error.response && error.response.data) {
+      console.error("[Chat API Response Data]:", error.response.data);
       return error.response.data;
     }
+    const isTimeout = error.code === "ECONNABORTED" || error.message?.includes("timeout");
     return {
       success: false,
       error: {
-        code: 500,
-        message: "Không thể kết nối đến máy chủ AI, vui lòng thử lại sau.",
+        code: error.code || 500,
+        message: isTimeout
+          ? "Hệ thống AI xử lý quá 75s (Timeout). Máy chủ AI Google có thể đang bị nghẽn mạng, bạn vui lòng thử lại nhé!"
+          : `Không thể kết nối đến máy chủ AI (${error.message || "Lỗi mạng"}), vui lòng thử lại sau.`,
+        detail: error.message,
         retryable: true
       }
     };

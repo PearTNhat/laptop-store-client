@@ -16,6 +16,22 @@ const apiCreateOrder = async ({ accessToken, body }) => {
         throw new Error(error.message)
     }
 }
+const apiCreateOrderCOD = async ({ accessToken, body }) => {
+    try {
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+        }
+        const { data } = await http.post('order', body, config)
+        return data
+    } catch (error) {
+        if (error.response && error.response.data) {
+            return error.response.data
+        }
+        throw new Error(error.message)
+    }
+}
 const apiGetOrdersUser = async ({ accessToken, params }) => {
     try {
         const config = {
@@ -133,6 +149,7 @@ const apiDeleteProductOrder = async ({ accessToken, orderId, productId }) => {
 }
 export {
     apiCreateOrder,
+    apiCreateOrderCOD,
     apiGetOrdersUser,
     apiCheckStatusOrder,
     apiGetAllOrders, apiDeleteOrder,

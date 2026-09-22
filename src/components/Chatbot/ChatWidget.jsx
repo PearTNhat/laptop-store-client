@@ -121,10 +121,12 @@ export default function ChatWidget() {
         };
         setMessages((prev) => [...prev, modelMsg]);
       } else {
+        console.error("[ChatWidget] Phản hồi lỗi từ máy chủ:", response);
         const errorMsg = {
           role: "model",
           content:
             response?.error?.message ||
+            response?.message ||
             "Dạ hiện tại em đang gặp chút gián đoạn khi xử lý câu hỏi. Bạn vui lòng thử lại sau giây lát nhé!",
           products: [],
           timestamp: new Date().toISOString()
@@ -132,12 +134,13 @@ export default function ChatWidget() {
         setMessages((prev) => [...prev, errorMsg]);
       }
     } catch (err) {
+      console.error("[ChatWidget] Lỗi ngoại lệ trong quá trình gửi tin nhắn:", err);
       setMessages((prev) => [
         ...prev,
         {
           role: "model",
           content:
-            "Không thể kết nối đến máy chủ AI, bạn vui lòng kiểm tra kết nối mạng hoặc thử lại sau nhé.",
+            `Không thể kết nối đến máy chủ AI (${err.message || "Lỗi mạng"}), bạn vui lòng kiểm tra kết nối hoặc F12 Console để xem chi tiết nhé.`,
           products: [],
           timestamp: new Date().toISOString()
         }

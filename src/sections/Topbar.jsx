@@ -20,9 +20,12 @@ function Topbar() {
           <FiPhoneCall className="text-main text-sm" />
           <span>
             ORDER ONLINE HOẶC GỌI NGAY:{" "}
-            <strong className="text-white hover:text-main cursor-pointer transition-colors">
-              (+1800) 000 8808
-            </strong>
+            <a
+              href="tel:0944477357"
+              className="text-white hover:text-main font-bold cursor-pointer transition-colors"
+            >
+              (+84) 944 477 357
+            </a>
           </span>
         </div>
 

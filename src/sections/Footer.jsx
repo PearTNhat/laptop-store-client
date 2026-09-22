@@ -26,14 +26,18 @@ function Footer() {
                                 <strong className="mx-1">
                                     SĐT:
                                 </strong>
-                                +84 4444 4444
+                                <a href="tel:0944477357" className="hover:text-white transition-colors">
+                                    0944 477 357
+                                </a>
                             </li>
                             <li className="flex items-center mb-[10px] hover:text-white cursor-pointer">
                                 <MdMail />
                                 <strong className="mx-1">
                                     Mail:
                                 </strong>
-                                letuannhat105@gmail.com
+                                <a href="mailto:letuannhat105@gmail.com" className="hover:text-white transition-colors">
+                                    letuannhat105@gmail.com
+                                </a>
                             </li>
                         </ul>
                         <ul className="flex items-center gap-2">

@@ -40,6 +40,20 @@ const apiLogin = async (info) => {
     throw new Error(error.message);
   }
 };
+const apiGoogleLogin = async ({ credential }) => {
+  try {
+    const config = {
+      withCredentials: true,
+    };
+    const { data } = await http.post("user/google-login", { credential }, config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    throw new Error(error.message);
+  }
+};
 const apiForgetPassword = async (email) => {
   try {
     const { data } = await http.get(`user/forgot-password?email=${email}`);
@@ -222,5 +236,6 @@ export {
   apiRemoveCartItem,
   apiUpdateWishlist,
   apiUpdateRole,
-  apiUpdateBlock
+  apiUpdateBlock,
+  apiGoogleLogin,
 };

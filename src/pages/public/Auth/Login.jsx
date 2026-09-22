@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userActions } from "~/store/slice/userSlice";
 import Swal from "sweetalert2";
-import { apiForgetPassword, apiLogin } from "~/apis/user";
+import { apiForgetPassword, apiLogin, apiGoogleLogin } from "~/apis/user";
+import { GoogleLogin } from "@react-oauth/google";
 import Button from "~/components/Button";
 import InputField from "~/components/InputField";
 import path from "~/constants/path";
@@ -65,6 +66,51 @@ function Login() {
     },
     [payload, dispatch, navigate]
   );
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse?.credential) {
+      Swal.fire("Lỗi!", "Không nhận được mã xác thực từ Google", "error");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await apiGoogleLogin({
+        credential: credentialResponse.credential,
+      });
+      if (!response.success) {
+        Swal.fire("Oops!", response.message, "error");
+      } else {
+        if (response.status === 403) {
+          await Swal.fire({
+            title: "Tài khoản của bạn đã bị khóa",
+            icon: "info",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Trở về",
+          });
+          return;
+        }
+        dispatch(
+          userActions.login({
+            accessToken: response.accessToken,
+            userData: response.userData,
+          })
+        );
+        Toast.fire({
+          icon: "success",
+          title: "Đăng nhập Google thành công",
+        });
+        navigate(`/${path.HOME}`);
+      }
+    } catch (error) {
+      Swal.fire("Lỗi!", error.message || "Đăng nhập Google thất bại", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    Swal.fire("Lỗi!", "Đăng nhập bằng Google không thành công", "error");
+  };
 
   useEffect(() => {
     setPayload({
@@ -213,12 +259,34 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-main hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-500/25 transition-all duration-200 text-sm transform active:scale-[0.99] disabled:opacity-70 mt-2"
+            className="w-full py-3 bg-main hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-500/25 transition-all duration-200 text-sm transform active:scale-[0.99] disabled:opacity-70 mt-2 cursor-pointer"
           >
             {loading ? "Đang xử lý..." : "Đăng nhập ngay"}
           </button>
 
-          <div className="relative my-4 text-center">
+          <div className="relative my-3 text-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-100"></div>
+            </div>
+            <span className="relative bg-white px-3 text-[11px] text-gray-400 uppercase tracking-wider font-semibold">
+              Hoặc đăng nhập bằng
+            </span>
+          </div>
+
+          <div className="flex justify-center w-full min-h-[44px]">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              shape="pill"
+              text="signin_with"
+              locale="vi"
+              width="100%"
+            />
+          </div>
+
+          <div className="relative my-3 text-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-100"></div>
             </div>

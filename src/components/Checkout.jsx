@@ -1,173 +1,425 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { apiCreateOrder } from "~/apis/order";
 import { Logo } from "~/assets/images";
 import { formatNumber } from "~/utils/helper";
 import InputForm from "./InputForm";
+import path from "~/constants/path";
+import {
+  FiArrowLeft,
+  FiShield,
+  FiMapPin,
+  FiPhone,
+  FiUser,
+  FiTruck,
+  FiCheckCircle,
+  FiCreditCard,
+  FiLock,
+  FiShoppingBag,
+} from "react-icons/fi";
 
 function Checkout() {
+  const navigate = useNavigate();
   const { userData, accessToken } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+
+  const carts = userData?.carts || [];
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: userData?.firstName + " " + userData?.lastName,
-      phone: userData?.phone,
-      address: userData?.address,
+      name: (userData?.firstName ? userData?.firstName + " " : "") + (userData?.lastName || ""),
+      phone: userData?.phone || "",
+      address: userData?.address || "",
     },
   });
-  const [total] = useState(() =>
-    userData?.carts.reduce(
-      (acc, cart) => acc + cart.product.discountPrice * cart.quantity,
-      0
-    )
+
+  const total = carts.reduce(
+    (acc, cart) =>
+      acc + (cart.product?.discountPrice || cart.product?.price || 0) * (cart.quantity || 1),
+    0
   );
+
   const handleCheckout = async (data) => {
-    const body = {
-      products: userData.carts,
-      total,
-      name: data.name.trim(),
-      ...data,
-    };
-    const response = await apiCreateOrder({
-      accessToken,
-      body,
-    });
-    if (response?.success) {
-      if (response.data.payUrl) {
-        window.location.href = response.data.payUrl;
+    if (!carts || carts.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Giỏ hàng trống",
+        text: "Bạn chưa có sản phẩm nào trong giỏ hàng để thanh toán.",
+      });
+      navigate(`/${path.HOME}`);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const body = {
+        products: carts,
+        total,
+        name: data.name.trim(),
+        phone: data.phone.trim(),
+        address: data.address.trim(),
+        payName: "MoMo",
+      };
+
+      const response = await apiCreateOrder({
+        accessToken,
+        body,
+      });
+
+      if (response?.success) {
+        if (response.data?.payUrl) {
+          window.location.href = response.data.payUrl;
+        } else {
+          await Swal.fire({
+            icon: "success",
+            title: "Đặt hàng thành công!",
+            text: "Cảm ơn bạn đã mua hàng tại Laptop Store. Chúng tôi sẽ liên hệ sớm nhất.",
+            confirmButtonColor: "#ee3131",
+          });
+          navigate(path.USER_ORDER);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Mua hàng thất bại",
+          text: response?.message || "Có lỗi xảy ra trong quá trình thanh toán.",
+        });
       }
-    } else {
+    } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Mua hàng thất bại",
+        title: "Lỗi kết nối",
+        text: err.message || "Không thể kết nối đến máy chủ thanh toán.",
       });
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <form onSubmit={handleSubmit(handleCheckout)}>
-      <div className="flex gap-4">
-        <div className="px-2 py-4 w-[40%]">
-          <div className="">
-            <Link to="/">
-              <img src={Logo} alt="logo" />
+    <div className="min-h-screen bg-slate-50/70 antialiased">
+      {/* Top Header */}
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-xs">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="block">
+              <img src={Logo} alt="Digital World" className="h-8 w-auto object-contain" />
+            </Link>
+            <span className="h-5 w-[1px] bg-gray-200 hidden sm:block"></span>
+            <span className="text-sm font-bold text-gray-700 hidden sm:block">
+              Thanh toán an toàn
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
+              <FiShield className="text-sm" />
+              <span>Mã hóa SSL 256-bit</span>
+            </div>
+
+            <Link
+              to={path.USER_CART}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-main transition-colors"
+            >
+              <FiArrowLeft className="text-sm" />
+              <span>Quay lại giỏ hàng</span>
             </Link>
           </div>
-          <div className="mt-4">
-            <h2 className="font-semibold text-xl text-center">
-              Thông tin khách hàng
-            </h2>
-            <InputForm
-              cssParents={"flex-1"}
-              id="name"
-              validate={{
-                required: "Không được để trống",
-                validate: (value) => {
-                  const trimmedValue = value.trim();
-                  if (trimmedValue.length === 0) {
-                    return "Không được để trống";
-                  }
-                  if (
-                    !/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+(?:\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+)*$/.test(
-                      trimmedValue
-                    )
-                  ) {
-                    return "Tên không bao gồm kí tự số và kí tự đặc biệt";
-                  }
-                  return true;
-                },
-              }}
-              label="Tên"
-              register={register}
-              error={errors}
-            />
-            <InputForm
-              cssParents={"flex-1"}
-              id="phone"
-              validate={{
-                required: "Không được để trống",
-                pattern: {
-                  value: /^0\d{9}$/,
-                  message: "Số điện thoại phải có 10 số và bắt đầu bằng số 0.",
-                },
-              }}
-              label="Số điện thoại"
-              register={register}
-              error={errors}
-            />
-            <InputForm
-              id="address"
-              cssParents={"flex-1"}
-              validate={{
-                required: "Không được để trống",
-              }}
-              label="Địa chỉ"
-              register={register}
-              error={errors}
-            />
-          </div>
         </div>
-        <div className="w-[60%] h-screen overflow-auto py-2">
-          <table className="table-auto w-full">
-            <thead className="bg-gray-300">
-              <tr>
-                <th className="p-2 text-left">Ảnh</th>
-                <th className="p-2 text-left">Tên</th>
-                <th className="p-2 text-left">Màu</th>
-                <th className="p-2 text-left text-nowrap">Số lượng</th>
-                <th className="p-2 text-right">Giá</th>
-              </tr>
-            </thead>
-            <tbody className="border border-gray-300">
-              {userData?.carts?.map((cart) => {
-                //  vì có 1 sản phẩm nên k cần color
-                const color = cart.product.colors.find(
-                  (color) => color.color === cart.color
-                );
-                return (
-                  <tr key={cart._id} className="border-b border-b-gray-300">
-                    <td className="p-2">
-                      <img
-                        src={color.primaryImage.url}
-                        className=" w-[80px]"
-                        alt=""
-                      />
-                    </td>
-                    <td className="p-2" title={cart.product.title}>
-                      <p className="line-clamp-2">{cart.product.title}</p>
-                    </td>
-                    <td className="p-2">{cart.color}</td>
-                    <td className="p-2 text-center">{cart.quantity}</td>
-                    <td className="text-right p-2">
-                      {formatNumber(cart.product.discountPrice)}₫
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="flex justify-end mt-2 gap-2">
-            <div className="">
-              <span className="font-semibold">Total: </span>
-              <span className="text-main">{formatNumber(total)}₫</span>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {(!carts || carts.length === 0) ? (
+          <div className="bg-white rounded-2xl p-12 border border-gray-100 shadow-sm text-center flex flex-col items-center justify-center space-y-4 max-w-lg mx-auto">
+            <div className="w-20 h-20 rounded-full bg-red-50 text-main flex items-center justify-center text-3xl shadow-inner">
+              <FiShoppingBag />
             </div>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className=" bg-main text-white rounded-md px-10 py-2 mt-2"
+            <h2 className="text-lg font-bold text-gray-800">
+              Giỏ hàng của bạn đang trống!
+            </h2>
+            <p className="text-xs text-gray-500">
+              Vui lòng thêm sản phẩm vào giỏ hàng trước khi tiến hành thanh toán.
+            </p>
+            <Link
+              to={`/${path.PRODUCTS_CATEGORY}`}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-main hover:bg-red-600 text-white text-xs font-bold shadow-md shadow-red-500/25 transition-all"
             >
-              Thanh toán
-            </button>
+              <span>Mua sắm ngay</span>
+            </Link>
           </div>
-        </div>
+        ) : (
+          <form onSubmit={handleSubmit(handleCheckout)}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* Left Column (col-span-7): Customer & Shipping & Payment */}
+              <div className="lg:col-span-7 space-y-6">
+                {/* 1. Customer Info Card */}
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-5">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
+                    <span className="w-7 h-7 rounded-lg bg-red-50 text-main font-bold text-xs flex items-center justify-center">
+                      1
+                    </span>
+                    <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                      <FiMapPin className="text-main" />
+                      <span>Thông tin giao hàng</span>
+                    </h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                        <FiUser className="text-gray-400" />
+                        Họ và tên người nhận <span className="text-main">*</span>
+                      </label>
+                      <InputForm
+                        id="name"
+                        validate={{
+                          required: "Vui lòng nhập họ tên người nhận",
+                          validate: (value) => {
+                            const trimmed = value?.trim();
+                            if (!trimmed) return "Không được để trống";
+                            return true;
+                          },
+                        }}
+                        placeholder="Nguyễn Văn A"
+                        register={register}
+                        error={errors}
+                        cssInput="!border-gray-200 !rounded-xl !py-2.5 !px-3.5 focus:!border-main focus:!ring-2 focus:!ring-main/20 text-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                        <FiPhone className="text-gray-400" />
+                        Số điện thoại nhận hàng <span className="text-main">*</span>
+                      </label>
+                      <InputForm
+                        id="phone"
+                        validate={{
+                          required: "Vui lòng nhập số điện thoại",
+                          pattern: {
+                            value: /^0\d{9}$/,
+                            message: "Số điện thoại phải có 10 chữ số (bắt đầu bằng số 0)",
+                          },
+                        }}
+                        placeholder="0912345678"
+                        register={register}
+                        error={errors}
+                        cssInput="!border-gray-200 !rounded-xl !py-2.5 !px-3.5 focus:!border-main focus:!ring-2 focus:!ring-main/20 text-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-gray-700 flex items-center gap-1.5">
+                        <FiMapPin className="text-gray-400" />
+                        Địa chỉ nhận hàng chi tiết <span className="text-main">*</span>
+                      </label>
+                      <InputForm
+                        id="address"
+                        validate={{
+                          required: "Vui lòng nhập địa chỉ nhận hàng",
+                        }}
+                        placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                        register={register}
+                        error={errors}
+                        cssInput="!border-gray-200 !rounded-xl !py-2.5 !px-3.5 focus:!border-main focus:!ring-2 focus:!ring-main/20 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Payment Method Card */}
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-4">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100">
+                    <span className="w-7 h-7 rounded-lg bg-red-50 text-main font-bold text-xs flex items-center justify-center">
+                      2
+                    </span>
+                    <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                      <FiCreditCard className="text-main" />
+                      <span>Phương thức thanh toán</span>
+                    </h2>
+                  </div>
+
+                  <div className="pt-1">
+                    {/* MoMo Payment Gateway Card */}
+                    <div
+                      className="p-4 rounded-2xl border-2 shadow-xs flex items-center justify-between transition-all"
+                      style={{
+                        borderColor: "#a50064",
+                        backgroundColor: "#fdf2f8",
+                      }}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        {/* MoMo Official Styled Icon */}
+                        <div
+                          className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0"
+                          style={{
+                            backgroundColor: "#a50064",
+                          }}
+                        >
+                          <span
+                            className="font-extrabold text-sm tracking-tight select-none"
+                            style={{ color: "#ffffff" }}
+                          >
+                            MoMo
+                          </span>
+                        </div>
+
+                        <div>
+                          <p className="text-xs font-bold text-gray-900 flex items-center gap-2">
+                            <span>Cổng thanh toán trực tuyến MoMo</span>
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-100">
+                              Bảo mật
+                            </span>
+                          </p>
+                          <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                            Hỗ trợ Ví MoMo, Quét mã QR Ngân hàng (VietQR), Thẻ ATM nội địa & Thẻ quốc tế Visa/MasterCard
+                          </p>
+                        </div>
+                      </div>
+
+                      <FiCheckCircle
+                        className="text-xl flex-shrink-0 ml-3"
+                        style={{ color: "#a50064" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column (col-span-5): Sticky Order Review Card */}
+              <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm space-y-5">
+                  <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                    <h2 className="text-base font-bold text-gray-900">
+                      Đơn hàng của bạn
+                    </h2>
+                    <span className="text-xs font-semibold text-gray-500">
+                      {carts.length} sản phẩm
+                    </span>
+                  </div>
+
+                  {/* Products Mini List */}
+                  <div className="max-h-64 overflow-y-auto space-y-3 pr-1 divide-y divide-gray-50">
+                    {carts.map((cart, idx) => {
+                      const color =
+                        cart.product?.colors?.find(
+                          (c) => c.color?.toLowerCase() === cart.color?.toLowerCase()
+                        ) || cart.product?.colors?.[0] || {};
+                      const itemPrice = cart.product?.discountPrice || cart.product?.price || 0;
+
+                      return (
+                        <div
+                          key={cart._id || idx}
+                          className="pt-3 first:pt-0 flex items-center gap-3"
+                        >
+                          <div className="relative w-14 h-14 rounded-xl bg-gray-50 border border-gray-100 p-1 flex-shrink-0 flex items-center justify-center">
+                            <img
+                              src={color?.primaryImage?.url || cart.product?.primaryImage?.url}
+                              alt={cart.product?.title}
+                              className="w-full h-full object-contain"
+                            />
+                            <span className="absolute -top-1.5 -right-1.5 bg-gray-800 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-xs">
+                              {cart.quantity}
+                            </span>
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-gray-900 truncate" title={cart.product?.title}>
+                              {cart.product?.title}
+                            </p>
+                            <p className="text-[11px] text-gray-500">
+                              Màu: <span className="font-medium text-gray-700">{cart.color}</span>
+                            </p>
+                          </div>
+
+                          <div className="text-right flex-shrink-0">
+                            <span className="text-xs font-black text-gray-900">
+                              {formatNumber(itemPrice * cart.quantity)}₫
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Pricing Breakdown */}
+                  <div className="pt-4 border-t border-gray-100 space-y-2.5 text-xs">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Tạm tính</span>
+                      <span className="font-semibold text-gray-900">
+                        {formatNumber(total)}₫
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between text-gray-600">
+                      <span className="flex items-center gap-1">
+                        <FiTruck className="text-emerald-600" />
+                        Phí vận chuyển
+                      </span>
+                      <span className="font-bold text-emerald-600 uppercase text-[11px]">
+                        Miễn phí
+                      </span>
+                    </div>
+
+                    <div className="pt-3 border-t border-gray-100 flex justify-between items-baseline">
+                      <div>
+                        <span className="text-sm font-bold text-gray-900 block">Tổng thanh toán</span>
+                        <span className="text-[10px] text-gray-400">(Đã bao gồm thuế VAT)</span>
+                      </div>
+                      <span className="text-xl font-black text-main">
+                        {formatNumber(total)}₫
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Submit CTA */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 bg-main hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-500/25 transition-all duration-200 text-sm flex items-center justify-center gap-2 transform active:scale-98 disabled:opacity-70 cursor-pointer"
+                  >
+                    <FiLock className="text-sm" />
+                    <span>
+                      {loading
+                        ? "Đang kết nối cổng MoMo..."
+                        : `Thanh toán qua MoMo (${formatNumber(total)}₫)`}
+                    </span>
+                  </button>
+
+                  <p className="text-[11px] text-center text-gray-400">
+                    Bằng việc bấm nút, bạn đồng ý với các điều khoản mua sắm của Laptop Store
+                  </p>
+                </div>
+
+                {/* Guarantees */}
+                <div className="bg-gradient-to-b from-gray-50 to-slate-50/70 rounded-2xl p-5 border border-gray-100 space-y-2.5 text-xs text-gray-600">
+                  <div className="flex items-center gap-2.5">
+                    <FiCheckCircle className="text-emerald-600 text-base flex-shrink-0" />
+                    <span>Cam kết sản phẩm mới 100% chính hãng</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <FiShield className="text-main text-base flex-shrink-0" />
+                    <span>Bảo hành chính hãng 12 - 24 tháng</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <FiTruck className="text-blue-600 text-base flex-shrink-0" />
+                    <span>Đồng kiểm ngoại quan máy khi nhận hàng</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
       </div>
-    </form>
+    </div>
   );
 }
 
